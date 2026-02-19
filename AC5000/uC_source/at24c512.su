@@ -1,0 +1,9 @@
+at24c512.c:20:16:twi_start	2	static
+at24c512.c:27:13:twi_stop	2	static
+at24c512.c:33:16:twi_send_byte	2	static
+at24c512.c:55:6:at24c512_init	2	static
+at24c512.c:64:9:at24c512_read_byte	4	static
+at24c512.c:84:6:at24c512_read_block	8	static
+at24c512.c:110:6:at24c512_write_byte	5	static
+at24c512.c:133:9:at24c512_is_ready	2	static
+at24c512.c:124:6:at24c512_write_block	8	static

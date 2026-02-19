@@ -1,0 +1,2164 @@
+Archive member included to satisfy reference by file (symbol)
+
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+                              main.o (__udivmodqi4)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+                              main.o (__udivmodhi4)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+                              main.o (__divmodhi4)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+                              main.o (__udivmodsi4)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o (exit)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+                              main.o (__tablejump2__)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+                              main.o (__do_copy_data)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+                              main.o (__do_clear_bss)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+                              main.o (__muluhisi3)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o) (__umulhisi3)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+                              main.o (strtol)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+                              main.o (strtoul)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(isspace.o)
+                              interpretacjaSMS.o (isspace)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(toupper.o)
+                              interpretacjaSMS.o (toupper)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp_P.o)
+                              interpretacjaSMS.o (memcmp_P)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy_P.o)
+                              main.o (memcpy_P)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat_P.o)
+                              main.o (strcat_P)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy_P.o)
+                              main.o (strcpy_P)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncasecmp_P.o)
+                              interpretacjaSMS.o (strncasecmp_P)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncmp_P.o)
+                              main.o (strncmp_P)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr_P.o)
+                              main.o (strstr_P)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp.o)
+                              main.o (memcmp)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy.o)
+                              main.o (memcpy)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memset.o)
+                              main.o (memset)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat.o)
+                              main.o (strcat)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strchr.o)
+                              main.o (strchr)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcmp.o)
+                              interpretacjaSMS.o (strcmp)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy.o)
+                              main.o (strcpy)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncpy.o)
+                              main.o (strncpy)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr.o)
+                              main.o (strstr)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(utoa_ncheck.o)
+                              main.o (__utoa_ncheck)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o)
+                              main.o (sprintf)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o) (vfprintf)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(errno.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o) (errno)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(cty_isfalse.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(isspace.o) (__ctype_isfalse)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen_P.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o) (strnlen_P)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o) (strnlen)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strrev.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(utoa_ncheck.o) (strrev)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(fputc.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o) (fputc)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(ultoa_invert.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o) (__ultoa_invert)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+                              main.o (eeprom_read_block)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_byte.o)
+                              main.o (eeprom_read_byte)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+                              wewy.o (eeprom_read_dword)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+                              main.o (eeprom_update_block)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+                              main.o (eeprom_update_byte)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+                              uart1_eeprom.o (eeprom_write_byte)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o) (__mulsi3)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o) (__prologue_saves__)
+/opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o) (__epilogue_restores__)
+
+Allocating common symbols
+Common symbol       size              file
+
+stan_wyjscie        0x1               main.o
+opoznienie_zatrzymaj_odpytywanie_urzadzenia
+                    0x1               main.o
+licznik_wstrzymanie_alarmow_po_inicjalizacji_100ms
+                    0x1               wewy.o
+tekst_wysylanego_smsa
+                    0xa1              pamiec_ram.o
+licznik_wejscie     0x1               wewy.o
+czy_jest_nowe_polecenie_SIM900
+                    0x1               sim900.o
+errno               0x2               /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(errno.o)
+pozycja_w_eeprom    0x2               zapiseeprom.o
+flaga_odebrany_znak_zachety
+                    0x1               sim900.o
+zarejestrowane_komendy_od_SIM900
+                    0xa               poleceniagsm.o
+bufor_pomoc_liczba_znakow_do_zapisu
+                    0x1               zapiseeprom.o
+wykonywanie_rozmowy_telefonicznej
+                    0x1               sim900.o
+czy_zajety_bufor_eeprom
+                    0x1               zapiseeprom.o
+wysylany_blok_SIM900
+                    0x15e             pamiec_ram.o
+bufor_eeprom        0x32              zapiseeprom.o
+nie_wysylaj_echa_z_powodu_nietypowego_smsa
+                    0x1               main.o
+komendy_kolejka     0xa               komendy.o
+poczatek_polecenia_SIM900
+                    0x2               sim900.o
+odebrany_blok_SIM900
+                    0x191             sim900.o
+nazwa_operatora     0xb               main.o
+liczba_wysylanych_znakow_SIM900
+                    0x2               sim900.o
+czas_trwania_impulsu_off_na_wejsciu
+                    0x4               wewy.o
+numer_telefonu_wysylanego_smsa
+                    0x21              main.o
+zakonczenie_polecenia_SIM900
+                    0x2               sim900.o
+bufor_pdu           0xc8              main.o
+numer_skopiowanego_telefonu_do_raportu_uzytkownikow_brama
+                    0x1               main.o
+czekanie_na_odebranie_zachety
+                    0x1               sim900.o
+liczba_odebranych_znakow_SIM900
+                    0x2               sim900.o
+numer_telefonu_odebranego_smsa
+                    0x11              main.o
+bufor_pomoc_adres_eeprom
+                    0x2               zapiseeprom.o
+czas_trwania_impulsu_off
+                    0x4               wewy.o
+stan_logiczny_na_wejsciu
+                    0x1               wewy.o
+bufor_ustaw_czas    0x20              komendy.o
+licznik_przelacznik_wyjscia
+                    0x4               wewy.o
+czas_trwania_impulsu_na_wejsciu
+                    0x4               wewy.o
+numer_powiadomien   0x11              pamiec_ram.o
+numer_telefonu_do_ktorego_dzwonic
+                    0x21              main.o
+czas_trwania_impulsu
+                    0x4               wewy.o
+licznik_oczekiwanie_na_potwierdzenie_wyslania_znakow
+                    0x1               main.o
+liczba_wykonanych_komend_identycznego_polecenia
+                    0x1               main.o
+licznik_100ms_dioda_led
+                    0x1               main.o
+kod_modulu          0x4               main.o
+liczba_komend_w_kolejce_SIM900
+                    0x1               poleceniagsm.o
+poprzedni_stan_logiczny_na_wejsciu
+                    0x1               wewy.o
+numer_telefonu_ktory_dzwoni
+                    0x11              main.o
+liczba_znakow_pdu_do_odebrania
+                    0x2               sim900.o
+nr_wyslanego_znaku_SIM900
+                    0x2               sim900.o
+polozenie_otrzymanych_komend_SIM900
+                    0xa               sim900.o
+nr_usunietego_uzytkownika_z_smsa
+                    0x1               interpretacjaSMS.o
+licznik_opoznienie_oczekiwania_na_bajt_SIM900
+                    0x1               sim900.o
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00008000         xr
+data             0x00800100         0x00000800         rw!x
+eeprom           0x00810000         0x00000400         rw!x
+fuse             0x00820000         0x00000003         rw!x
+lock             0x00830000         0x00000400         rw!x
+signature        0x00840000         0x00000400         rw!x
+user_signatures  0x00850000         0x00000400         rw!x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+Address of section .data set to 0x800100
+LOAD /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+LOAD main.o
+LOAD wewy.o
+LOAD sim900.o
+LOAD poleceniagsm.o
+LOAD pamiec_ram.o
+LOAD interpretacjaSMS.o
+LOAD komendy.o
+LOAD konfiguracja.o
+LOAD zapiseeprom.o
+LOAD pdu.o
+LOAD uart1_eeprom.o
+LOAD /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libm.a
+START GROUP
+LOAD /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a
+LOAD /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libm.a
+LOAD /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a
+LOAD /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a
+END GROUP
+                [0x00000000]                      __TEXT_REGION_ORIGIN__ = DEFINED (__TEXT_REGION_ORIGIN__)?__TEXT_REGION_ORIGIN__:0x0
+                [0x00008000]                      __TEXT_REGION_LENGTH__ = DEFINED (__TEXT_REGION_LENGTH__)?__TEXT_REGION_LENGTH__:0x20000
+                [0x00800100]                      __DATA_REGION_ORIGIN__ = DEFINED (__DATA_REGION_ORIGIN__)?__DATA_REGION_ORIGIN__:0x800060
+                [0x00000800]                      __DATA_REGION_LENGTH__ = DEFINED (__DATA_REGION_LENGTH__)?__DATA_REGION_LENGTH__:0xffa0
+                [0x00000400]                      __EEPROM_REGION_LENGTH__ = DEFINED (__EEPROM_REGION_LENGTH__)?__EEPROM_REGION_LENGTH__:0x10000
+                [0x00000003]                      __FUSE_REGION_LENGTH__ = DEFINED (__FUSE_REGION_LENGTH__)?__FUSE_REGION_LENGTH__:0x400
+                0x00000400                        __LOCK_REGION_LENGTH__ = DEFINED (__LOCK_REGION_LENGTH__)?__LOCK_REGION_LENGTH__:0x400
+                0x00000400                        __SIGNATURE_REGION_LENGTH__ = DEFINED (__SIGNATURE_REGION_LENGTH__)?__SIGNATURE_REGION_LENGTH__:0x400
+                0x00000400                        __USER_SIGNATURE_REGION_LENGTH__ = DEFINED (__USER_SIGNATURE_REGION_LENGTH__)?__USER_SIGNATURE_REGION_LENGTH__:0x400
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000     0x6a84
+ *(.vectors)
+ .vectors       0x00000000       0xb4 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+                0x00000000                __vectors
+                0x00000000                __vector_default
+ *(.vectors)
+                0x000000b4                        __progmem_start = .
+ *(.progmem)
+ *(.progmem.*)
+ .progmem.data  0x000000b4      0x2d1 main.o
+ .progmem.data  0x00000385       0x72 poleceniagsm.o
+ .progmem.data  0x000003f7      0x12f interpretacjaSMS.o
+ .progmem.data  0x00000526       0x10 konfiguracja.o
+ .progmem.data  0x00000536      0x191 pdu.o
+                0x000006c7                        __progmem_end = .
+                0x00000001                        ASSERT (((__progmem_start == __progmem_end) || (__progmem_end <= 0x10000)), .progmem section exceeds 0x10000)
+                0x000006c8                        . = ALIGN (0x2)
+ *fill*         0x000006c7        0x1 
+                0x000006c8                        __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x000006c8        0x0 linker stubs
+ *(.trampolines*)
+                0x000006c8                        __trampolines_end = .
+                0x000006c8                        . = ALIGN (0x2)
+ *(.lowtext)
+ *(.lowtext*)
+                0x000006c8                        __ctors_start = .
+ *(.ctors)
+                0x000006c8                        __ctors_end = .
+                0x000006c8                        __dtors_start = .
+ *(.dtors)
+                0x000006c8                        __dtors_end = .
+ SORT_BY_NAME(*)(.ctors)
+ SORT_BY_NAME(*)(.dtors)
+ *(.init0)
+ .init0         0x000006c8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+                0x000006c8                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x000006c8        0xc /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x000006d4       0x16 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+                0x000006d4                __do_copy_data
+ .init4         0x000006ea       0x10 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+                0x000006ea                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x000006fa        0x8 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+ *(.init9)
+ *(.text)
+ .text          0x00000702        0x4 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+                0x00000702                __vector_42
+                0x00000702                __vector_22
+                0x00000702                __vector_28
+                0x00000702                __vector_1
+                0x00000702                __vector_32
+                0x00000702                __vector_34
+                0x00000702                __vector_24
+                0x00000702                __vector_12
+                0x00000702                __bad_interrupt
+                0x00000702                __vector_6
+                0x00000702                __vector_31
+                0x00000702                __vector_35
+                0x00000702                __vector_39
+                0x00000702                __vector_3
+                0x00000702                __vector_23
+                0x00000702                __vector_30
+                0x00000702                __vector_25
+                0x00000702                __vector_11
+                0x00000702                __vector_13
+                0x00000702                __vector_17
+                0x00000702                __vector_19
+                0x00000702                __vector_7
+                0x00000702                __vector_41
+                0x00000702                __vector_43
+                0x00000702                __vector_27
+                0x00000702                __vector_5
+                0x00000702                __vector_33
+                0x00000702                __vector_37
+                0x00000702                __vector_4
+                0x00000702                __vector_44
+                0x00000702                __vector_9
+                0x00000702                __vector_2
+                0x00000702                __vector_21
+                0x00000702                __vector_15
+                0x00000702                __vector_36
+                0x00000702                __vector_29
+                0x00000702                __vector_40
+                0x00000702                __vector_8
+                0x00000702                __vector_26
+                0x00000702                __vector_10
+                0x00000702                __vector_16
+                0x00000702                __vector_38
+ .text          0x00000706     0x313a main.o
+                0x000007a2                test_dioda_wyjscia
+                0x000007d0                test_wejscie
+                0x000007e0                __vector_14
+                0x000008da                generuj_raport_sieci
+                0x0000095e                generuj_raport_uzytkownikow_1
+                0x000009f6                generuj_raport_uzytkownikow
+                0x00000a8c                generuj_raport_stanu_urzadzenia
+                0x00000df8                wymus_wylaczenie_wyjscia
+                0x00000e10                ustaw_wyjscie_clip
+                0x00000e86                sprawdz_blokade_serwisowa
+                0x00000ef6                wykonanie_polecenia_sms
+                0x0000137a                steruj_wejsciem_reset_100ms
+                0x000013c2                sprawdz_przychodzaca_rozmowe
+                0x00001462                zakonczono_rozmowe_telefoniczna
+                0x0000152e                zakonczono_wysylanie_smsa
+                0x0000153a                problem_z_wyslaniem_powiadomienia
+                0x00001562                wyzerowanie_danych_SIM900
+                0x00001590                reset_modulu_SIM900
+                0x000015ea                obsluga_wysylania_sms
+                0x000016f4                odpowiedz_na_polecenie
+                0x00001c4a                obsluga_komendy_SIM900
+                0x00001f6e                wyslanie_polecenia_ROM
+                0x00001f9c                wyslij_sms
+                0x0000209e                wykonanie_komend_SIM900
+                0x0000280c                steruj_SIM900_100MS
+                0x000029e6                steruj_SIM900_10MS
+                0x00002ba6                wykonanie_komend_powiadomien
+                0x00002e98                test_sms_clip_100ms
+                0x00002e9a                steruj_wejscia_wyjscia_100ms
+                0x00002ea6                zapis_w_eeprom_stanu_wyjsc
+                0x00002f1c                steruj_urzadzeniem_100MS
+                0x000031f6                steruj_urzadzeniem_10MS
+                0x00003202                wolne_zdarzenie_timer
+                0x000032e2                ustaw_parametry_dla_bezpieczenstwa
+                0x00003302                inicjalizuj_parametry_modulu
+                0x000034b2                wykonanie_komend_ukladow
+                0x00003828                wykonanie_komend
+ .text          0x00003840      0x31e wewy.o
+                0x00003840                aktualny_stan_logiczny_na_wejsciu
+                0x00003854                aktualizuj_stan_wyzwolenia_wejsc_100ms
+                0x00003992                steruj_wejscia_10ms
+                0x000039a6                steruj_wyjscia_100ms
+                0x00003adc                kopiuj_parametry_we_wy_z_eeprom
+                0x00003b42                inicjalizuj_parametry_we_wy
+ .text          0x00003b5e      0x41e sim900.o
+                0x00003b5e                wyslij_znaki_SIM900
+                0x00003b90                wyslij_polecenie_ROM_SIM900
+                0x00003bca                wyslij_polecenie_RAM_SIM900
+                0x00003bf4                __vector_20
+                0x00003c6a                __vector_18
+                0x00003eb8                inicjalizacja_SIM900
+                0x00003edc                zakonczenie_procedury_inicjalizacyjnej
+                0x00003f04                procedura_inicjalizacyjna_SIM900_100MS
+ .text          0x00003f7c      0x470 poleceniagsm.o
+                0x00003f7c                porownaj_znaki
+                0x00003fac                resetuj_polecenie_konczace
+                0x00003fc4                polecenia_konczace_gsm
+                0x000043a8                czy_jest_nowa_komenda_SIM900
+ .text          0x000043ec        0x0 pamiec_ram.o
+ .text          0x000043ec      0x940 interpretacjaSMS.o
+                0x000043ec                sprawdz_kod
+                0x00004456                sprawdz_reset_ustawien
+                0x0000446e                interpretuj_instrukcje_sms
+                0x00004500                pobierz_long
+                0x00004548                pomin_znak
+                0x000045a4                czy_jest_znak
+                0x00004606                pobierz_wyraz
+                0x00004684                pobierz_numer_telefonu
+                0x00004798                interpretuj_wiadomosc_sms
+ .text          0x00004d2c       0xb0 komendy.o
+                0x00004d2c                dodaj_komende
+                0x00004d50                filtruj_i_dodaj_komende
+                0x00004d78                filtruj_komendy_z_przedzialu
+                0x00004da8                usun_komende
+                0x00004dbe                czy_sa_komendy_z_przedzialu
+ .text          0x00004ddc      0x268 konfiguracja.o
+                0x00004ddc                konwersja_znaku_telefonu
+                0x00004e00                konwertuj_telefon_na_blok_eeprom
+                0x00004e82                konwersja_znaku_telefonu_eeprom
+                0x00004e8e                konwertuj_blok_eeprom_na_telefon
+                0x00004f4e                kopiuj_blok_eeprom_na_telefon
+                0x00004f96                porownaj_numer_telefonu_blok
+                0x00004ff4                porownaj_numer_telefonu
+ .text          0x00005044      0x1d8 zapiseeprom.o
+                0x00005070                zapisz_bajt_w_EEPROM
+                0x00005134                zapisz_znaki_w_eeprom
+                0x00005182                zapisz_znaki_w_eeprom_bez_kopiowania
+                0x0000518a                zapisz_znak_w_eeprom
+                0x000051be                eeprom_read_3char
+ .text          0x0000521c      0x4ba pdu.o
+                0x0000521c                pdu_to_ascii
+                0x000052c8                ascii_to_pdu_blok
+                0x000053bc                konwertuj_blok_dwa_znaki_na_znak_pdu
+                0x000053f8                pobierz_numer_telefonu_nadawcy_z_PDU
+                0x000054aa                pobierz_date_z_PDU
+                0x000054f0                pobierz_czas_z_PDU
+                0x00005536                wpisz_telefon_w_formacie_sms
+                0x000055ba                wpisz_centrum_sms_w_formacie_sms
+                0x00005644                zapisz_naglowek_pdu
+                0x00005684                konwertuj_pdu_na_blok_wysylany
+ .text          0x000056d6      0x1d2 uart1_eeprom.o
+                0x000056d6                uart1_init
+                0x000056fa                uart1_putc
+                0x00005708                uart1_getc
+                0x00005716                uart1_data_available
+                0x00005722                uart1_puts
+                0x0000573a                uart1_process_commands
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(isspace.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(toupper.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp_P.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy_P.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat_P.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy_P.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncasecmp_P.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncmp_P.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr_P.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memset.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strchr.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcmp.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncpy.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(utoa_ncheck.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(errno.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(cty_isfalse.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen_P.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strrev.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(fputc.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(ultoa_invert.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_byte.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .text          0x000058a8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+                0x000058a8                        . = ALIGN (0x2)
+ *(.text.*)
+ .text.startup  0x000058a8      0x208 main.o
+                0x000058a8                main
+ .text.libgcc.mul
+                0x00005ab0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.div
+                0x00005ab0       0x18 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+                0x00005ab0                __udivmodqi4
+ .text.libgcc   0x00005ac8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.prologue
+                0x00005ac8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.builtins
+                0x00005ac8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.fmul
+                0x00005ac8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.fixed
+                0x00005ac8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.mul
+                0x00005ac8        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.div
+                0x00005ac8       0x28 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+                0x00005ac8                __udivmodhi4
+ .text.libgcc   0x00005af0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.prologue
+                0x00005af0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.builtins
+                0x00005af0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fmul
+                0x00005af0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fixed
+                0x00005af0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.mul
+                0x00005af0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.div
+                0x00005af0       0x28 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+                0x00005af0                __divmodhi4
+                0x00005af0                _div
+ .text.libgcc   0x00005b18        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.prologue
+                0x00005b18        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.builtins
+                0x00005b18        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.fmul
+                0x00005b18        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.fixed
+                0x00005b18        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.mul
+                0x00005b18        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.div
+                0x00005b18       0x44 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+                0x00005b18                __udivmodsi4
+ .text.libgcc   0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.prologue
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.builtins
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.fmul
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.fixed
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.mul
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc   0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .text.libgcc.div
+                0x00005b5c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .text.libgcc   0x00005b5c        0xc /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+                0x00005b5c                __tablejump2__
+ .text.libgcc.prologue
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .text.libgcc.builtins
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .text.libgcc.fmul
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .text.libgcc.fixed
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .text.libgcc.mul
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc   0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.div
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.prologue
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.builtins
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.fmul
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.fixed
+                0x00005b68        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.mul
+                0x00005b68       0x16 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+                0x00005b68                __muluhisi3
+ .text.libgcc.div
+                0x00005b7e        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .text.libgcc   0x00005b7e        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .text.libgcc.prologue
+                0x00005b7e        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .text.libgcc.builtins
+                0x00005b7e        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .text.libgcc.fmul
+                0x00005b7e        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .text.libgcc.fixed
+                0x00005b7e        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .text.libgcc.mul
+                0x00005b7e       0x1e /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+                0x00005b7e                __umulhisi3
+ .text.libgcc.div
+                0x00005b9c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .text.libgcc   0x00005b9c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .text.libgcc.prologue
+                0x00005b9c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .text.libgcc.builtins
+                0x00005b9c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .text.libgcc.fmul
+                0x00005b9c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .text.libgcc.fixed
+                0x00005b9c        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .text.avr-libc
+                0x00005b9c      0x266 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+                0x00005b9c                strtol
+ .text.avr-libc
+                0x00005e02      0x268 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+                0x00005e02                strtoul
+ .text.avr-libc
+                0x0000606a       0x12 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(isspace.o)
+                0x0000606a                isspace
+ .text.avr-libc
+                0x0000607c       0x10 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(toupper.o)
+                0x0000607c                toupper
+ .text.avr-libc
+                0x0000608c       0x1a /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp_P.o)
+                0x0000608c                memcmp_P
+ .text.avr-libc
+                0x000060a6       0x12 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy_P.o)
+                0x000060a6                memcpy_P
+ .text.avr-libc
+                0x000060b8       0x16 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat_P.o)
+                0x000060b8                strcat_P
+ .text.avr-libc
+                0x000060ce        0xe /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy_P.o)
+                0x000060ce                strcpy_P
+ .text.avr-libc
+                0x000060dc       0x30 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncasecmp_P.o)
+                0x000060dc                strncasecmp_P
+ .text.avr-libc
+                0x0000610c       0x1c /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncmp_P.o)
+                0x0000610c                strncmp_P
+ .text.avr-libc
+                0x00006128       0x34 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr_P.o)
+                0x00006128                strstr_P
+ .text.avr-libc
+                0x0000615c       0x1a /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp.o)
+                0x0000615c                memcmp
+ .text.avr-libc
+                0x00006176       0x12 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy.o)
+                0x00006176                memcpy
+ .text.avr-libc
+                0x00006188        0xe /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memset.o)
+                0x00006188                memset
+ .text.avr-libc
+                0x00006196       0x16 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat.o)
+                0x00006196                strcat
+ .text.avr-libc
+                0x000061ac       0x16 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strchr.o)
+                0x000061ac                strchr
+ .text.avr-libc
+                0x000061c2       0x12 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcmp.o)
+                0x000061c2                strcmp
+ .text.avr-libc
+                0x000061d4        0xe /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy.o)
+                0x000061d4                strcpy
+ .text.avr-libc
+                0x000061e2       0x1e /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncpy.o)
+                0x000061e2                strncpy
+ .text.avr-libc
+                0x00006200       0x34 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr.o)
+                0x00006200                strstr
+ .text.avr-libc
+                0x00006234       0x34 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(utoa_ncheck.o)
+                0x00006234                __utoa_ncheck
+                0x00006236                __utoa_common
+ .text.avr-libc
+                0x00006268       0x46 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o)
+                0x00006268                sprintf
+ .text.avr-libc
+                0x000062ae      0x3b0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+                0x000062ae                vfprintf
+ .text.avr-libc
+                0x0000665e        0x6 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(cty_isfalse.o)
+                0x0000665e                __ctype_isfalse
+                0x00006662                __ctype_istrue
+ .text.avr-libc
+                0x00006664       0x16 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen_P.o)
+                0x00006664                strnlen_P
+ .text.avr-libc
+                0x0000667a       0x16 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen.o)
+                0x0000667a                strnlen
+ .text.avr-libc
+                0x00006690       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strrev.o)
+                0x00006690                strrev
+ .text.avr-libc
+                0x000066b0       0x60 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(fputc.o)
+                0x000066b0                fputc
+ .text.avr-libc
+                0x00006710       0xbc /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(ultoa_invert.o)
+                0x00006710                __ultoa_invert
+ .text.avr-libc
+                0x000067cc       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+                0x000067cc                eeprom_read_block
+                0x000067d0                eeprom_read_blraw
+ .text.avr-libc
+                0x000067ec       0x10 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_byte.o)
+                0x000067ec                eeprom_read_byte
+ .text.avr-libc
+                0x000067fc        0xc /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+                0x000067fc                eeprom_read_dword
+                0x000067fc                eeprom_read_float
+ .text.avr-libc
+                0x00006808       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+                0x00006808                eeprom_update_block
+ .text.avr-libc
+                0x00006828       0x24 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+                0x00006828                eeprom_update_byte
+                0x0000682a                eeprom_update_r18
+ .text.avr-libc
+                0x0000684c       0x1c /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+                0x0000684c                eeprom_write_byte
+                0x0000684e                eeprom_write_r18
+ .text.libgcc.mul
+                0x00006868       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+                0x00006868                __mulsi3
+ .text.libgcc.div
+                0x00006888        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .text.libgcc   0x00006888        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .text.libgcc.prologue
+                0x00006888        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .text.libgcc.builtins
+                0x00006888        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .text.libgcc.fmul
+                0x00006888        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .text.libgcc.fixed
+                0x00006888        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .text.libgcc.mul
+                0x00006888        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .text.libgcc.div
+                0x00006888        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .text.libgcc   0x00006888        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .text.libgcc.prologue
+                0x00006888       0x38 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+                0x00006888                __prologue_saves__
+ .text.libgcc.builtins
+                0x000068c0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .text.libgcc.fmul
+                0x000068c0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .text.libgcc.fixed
+                0x000068c0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .text.libgcc.mul
+                0x000068c0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+ .text.libgcc.div
+                0x000068c0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+ .text.libgcc   0x000068c0        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+ .text.libgcc.prologue
+                0x000068c0       0x36 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+                0x000068c0                __epilogue_restores__
+ .text.libgcc.builtins
+                0x000068f6        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+ .text.libgcc.fmul
+                0x000068f6        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+ .text.libgcc.fixed
+                0x000068f6        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+                0x000068f6                        . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x000068f6        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+                0x000068f6                exit
+                0x000068f6                _exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x000068f6        0x4 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ *(.fini0)
+ *(.hightext)
+ *(.hightext*)
+ *(.progmemx)
+ *(.progmemx.*)
+                0x000068fa                        . = ALIGN (0x2)
+ *(.jumptables)
+ *(.jumptables*)
+ .jumptables.gcc.wykonanie_polecenia_sms
+                0x000068fa       0x22 main.o
+ .jumptables.gcc.odpowiedz_na_polecenie
+                0x0000691c       0x96 main.o
+ .jumptables.gcc.wykonanie_komend_SIM900
+                0x000069b2       0x9e main.o
+ .jumptables.gcc.interpretuj_wiadomosc_sms
+                0x00006a50       0x34 interpretacjaSMS.o
+                0x00006a84                        _etext = .
+
+.data           0x00800100      0x11e load address 0x00006a84
+                0x00800100                        PROVIDE (__data_start = .)
+ *(.data)
+ .data          0x00800100        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+ .data          0x00800100        0x8 main.o
+                0x00800100                tryb_pracy
+                0x00800101                clip_duration_sekundy
+                0x00800105                sms_trigger
+                0x00800106                tryb_clip
+                0x00800107                max_oczekiwanie_na_odpowiedz
+ .data          0x00800108        0x0 wewy.o
+ .data          0x00800108        0x1 sim900.o
+                0x00800108                licznik_100ms_procedura_inicjalizacyjna_SIM900
+ .data          0x00800109        0x1 poleceniagsm.o
+                0x00800109                poziom_sieci_gsm
+ .data          0x0080010a        0x0 pamiec_ram.o
+ .data          0x0080010a        0x0 interpretacjaSMS.o
+ .data          0x0080010a        0xc komendy.o
+                0x0080010a                rtc_czas
+ .data          0x00800116        0x0 konfiguracja.o
+ .data          0x00800116        0x0 zapiseeprom.o
+ .data          0x00800116        0x0 pdu.o
+ .data          0x00800116        0x0 uart1_eeprom.o
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(isspace.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(toupper.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp_P.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy_P.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat_P.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy_P.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncasecmp_P.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncmp_P.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr_P.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memset.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strchr.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcmp.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncpy.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(utoa_ncheck.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(errno.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(cty_isfalse.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen_P.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strrev.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(fputc.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(ultoa_invert.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_byte.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .data          0x00800116        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+ *(.data*)
+ *(.gnu.linkonce.d*)
+ *(.rodata)
+ *(.rodata*)
+ .rodata.str1.1
+                0x00800116      0x107 main.o
+                                 0xe9 (size before relaxing)
+ .rodata.str1.1
+                0x0080021d        0x0 interpretacjaSMS.o
+                                 0x22 (size before relaxing)
+ .rodata.str1.1
+                0x0080021d        0x0 uart1_eeprom.o
+                                  0xd (size before relaxing)
+ *(.gnu.linkonce.r*)
+                0x0080021e                        . = ALIGN (0x2)
+ *fill*         0x0080021d        0x1 
+                0x0080021e                        _edata = .
+                0x0080021e                        PROVIDE (__data_end = .)
+
+.bss            0x0080021e      0x603
+                0x0080021e                        PROVIDE (__bss_start = .)
+ *(.bss)
+ .bss           0x0080021e        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+ .bss           0x0080021e       0x64 main.o
+                0x0080021e                wysylanie_smsa_clipa
+                0x0080021f                blokada_systemu_tymczasowo_odblokowana
+                0x00800220                blokada_systemu
+                0x00800221                autosync_czas_aktywny
+                0x00800222                opoznienie_wysylania_clipow_100MS
+                0x00800224                licznik_reset_urzadzenia
+                0x00800225                licznik_reset_modulu_SIM900
+                0x00800226                modul_zalogowany_w_sieci
+                0x00800227                licznik_wybudz_watki_10MS
+                0x00800228                wykonac_watki
+                0x00800229                wykonac_watki_10MS
+                0x0080022a                wykonaj_zdarzenie_timer
+                0x0080022b                service_lock_blink_count
+                0x0080022c                service_lock_led_state
+                0x0080022d                licznik_service_lock_led_100ms
+                0x0080022f                stan_cyklu_blysku
+                0x00800230                liczba_blyskow_led
+                0x00800231                g_czas_systemowy_100ms
+                0x00800235                licznik_timeout_rozmowy_100ms
+                0x00800237                clip_debounce_timer_100ms
+                0x00800239                licznik_cykli_przekaznika
+                0x0080023d                licznik_timeout_ussd_100ms
+                0x0080023f                oczekiwanie_na_ussd
+                0x00800240                sms_pomijaj_aktualizacje_czasu
+                0x00800241                watchdog_sms_safe_mode_100ms
+                0x00800243                watchdog_sms_trwa_reset
+                0x00800244                watchdog_sms_licznik_100ms
+                0x00800246                watchdog_sms_aktywny
+                0x00800247                blokada_clip
+                0x00800248                max_oczekiwanie_na_odpowiedz_at
+                0x00800249                licznik_bezpieczenstwa_opoznienie_wysylania_sms
+                0x0080024b                licznik_ogolny_blad_zalogowania
+                0x0080024d                licznik_blad_zalogowania_u_operatora
+                0x0080024e                licznik_blad_stanu_karty_SIM
+                0x0080024f                licznik_awaria_brak_zasiegu
+                0x00800251                liczba_smsow_ech_do_wyslania
+                0x00800252                ustaw_maksymalny_czas_dzwonienia
+                0x00800253                maksymalny_czas_dzwonienia
+                0x00800254                liczba_prob_wyslania_smsa
+                0x00800255                flaga_wysylanie_smsa
+                0x00800256                flaga_odczytywanie_smsa
+                0x00800257                dlugosc_pdu
+                0x00800258                licznik_bezpieczenstwa_wykonywana_rozmowa
+                0x0080025a                trwa_rozmowa_przychodzaca_od_uzytkownika
+                0x0080025b                nastepne_wysylane_polecenie_SIM900
+                0x0080025c                licznik_wysylane_polecenie_SIM900
+                0x0080025e                aktualnie_wysylane_polecenie_SIM900
+                0x0080025f                oproznij_bufor_SIM900_po_bledzie
+                0x00800260                opoznienie_SIM900_100MS
+ .bss           0x00800282        0x1 wewy.o
+ .bss           0x00800283        0xa sim900.o
+                0x00800283                podlaczona_karta_SIM_SIM900
+                0x00800284                podlaczony_modul_gsm_SIM900
+                0x00800285                komenda_SIM900
+                0x00800286                sprawdzaj_wejscie_CTS_SIM900
+                0x00800287                sms_timestamp_sekunda
+                0x00800288                sms_timestamp_minuta
+                0x00800289                sms_timestamp_godzina
+                0x0080028a                sms_timestamp_dzien
+                0x0080028b                sms_timestamp_miesiac
+                0x0080028c                sms_timestamp_rok
+ .bss           0x0080028d        0x5 poleceniagsm.o
+                0x0080028d                numer_bledu_cms
+                0x0080028f                numer_bledu_cme
+                0x00800291                bledny_PIN
+ .bss           0x00800292        0x1 pamiec_ram.o
+                0x00800292                powiadomienia_aktywne
+ .bss           0x00800293        0x0 interpretacjaSMS.o
+ .bss           0x00800293        0x0 komendy.o
+ .bss           0x00800293        0x0 konfiguracja.o
+ .bss           0x00800293        0x2 zapiseeprom.o
+                0x00800293                nr_zapisanego_znaku
+                0x00800294                liczba_znakow_do_zapisu
+ .bss           0x00800295        0x0 pdu.o
+ .bss           0x00800295        0x6 uart1_eeprom.o
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(isspace.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(toupper.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp_P.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy_P.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat_P.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy_P.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncasecmp_P.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncmp_P.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr_P.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memset.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strchr.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcmp.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncpy.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(utoa_ncheck.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(errno.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(cty_isfalse.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen_P.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strrev.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(fputc.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(ultoa_invert.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_byte.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .bss           0x0080029b        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x0080029b      0x142 main.o
+                0x0080029b                stan_wyjscie
+                0x0080029c                opoznienie_zatrzymaj_odpytywanie_urzadzenia
+                0x0080029d                nie_wysylaj_echa_z_powodu_nietypowego_smsa
+                0x0080029e                nazwa_operatora
+                0x008002a9                numer_telefonu_wysylanego_smsa
+                0x008002ca                bufor_pdu
+                0x00800392                numer_skopiowanego_telefonu_do_raportu_uzytkownikow_brama
+                0x00800393                numer_telefonu_odebranego_smsa
+                0x008003a4                numer_telefonu_do_ktorego_dzwonic
+                0x008003c5                licznik_oczekiwanie_na_potwierdzenie_wyslania_znakow
+                0x008003c6                liczba_wykonanych_komend_identycznego_polecenia
+                0x008003c7                licznik_100ms_dioda_led
+                0x008003c8                kod_modulu
+                0x008003cc                numer_telefonu_ktory_dzwoni
+ COMMON         0x008003dd       0x18 wewy.o
+                0x008003dd                licznik_wstrzymanie_alarmow_po_inicjalizacji_100ms
+                0x008003de                licznik_wejscie
+                0x008003df                czas_trwania_impulsu_off_na_wejsciu
+                0x008003e3                czas_trwania_impulsu_off
+                0x008003e7                stan_logiczny_na_wejsciu
+                0x008003e8                licznik_przelacznik_wyjscia
+                0x008003ec                czas_trwania_impulsu_na_wejsciu
+                0x008003f0                czas_trwania_impulsu
+                0x008003f4                poprzedni_stan_logiczny_na_wejsciu
+ COMMON         0x008003f5      0x1ac sim900.o
+                0x008003f5                czy_jest_nowe_polecenie_SIM900
+                0x008003f6                flaga_odebrany_znak_zachety
+                0x008003f7                wykonywanie_rozmowy_telefonicznej
+                0x008003f8                poczatek_polecenia_SIM900
+                0x008003fa                odebrany_blok_SIM900
+                0x0080058b                liczba_wysylanych_znakow_SIM900
+                0x0080058d                zakonczenie_polecenia_SIM900
+                0x0080058f                czekanie_na_odebranie_zachety
+                0x00800590                liczba_odebranych_znakow_SIM900
+                0x00800592                liczba_znakow_pdu_do_odebrania
+                0x00800594                nr_wyslanego_znaku_SIM900
+                0x00800596                polozenie_otrzymanych_komend_SIM900
+                0x008005a0                licznik_opoznienie_oczekiwania_na_bajt_SIM900
+ COMMON         0x008005a1        0xb poleceniagsm.o
+                0x008005a1                zarejestrowane_komendy_od_SIM900
+                0x008005ab                liczba_komend_w_kolejce_SIM900
+ COMMON         0x008005ac      0x210 pamiec_ram.o
+                0x008005ac                tekst_wysylanego_smsa
+                0x0080064d                wysylany_blok_SIM900
+                0x008007ab                numer_powiadomien
+ COMMON         0x008007bc        0x1 interpretacjaSMS.o
+                0x008007bc                nr_usunietego_uzytkownika_z_smsa
+ COMMON         0x008007bd       0x2a komendy.o
+                0x008007bd                komendy_kolejka
+                0x008007c7                bufor_ustaw_czas
+ COMMON         0x008007e7       0x38 zapiseeprom.o
+                0x008007e7                pozycja_w_eeprom
+                0x008007e9                bufor_pomoc_liczba_znakow_do_zapisu
+                0x008007ea                czy_zajety_bufor_eeprom
+                0x008007eb                bufor_eeprom
+                0x0080081d                bufor_pomoc_adres_eeprom
+ COMMON         0x0080081f        0x2 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(errno.o)
+                0x0080081f                errno
+                0x00800821                        PROVIDE (__bss_end = .)
+                0x00006a84                        __data_load_start = LOADADDR (.data)
+                0x00006ba2                        __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x00800821        0x0
+                [!provide]                        PROVIDE (__noinit_start = .)
+ *(.noinit .noinit.* .gnu.linkonce.n.*)
+                [!provide]                        PROVIDE (__noinit_end = .)
+                0x00800821                        _end = .
+                [!provide]                        PROVIDE (__heap_start = .)
+                0x00000000                        __flmap_init_label = DEFINED (__flmap_noinit_start)?__flmap_noinit_start:0x0
+                0x00000000                        __flmap = DEFINED (__flmap)?__flmap:0x0
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                        __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000       0x24
+ *(.comment)
+ .comment       0x00000000       0x24 main.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 wewy.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 sim900.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 poleceniagsm.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 pamiec_ram.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 interpretacjaSMS.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 komendy.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 konfiguracja.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 zapiseeprom.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 pdu.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 uart1_eeprom.o
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o)
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(errno.o)
+                                 0x25 (size before relaxing)
+ .comment       0x00000024        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(fputc.o)
+                                 0x25 (size before relaxing)
+
+.note.gnu.avr.deviceinfo
+                0x00000000       0x40
+ .note.gnu.avr.deviceinfo
+                0x00000000       0x40 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+
+.gnu.build.attributes
+ *(.gnu.build.attributes .gnu.build.attributes.*)
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0x3c0
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x28 main.o
+ .debug_aranges
+                0x00000028       0x20 wewy.o
+ .debug_aranges
+                0x00000048       0x20 sim900.o
+ .debug_aranges
+                0x00000068       0x20 poleceniagsm.o
+ .debug_aranges
+                0x00000088       0x18 pamiec_ram.o
+ .debug_aranges
+                0x000000a0       0x20 interpretacjaSMS.o
+ .debug_aranges
+                0x000000c0       0x20 komendy.o
+ .debug_aranges
+                0x000000e0       0x20 konfiguracja.o
+ .debug_aranges
+                0x00000100       0x20 zapiseeprom.o
+ .debug_aranges
+                0x00000120       0x20 pdu.o
+ .debug_aranges
+                0x00000140       0x20 uart1_eeprom.o
+ .debug_aranges
+                0x00000160       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .debug_aranges
+                0x00000180       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .debug_aranges
+                0x000001a0       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .debug_aranges
+                0x000001c0       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .debug_aranges
+                0x000001e0       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .debug_aranges
+                0x00000200       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .debug_aranges
+                0x00000220       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .debug_aranges
+                0x00000240       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .debug_aranges
+                0x00000260       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .debug_aranges
+                0x00000280       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .debug_aranges
+                0x000002a0       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+ .debug_aranges
+                0x000002c0       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_byte.o)
+ .debug_aranges
+                0x000002e0       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+ .debug_aranges
+                0x00000300       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+ .debug_aranges
+                0x00000320       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+ .debug_aranges
+                0x00000340       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+ .debug_aranges
+                0x00000360       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .debug_aranges
+                0x00000380       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .debug_aranges
+                0x000003a0       0x20 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x00000000     0xb2e6
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x00000000      0x8ea /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+ .debug_info    0x000008ea     0x552b main.o
+ .debug_info    0x00005e15      0x558 wewy.o
+ .debug_info    0x0000636d      0x6d4 sim900.o
+ .debug_info    0x00006a41      0xad3 poleceniagsm.o
+ .debug_info    0x00007514       0xf1 pamiec_ram.o
+ .debug_info    0x00007605     0x168a interpretacjaSMS.o
+ .debug_info    0x00008c8f      0x644 komendy.o
+ .debug_info    0x000092d3      0x72d konfiguracja.o
+ .debug_info    0x00009a00      0x5a6 zapiseeprom.o
+ .debug_info    0x00009fa6      0x927 pdu.o
+ .debug_info    0x0000a8cd      0x442 uart1_eeprom.o
+ .debug_info    0x0000ad0f       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .debug_info    0x0000ad35       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .debug_info    0x0000ad5b       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .debug_info    0x0000ad81       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .debug_info    0x0000ada7       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .debug_info    0x0000adcd       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .debug_info    0x0000adf3       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .debug_info    0x0000ae19       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .debug_info    0x0000ae3f       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .debug_info    0x0000ae65       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .debug_info    0x0000ae8b       0xa7 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+ .debug_info    0x0000af32       0xa6 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_byte.o)
+ .debug_info    0x0000afd8       0xa7 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+ .debug_info    0x0000b07f       0xa8 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+ .debug_info    0x0000b127       0xa7 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+ .debug_info    0x0000b1ce       0xa6 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+ .debug_info    0x0000b274       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .debug_info    0x0000b29a       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .debug_info    0x0000b2c0       0x26 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+
+.debug_abbrev   0x00000000     0x258f
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000      0x86e /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+ .debug_abbrev  0x0000086e      0x6c9 main.o
+ .debug_abbrev  0x00000f37      0x210 wewy.o
+ .debug_abbrev  0x00001147      0x215 sim900.o
+ .debug_abbrev  0x0000135c      0x24c poleceniagsm.o
+ .debug_abbrev  0x000015a8       0x85 pamiec_ram.o
+ .debug_abbrev  0x0000162d      0x310 interpretacjaSMS.o
+ .debug_abbrev  0x0000193d      0x137 komendy.o
+ .debug_abbrev  0x00001a74      0x276 konfiguracja.o
+ .debug_abbrev  0x00001cea      0x282 zapiseeprom.o
+ .debug_abbrev  0x00001f6c      0x23c pdu.o
+ .debug_abbrev  0x000021a8      0x26b uart1_eeprom.o
+ .debug_abbrev  0x00002413       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .debug_abbrev  0x00002427       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .debug_abbrev  0x0000243b       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .debug_abbrev  0x0000244f       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .debug_abbrev  0x00002463       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .debug_abbrev  0x00002477       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .debug_abbrev  0x0000248b       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .debug_abbrev  0x0000249f       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .debug_abbrev  0x000024b3       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .debug_abbrev  0x000024c7       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .debug_abbrev  0x000024db       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+ .debug_abbrev  0x000024ef       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_byte.o)
+ .debug_abbrev  0x00002503       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+ .debug_abbrev  0x00002517       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+ .debug_abbrev  0x0000252b       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+ .debug_abbrev  0x0000253f       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+ .debug_abbrev  0x00002553       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .debug_abbrev  0x00002567       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .debug_abbrev  0x0000257b       0x14 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+
+.debug_line     0x00000000     0xe194
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x00000000      0x1a6 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+ .debug_line    0x000001a6     0x7b53 main.o
+ .debug_line    0x00007cf9      0x6bf wewy.o
+ .debug_line    0x000083b8      0xa6c sim900.o
+ .debug_line    0x00008e24      0xa37 poleceniagsm.o
+ .debug_line    0x0000985b       0x4c pamiec_ram.o
+ .debug_line    0x000098a7     0x1299 interpretacjaSMS.o
+ .debug_line    0x0000ab40      0x39c komendy.o
+ .debug_line    0x0000aedc      0x843 konfiguracja.o
+ .debug_line    0x0000b71f      0x660 zapiseeprom.o
+ .debug_line    0x0000bd7f     0x10d5 pdu.o
+ .debug_line    0x0000ce54      0x6b6 uart1_eeprom.o
+ .debug_line    0x0000d50a       0x9a /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .debug_line    0x0000d5a4       0xca /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .debug_line    0x0000d66e       0xc4 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .debug_line    0x0000d732      0x11e /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .debug_line    0x0000d850       0x5e /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+ .debug_line    0x0000d8ae       0x76 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+ .debug_line    0x0000d924       0x94 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+ .debug_line    0x0000d9b8       0x82 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+ .debug_line    0x0000da3a       0x8e /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .debug_line    0x0000dac8       0xac /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .debug_line    0x0000db74       0xab /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+ .debug_line    0x0000dc1f       0x7a /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_byte.o)
+ .debug_line    0x0000dc99       0x68 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+ .debug_line    0x0000dd01       0xa5 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+ .debug_line    0x0000dda6       0xb6 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+ .debug_line    0x0000de5c       0x9e /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+ .debug_line    0x0000defa       0xac /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+ .debug_line    0x0000dfa6       0xfa /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+ .debug_line    0x0000e0a0       0xf4 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+
+.debug_frame    0x00000000      0xca8
+ *(.debug_frame)
+ .debug_frame   0x00000000      0x4a8 main.o
+ .debug_frame   0x000004a8       0x84 wewy.o
+ .debug_frame   0x0000052c       0xbc sim900.o
+ .debug_frame   0x000005e8       0xb8 poleceniagsm.o
+ .debug_frame   0x000006a0      0x208 interpretacjaSMS.o
+ .debug_frame   0x000008a8       0x64 komendy.o
+ .debug_frame   0x0000090c      0x110 konfiguracja.o
+ .debug_frame   0x00000a1c       0xb0 zapiseeprom.o
+ .debug_frame   0x00000acc      0x150 pdu.o
+ .debug_frame   0x00000c1c       0x8c uart1_eeprom.o
+
+.debug_str      0x00000000     0x43fb
+ *(.debug_str)
+ .debug_str     0x00000000      0x318 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+ .debug_str     0x00000318     0x40e3 main.o
+                               0x384a (size before relaxing)
+ .debug_str     0x000043fb        0x0 wewy.o
+                                0x494 (size before relaxing)
+ .debug_str     0x000043fb        0x0 sim900.o
+                                0x7e0 (size before relaxing)
+ .debug_str     0x000043fb        0x0 poleceniagsm.o
+                                0x83a (size before relaxing)
+ .debug_str     0x000043fb        0x0 pamiec_ram.o
+                                0x18a (size before relaxing)
+ .debug_str     0x000043fb        0x0 interpretacjaSMS.o
+                               0x1f55 (size before relaxing)
+ .debug_str     0x000043fb        0x0 komendy.o
+                               0x1869 (size before relaxing)
+ .debug_str     0x000043fb        0x0 konfiguracja.o
+                                0x3ae (size before relaxing)
+ .debug_str     0x000043fb        0x0 zapiseeprom.o
+                                0x33d (size before relaxing)
+ .debug_str     0x000043fb        0x0 pdu.o
+                                0x3e9 (size before relaxing)
+ .debug_str     0x000043fb        0x0 uart1_eeprom.o
+                                0x274 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+                                 0x84 (size before relaxing)
+ .debug_str     0x000043fb        0x0 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+                                 0x84 (size before relaxing)
+
+.debug_loc      0x00000000     0x617e
+ *(.debug_loc)
+ .debug_loc     0x00000000     0x20eb main.o
+ .debug_loc     0x000020eb      0x2cf wewy.o
+ .debug_loc     0x000023ba      0x21d sim900.o
+ .debug_loc     0x000025d7      0x426 poleceniagsm.o
+ .debug_loc     0x000029fd      0xe83 interpretacjaSMS.o
+ .debug_loc     0x00003880      0x210 komendy.o
+ .debug_loc     0x00003a90      0x9fd konfiguracja.o
+ .debug_loc     0x0000448d      0x568 zapiseeprom.o
+ .debug_loc     0x000049f5     0x14e2 pdu.o
+ .debug_loc     0x00005ed7      0x2a7 uart1_eeprom.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x00000000      0xc50
+ *(.debug_ranges)
+ .debug_ranges  0x00000000      0x848 main.o
+ .debug_ranges  0x00000848       0x40 wewy.o
+ .debug_ranges  0x00000888       0x18 sim900.o
+ .debug_ranges  0x000008a0       0x58 poleceniagsm.o
+ .debug_ranges  0x000008f8       0xc8 interpretacjaSMS.o
+ .debug_ranges  0x000009c0       0x68 komendy.o
+ .debug_ranges  0x00000a28       0x80 konfiguracja.o
+ .debug_ranges  0x00000aa8       0x18 zapiseeprom.o
+ .debug_ranges  0x00000ac0      0x130 pdu.o
+ .debug_ranges  0x00000bf0       0x60 uart1_eeprom.o
+
+.debug_addr
+ *(.debug_addr)
+
+.debug_line_str
+ *(.debug_line_str)
+
+.debug_loclists
+ *(.debug_loclists)
+
+.debug_macro
+ *(.debug_macro)
+
+.debug_names
+ *(.debug_names)
+
+.debug_rnglists
+ *(.debug_rnglists)
+
+.debug_str_offsets
+ *(.debug_str_offsets)
+
+.debug_sup
+ *(.debug_sup)
+OUTPUT(AC200-DTM-FS-UART-WWW.elf elf32-avr)
+LOAD linker stubs
+
+Cross Reference Table
+
+Symbol                                            File
+__DATA_REGION_LENGTH__                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__DATA_REGION_ORIGIN__                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__EEPROM_REGION_LENGTH__                          /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__FUSE_REGION_LENGTH__                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__TEXT_REGION_LENGTH__                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__TEXT_REGION_ORIGIN__                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__bad_interrupt                                   /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__bss_end                                         /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+__bss_start                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+__ctype_isfalse                                   /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(cty_isfalse.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(isspace.o)
+__ctype_istrue                                    /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(cty_isfalse.o)
+__data_end                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+__data_load_start                                 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+__data_start                                      /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+__divmodhi4                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+                                                  main.o
+__do_clear_bss                                    /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_clear_bss.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(errno.o)
+                                                  uart1_eeprom.o
+                                                  zapiseeprom.o
+                                                  komendy.o
+                                                  interpretacjaSMS.o
+                                                  pamiec_ram.o
+                                                  poleceniagsm.o
+                                                  sim900.o
+                                                  wewy.o
+                                                  main.o
+__do_copy_data                                    /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_copy_data.o)
+                                                  uart1_eeprom.o
+                                                  komendy.o
+                                                  interpretacjaSMS.o
+                                                  poleceniagsm.o
+                                                  sim900.o
+                                                  main.o
+__epilogue_restores__                             /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_epilogue.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+__heap_end                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__init                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__mulsi3                                          /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+__muluhisi3                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_mulsi3.o)
+                                                  main.o
+__prologue_saves__                                /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_prologue.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+__stack                                           /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__tablejump2__                                    /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_tablejump2.o)
+                                                  interpretacjaSMS.o
+                                                  main.o
+__udivmodhi4                                      /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodhi4.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+                                                  main.o
+__udivmodqi4                                      /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodqi4.o)
+                                                  main.o
+__udivmodsi4                                      /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_udivmodsi4.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+                                                  wewy.o
+                                                  main.o
+__ultoa_invert                                    /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(ultoa_invert.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+__umulhisi3                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_umulhisi3.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_muluhisi3.o)
+__utoa_common                                     /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(utoa_ncheck.o)
+__utoa_ncheck                                     /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(utoa_ncheck.o)
+                                                  main.o
+__vector_1                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_10                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_11                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_12                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_13                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_14                                       main.o
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_15                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_16                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_17                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_18                                       sim900.o
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_19                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_2                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_20                                       sim900.o
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_21                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_22                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_23                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_24                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_25                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_26                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_27                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_28                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_29                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_3                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_30                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_31                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_32                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_33                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_34                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_35                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_36                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_37                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_38                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_39                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_4                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_40                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_41                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_42                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_43                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_44                                       /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_5                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_6                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_7                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_8                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_9                                        /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vector_default                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+__vectors                                         /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+_div                                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_divmodhi4.o)
+_exit                                             /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+aktualizuj_stan_wyzwolenia_wejsc_100ms            wewy.o
+                                                  main.o
+aktualnie_wysylane_polecenie_SIM900               main.o
+aktualny_stan_logiczny_na_wejsciu                 wewy.o
+ascii_to_pdu_blok                                 pdu.o
+                                                  main.o
+autosync_czas_aktywny                             main.o
+bledny_PIN                                        poleceniagsm.o
+                                                  main.o
+blokada_clip                                      main.o
+blokada_systemu                                   main.o
+blokada_systemu_tymczasowo_odblokowana            main.o
+                                                  interpretacjaSMS.o
+bufor_eeprom                                      zapiseeprom.o
+                                                  interpretacjaSMS.o
+                                                  main.o
+bufor_pdu                                         main.o
+bufor_pomoc_adres_eeprom                          zapiseeprom.o
+bufor_pomoc_liczba_znakow_do_zapisu               zapiseeprom.o
+                                                  main.o
+bufor_ustaw_czas                                  komendy.o
+                                                  main.o
+clip_debounce_timer_100ms                         main.o
+clip_duration_sekundy                             main.o
+                                                  interpretacjaSMS.o
+czas_trwania_impulsu                              wewy.o
+czas_trwania_impulsu_na_wejsciu                   wewy.o
+czas_trwania_impulsu_off                          wewy.o
+czas_trwania_impulsu_off_na_wejsciu               wewy.o
+czekanie_na_odebranie_zachety                     sim900.o
+                                                  main.o
+czy_jest_nowa_komenda_SIM900                      poleceniagsm.o
+                                                  main.o
+czy_jest_nowe_polecenie_SIM900                    sim900.o
+                                                  poleceniagsm.o
+                                                  main.o
+czy_jest_znak                                     interpretacjaSMS.o
+czy_sa_komendy_z_przedzialu                       komendy.o
+                                                  main.o
+czy_zajety_bufor_eeprom                           zapiseeprom.o
+                                                  main.o
+dlugosc_pdu                                       main.o
+dodaj_komende                                     komendy.o
+                                                  interpretacjaSMS.o
+                                                  main.o
+eeprom_read_3char                                 zapiseeprom.o
+eeprom_read_block                                 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+                                                  konfiguracja.o
+                                                  main.o
+eeprom_read_blraw                                 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_block.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+eeprom_read_byte                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_byte.o)
+                                                  uart1_eeprom.o
+                                                  zapiseeprom.o
+                                                  konfiguracja.o
+                                                  main.o
+eeprom_read_dword                                 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+                                                  wewy.o
+eeprom_read_float                                 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eerd_dword.o)
+eeprom_update_block                               /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+                                                  main.o
+eeprom_update_byte                                /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+                                                  main.o
+eeprom_update_r18                                 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_byte.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eeupd_block.o)
+eeprom_write_byte                                 /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+                                                  uart1_eeprom.o
+eeprom_write_r18                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libatmega328pb.a(eewr_byte.o)
+errno                                             /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(errno.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+exit                                              /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/avr5/libgcc.a(_exit.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+filtruj_i_dodaj_komende                           komendy.o
+                                                  main.o
+filtruj_komendy_z_przedzialu                      komendy.o
+                                                  main.o
+flaga_odczytywanie_smsa                           main.o
+flaga_odebrany_znak_zachety                       sim900.o
+                                                  main.o
+flaga_wysylanie_smsa                              main.o
+fputc                                             /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(fputc.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+g_czas_systemowy_100ms                            main.o
+generuj_raport_sieci                              main.o
+generuj_raport_stanu_urzadzenia                   main.o
+generuj_raport_uzytkownikow                       main.o
+generuj_raport_uzytkownikow_1                     main.o
+inicjalizacja_SIM900                              sim900.o
+                                                  main.o
+inicjalizuj_parametry_modulu                      main.o
+inicjalizuj_parametry_we_wy                       wewy.o
+interpretuj_instrukcje_sms                        interpretacjaSMS.o
+interpretuj_wiadomosc_sms                         interpretacjaSMS.o
+                                                  main.o
+isspace                                           /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(isspace.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+                                                  interpretacjaSMS.o
+kod_modulu                                        main.o
+                                                  interpretacjaSMS.o
+komenda_SIM900                                    sim900.o
+                                                  poleceniagsm.o
+                                                  main.o
+komendy_kolejka                                   komendy.o
+                                                  main.o
+konwersja_znaku_telefonu                          konfiguracja.o
+                                                  interpretacjaSMS.o
+konwersja_znaku_telefonu_eeprom                   konfiguracja.o
+konwertuj_blok_dwa_znaki_na_znak_pdu              pdu.o
+                                                  main.o
+konwertuj_blok_eeprom_na_telefon                  konfiguracja.o
+                                                  main.o
+konwertuj_pdu_na_blok_wysylany                    pdu.o
+                                                  main.o
+konwertuj_telefon_na_blok_eeprom                  konfiguracja.o
+                                                  main.o
+kopiuj_blok_eeprom_na_telefon                     konfiguracja.o
+                                                  main.o
+kopiuj_parametry_we_wy_z_eeprom                   wewy.o
+liczba_blyskow_led                                main.o
+liczba_komend_w_kolejce_SIM900                    poleceniagsm.o
+                                                  main.o
+liczba_odebranych_znakow_SIM900                   sim900.o
+                                                  main.o
+liczba_prob_wyslania_smsa                         main.o
+liczba_smsow_ech_do_wyslania                      main.o
+liczba_wykonanych_komend_identycznego_polecenia   main.o
+liczba_wysylanych_znakow_SIM900                   sim900.o
+                                                  main.o
+liczba_znakow_do_zapisu                           zapiseeprom.o
+                                                  main.o
+liczba_znakow_pdu_do_odebrania                    sim900.o
+licznik_100ms_dioda_led                           main.o
+licznik_100ms_procedura_inicjalizacyjna_SIM900    sim900.o
+                                                  main.o
+licznik_awaria_brak_zasiegu                       main.o
+licznik_bezpieczenstwa_opoznienie_wysylania_sms   main.o
+licznik_bezpieczenstwa_wykonywana_rozmowa         main.o
+licznik_blad_stanu_karty_SIM                      main.o
+licznik_blad_zalogowania_u_operatora              main.o
+licznik_cykli_przekaznika                         main.o
+                                                  wewy.o
+licznik_oczekiwanie_na_potwierdzenie_wyslania_znakow main.o
+licznik_ogolny_blad_zalogowania                   main.o
+licznik_opoznienie_oczekiwania_na_bajt_SIM900     sim900.o
+                                                  main.o
+licznik_przelacznik_wyjscia                       wewy.o
+                                                  interpretacjaSMS.o
+                                                  main.o
+licznik_reset_modulu_SIM900                       main.o
+licznik_reset_urzadzenia                          main.o
+licznik_service_lock_led_100ms                    main.o
+licznik_timeout_rozmowy_100ms                     main.o
+licznik_timeout_ussd_100ms                        main.o
+                                                  interpretacjaSMS.o
+licznik_wejscie                                   wewy.o
+                                                  main.o
+licznik_wstrzymanie_alarmow_po_inicjalizacji_100ms wewy.o
+licznik_wybudz_watki_10MS                         main.o
+licznik_wysylane_polecenie_SIM900                 main.o
+main                                              main.o
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
+maksymalny_czas_dzwonienia                        main.o
+max_oczekiwanie_na_odpowiedz                      main.o
+max_oczekiwanie_na_odpowiedz_at                   main.o
+memcmp                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp.o)
+                                                  main.o
+memcmp_P                                          /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcmp_P.o)
+                                                  interpretacjaSMS.o
+memcpy                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy.o)
+                                                  zapiseeprom.o
+                                                  main.o
+memcpy_P                                          /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memcpy_P.o)
+                                                  main.o
+memset                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(memset.o)
+                                                  konfiguracja.o
+                                                  main.o
+modul_zalogowany_w_sieci                          main.o
+nastepne_wysylane_polecenie_SIM900                main.o
+nazwa_operatora                                   main.o
+nie_wysylaj_echa_z_powodu_nietypowego_smsa        main.o
+nr_usunietego_uzytkownika_z_smsa                  interpretacjaSMS.o
+nr_wyslanego_znaku_SIM900                         sim900.o
+                                                  main.o
+nr_zapisanego_znaku                               zapiseeprom.o
+numer_bledu_cme                                   poleceniagsm.o
+                                                  main.o
+numer_bledu_cms                                   poleceniagsm.o
+                                                  main.o
+numer_powiadomien                                 pamiec_ram.o
+                                                  interpretacjaSMS.o
+                                                  main.o
+numer_skopiowanego_telefonu_do_raportu_uzytkownikow_brama main.o
+numer_telefonu_do_ktorego_dzwonic                 main.o
+                                                  interpretacjaSMS.o
+numer_telefonu_ktory_dzwoni                       main.o
+numer_telefonu_odebranego_smsa                    main.o
+                                                  interpretacjaSMS.o
+numer_telefonu_wysylanego_smsa                    main.o
+                                                  interpretacjaSMS.o
+obsluga_komendy_SIM900                            main.o
+obsluga_wysylania_sms                             main.o
+oczekiwanie_na_ussd                               main.o
+                                                  interpretacjaSMS.o
+odebrany_blok_SIM900                              sim900.o
+                                                  poleceniagsm.o
+                                                  main.o
+odpowiedz_na_polecenie                            main.o
+opoznienie_SIM900_100MS                           main.o
+opoznienie_wysylania_clipow_100MS                 main.o
+opoznienie_zatrzymaj_odpytywanie_urzadzenia       main.o
+oproznij_bufor_SIM900_po_bledzie                  main.o
+pdu_to_ascii                                      pdu.o
+                                                  main.o
+pobierz_czas_z_PDU                                pdu.o
+                                                  main.o
+pobierz_date_z_PDU                                pdu.o
+                                                  main.o
+pobierz_long                                      interpretacjaSMS.o
+pobierz_numer_telefonu                            interpretacjaSMS.o
+pobierz_numer_telefonu_nadawcy_z_PDU              pdu.o
+                                                  main.o
+pobierz_wyraz                                     interpretacjaSMS.o
+poczatek_polecenia_SIM900                         sim900.o
+                                                  poleceniagsm.o
+                                                  main.o
+podlaczona_karta_SIM_SIM900                       sim900.o
+                                                  main.o
+podlaczony_modul_gsm_SIM900                       sim900.o
+                                                  main.o
+polecenia_konczace_gsm                            poleceniagsm.o
+polozenie_otrzymanych_komend_SIM900               sim900.o
+                                                  poleceniagsm.o
+pomin_znak                                        interpretacjaSMS.o
+poprzedni_stan_logiczny_na_wejsciu                wewy.o
+porownaj_numer_telefonu                           konfiguracja.o
+porownaj_numer_telefonu_blok                      konfiguracja.o
+                                                  main.o
+porownaj_znaki                                    poleceniagsm.o
+powiadomienia_aktywne                             pamiec_ram.o
+                                                  interpretacjaSMS.o
+                                                  main.o
+poziom_sieci_gsm                                  poleceniagsm.o
+                                                  uart1_eeprom.o
+                                                  main.o
+pozycja_w_eeprom                                  zapiseeprom.o
+problem_z_wyslaniem_powiadomienia                 main.o
+procedura_inicjalizacyjna_SIM900_100MS            sim900.o
+                                                  main.o
+reset_modulu_SIM900                               main.o
+resetuj_polecenie_konczace                        poleceniagsm.o
+rtc_czas                                          komendy.o
+                                                  main.o
+service_lock_blink_count                          main.o
+service_lock_led_state                            main.o
+sms_pomijaj_aktualizacje_czasu                    main.o
+sms_timestamp_dzien                               sim900.o
+                                                  main.o
+sms_timestamp_godzina                             sim900.o
+                                                  main.o
+sms_timestamp_miesiac                             sim900.o
+                                                  main.o
+sms_timestamp_minuta                              sim900.o
+                                                  main.o
+sms_timestamp_rok                                 sim900.o
+                                                  main.o
+sms_timestamp_sekunda                             sim900.o
+                                                  main.o
+sms_trigger                                       main.o
+                                                  interpretacjaSMS.o
+sprawdz_blokade_serwisowa                         main.o
+sprawdz_kod                                       interpretacjaSMS.o
+sprawdz_przychodzaca_rozmowe                      main.o
+sprawdz_reset_ustawien                            interpretacjaSMS.o
+sprawdzaj_wejscie_CTS_SIM900                      sim900.o
+                                                  main.o
+sprintf                                           /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o)
+                                                  interpretacjaSMS.o
+                                                  main.o
+stan_cyklu_blysku                                 main.o
+stan_logiczny_na_wejsciu                          wewy.o
+                                                  main.o
+stan_wyjscie                                      interpretacjaSMS.o
+                                                  wewy.o
+                                                  main.o
+steruj_SIM900_100MS                               main.o
+steruj_SIM900_10MS                                main.o
+steruj_urzadzeniem_100MS                          main.o
+steruj_urzadzeniem_10MS                           main.o
+steruj_wejscia_10ms                               wewy.o
+                                                  main.o
+steruj_wejscia_wyjscia_100ms                      main.o
+steruj_wejsciem_reset_100ms                       main.o
+steruj_wyjscia_100ms                              wewy.o
+                                                  main.o
+strcat                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat.o)
+                                                  main.o
+strcat_P                                          /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcat_P.o)
+                                                  main.o
+strchr                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strchr.o)
+                                                  main.o
+strcmp                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcmp.o)
+                                                  interpretacjaSMS.o
+strcpy                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy.o)
+                                                  interpretacjaSMS.o
+                                                  main.o
+strcpy_P                                          /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strcpy_P.o)
+                                                  interpretacjaSMS.o
+                                                  main.o
+strncasecmp_P                                     /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncasecmp_P.o)
+                                                  interpretacjaSMS.o
+strncmp_P                                         /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncmp_P.o)
+                                                  main.o
+strncpy                                           /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strncpy.o)
+                                                  main.o
+strnlen                                           /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+strnlen_P                                         /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strnlen_P.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+strrev                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strrev.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(utoa_ncheck.o)
+strstr                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr.o)
+                                                  interpretacjaSMS.o
+                                                  main.o
+strstr_P                                          /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strstr_P.o)
+                                                  main.o
+strtol                                            /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtol.o)
+                                                  interpretacjaSMS.o
+                                                  main.o
+strtoul                                           /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(strtoul.o)
+                                                  poleceniagsm.o
+                                                  main.o
+tekst_wysylanego_smsa                             pamiec_ram.o
+                                                  interpretacjaSMS.o
+                                                  main.o
+test_dioda_wyjscia                                main.o
+test_sms_clip_100ms                               main.o
+test_wejscie                                      main.o
+toupper                                           /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(toupper.o)
+                                                  interpretacjaSMS.o
+trwa_rozmowa_przychodzaca_od_uzytkownika          main.o
+tryb_clip                                         main.o
+                                                  interpretacjaSMS.o
+tryb_pracy                                        main.o
+                                                  interpretacjaSMS.o
+uart1_data_available                              uart1_eeprom.o
+uart1_getc                                        uart1_eeprom.o
+uart1_init                                        uart1_eeprom.o
+                                                  main.o
+uart1_process_commands                            uart1_eeprom.o
+                                                  main.o
+uart1_putc                                        uart1_eeprom.o
+uart1_puts                                        uart1_eeprom.o
+ustaw_maksymalny_czas_dzwonienia                  main.o
+ustaw_parametry_dla_bezpieczenstwa                main.o
+ustaw_wyjscie_clip                                main.o
+usun_komende                                      komendy.o
+                                                  main.o
+vfprintf                                          /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(vfprintf_std.o)
+                                                  /opt/homebrew/Cellar/avr-gcc@9/9.5.0/lib/avr-gcc/9/gcc/avr/9.5.0/../../../../../../avr/lib/avr5/libc.a(sprintf.o)
+watchdog_sms_aktywny                              main.o
+watchdog_sms_licznik_100ms                        main.o
+watchdog_sms_safe_mode_100ms                      main.o
+watchdog_sms_trwa_reset                           main.o
+wolne_zdarzenie_timer                             main.o
+wpisz_centrum_sms_w_formacie_sms                  pdu.o
+wpisz_telefon_w_formacie_sms                      pdu.o
+wykonac_watki                                     main.o
+wykonac_watki_10MS                                main.o
+wykonaj_zdarzenie_timer                           main.o
+wykonanie_komend                                  main.o
+wykonanie_komend_SIM900                           main.o
+wykonanie_komend_powiadomien                      main.o
+wykonanie_komend_ukladow                          main.o
+wykonanie_polecenia_sms                           main.o
+wykonywanie_rozmowy_telefonicznej                 sim900.o
+                                                  main.o
+wymus_wylaczenie_wyjscia                          main.o
+                                                  interpretacjaSMS.o
+wyslanie_polecenia_ROM                            main.o
+wyslij_polecenie_RAM_SIM900                       sim900.o
+                                                  interpretacjaSMS.o
+                                                  main.o
+wyslij_polecenie_ROM_SIM900                       sim900.o
+                                                  main.o
+wyslij_sms                                        main.o
+wyslij_znaki_SIM900                               sim900.o
+                                                  main.o
+wysylanie_smsa_clipa                              main.o
+wysylany_blok_SIM900                              pamiec_ram.o
+                                                  interpretacjaSMS.o
+                                                  sim900.o
+                                                  main.o
+wyzerowanie_danych_SIM900                         main.o
+zakonczenie_polecenia_SIM900                      sim900.o
+                                                  poleceniagsm.o
+                                                  main.o
+zakonczenie_procedury_inicjalizacyjnej            sim900.o
+zakonczono_rozmowe_telefoniczna                   main.o
+zakonczono_wysylanie_smsa                         main.o
+zapis_w_eeprom_stanu_wyjsc                        main.o
+zapisz_bajt_w_EEPROM                              zapiseeprom.o
+                                                  main.o
+zapisz_naglowek_pdu                               pdu.o
+                                                  main.o
+zapisz_znak_w_eeprom                              zapiseeprom.o
+                                                  interpretacjaSMS.o
+                                                  wewy.o
+zapisz_znaki_w_eeprom                             zapiseeprom.o
+                                                  interpretacjaSMS.o
+                                                  main.o
+zapisz_znaki_w_eeprom_bez_kopiowania              zapiseeprom.o
+                                                  main.o
+zarejestrowane_komendy_od_SIM900                  poleceniagsm.o

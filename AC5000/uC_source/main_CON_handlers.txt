@@ -1,0 +1,50 @@
+  case INTERPRETACJA_SMS_CON_STATUS: {
+    // CON bez parametru - wyślij status
+    extern uchar powiadomienia_aktywne;
+    extern uchar numer_powiadomien[];
+    
+    strcpy((char *)numer_telefonu_wysylanego_smsa,
+           (char *)numer_telefonu_odebranego_smsa);
+    
+    if (powiadomienia_aktywne && numer_powiadomien[0] != '\0') {
+      // Pokaż ostatnie 6 cyfr
+      uchar len = strlen((char *)numer_powiadomien);
+      uchar *ostatnie_cyfry = (uchar *)numer_powiadomien + (len > 6 ? len - 6 : 0);
+      
+      strcpy_P((char *)tekst_wysylanego_smsa, PSTR("Notify ON: ..."));
+      strcat((char *)tekst_wysylanego_smsa, (char *)ostatnie_cyfry);
+    } else {
+      strcpy_P((char *)tekst_wysylanego_smsa, PSTR("Notify OFF"));
+    }
+    
+    dodaj_komende(KOMENDA_KOLEJKI_WYSLIJ_SMSA_TEXT);
+    zapal_diode_led_blyski(2);
+    break;
+  }
+  case INTERPRETACJA_SMS_CON_OFF: {
+    // CON OFF - wyłączono
+    strcpy((char *)numer_telefonu_wysylanego_smsa,
+           (char *)numer_telefonu_odebranego_smsa);
+    strcpy_P((char *)tekst_wysylanego_smsa, PSTR("Notify OFF"));
+    dodaj_komende(KOMENDA_KOLEJKI_WYSLIJ_SMSA_TEXT);
+    zapal_diode_led_blyski(2);
+    break;
+  }
+  case INTERPRETACJA_SMS_CON_ON: {
+    // CON <numer> - włączono
+    extern uchar numer_powiadomien[];
+    
+    strcpy((char *)numer_telefonu_wysylanego_smsa,
+           (char *)numer_telefonu_odebranego_smsa);
+    
+    // Pokaż ostatnie 6 cyfr zapisanego numeru
+    uchar len = strlen((char *)numer_powiadomien);
+    uchar *ostatnie_cyfry = (uchar *)numer_powiadomien + (len > 6 ? len - 6 : 0);
+    
+    strcpy_P((char *)tekst_wysylanego_smsa, PSTR("Notify ON: ..."));
+    strcat((char *)tekst_wysylanego_smsa, (char *)ostatnie_cyfry);
+    
+    dodaj_komende(KOMENDA_KOLEJKI_WYSLIJ_SMSA_TEXT);
+    zapal_diode_led_blyski(2);
+    break;
+  }

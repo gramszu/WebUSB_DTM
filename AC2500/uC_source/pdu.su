@@ -1,0 +1,10 @@
+pdu.c:35:6:pdu_to_ascii	9	static
+pdu.c:81:8:ascii_to_pdu_blok	10	static
+pdu.c:113:6:konwertuj_blok_dwa_znaki_na_znak_pdu	2	static
+pdu.c:127:8:pobierz_numer_telefonu_nadawcy_z_PDU	5	static
+pdu.c:171:14:pobierz_date_z_PDU	2	static
+pdu.c:182:14:pobierz_czas_z_PDU	2	static
+pdu.c:193:8:wpisz_telefon_w_formacie_sms	4	static
+pdu.c:224:8:wpisz_centrum_sms_w_formacie_sms	4	static
+pdu.c:255:8:zapisz_naglowek_pdu	6	static
+pdu.c:268:6:konwertuj_pdu_na_blok_wysylany	5	static

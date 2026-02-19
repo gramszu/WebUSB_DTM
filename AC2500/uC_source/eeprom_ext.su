@@ -1,0 +1,7 @@
+eeprom_ext.c:9:9:eeprom_read_byte	2	static
+eeprom_ext.c:16:6:eeprom_write_byte	2	static
+eeprom_ext.c:25:6:eeprom_update_byte	5	static
+eeprom_ext.c:31:6:eeprom_read_block	2	static
+eeprom_ext.c:40:6:eeprom_update_block	2	static
+eeprom_ext.c:51:10:eeprom_read_dword	10	static
+eeprom_ext.c:64:9:eeprom_is_ready	2	static

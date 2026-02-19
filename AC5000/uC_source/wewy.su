@@ -1,0 +1,6 @@
+wewy.c:25:7:aktualny_stan_logiczny_na_wejsciu	2	static
+wewy.c:37:6:aktualizuj_stan_wyzwolenia_wejsc_100ms	2	static
+wewy.c:87:6:steruj_wejscia_10ms	2	static
+wewy.c:109:6:steruj_wyjscia_100ms	6	static
+wewy.c:148:6:kopiuj_parametry_we_wy_z_eeprom	2	static
+wewy.c:160:6:inicjalizuj_parametry_we_wy	2	static

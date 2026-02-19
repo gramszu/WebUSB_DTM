@@ -1,0 +1,2016 @@
+   1               		.file	"sim900.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	wyslij_znaki_SIM900
+  12               	wyslij_znaki_SIM900:
+  13               	.LVL0:
+  14               	.LFB1:
+  15               		.file 1 "sim900.c"
+   1:sim900.c      **** #include "sim900.h"
+   2:sim900.c      **** #include "pin_ATmega328.h" // Dodano
+   3:sim900.c      **** #include <avr/interrupt.h>
+   4:sim900.c      **** #include <avr/io.h>
+   5:sim900.c      **** #include <string.h>
+   6:sim900.c      **** 
+   7:sim900.c      **** #define FCPU_SIM900 F_CPU
+   8:sim900.c      **** #define FABRYCZNA_PREDKOSC_STARTOWA_SIM900 115200
+   9:sim900.c      **** #define VUBRR_SIM900(VUART) (FCPU_SIM900 / (VUART * 16L) - 1)
+  10:sim900.c      **** #define VUBRR_FABRYCZNA_PREDKOSC_STARTOWA_SIM900                               \
+  11:sim900.c      ****   VUBRR_SIM900(FABRYCZNA_PREDKOSC_STARTOWA_SIM900)
+  12:sim900.c      **** 
+  13:sim900.c      **** uchar odebrany_blok_SIM900[MAX_LICZBA_ODBIERANYCH_ZNAKOW_SIM900 + 1];
+  14:sim900.c      **** volatile uint liczba_odebranych_znakow_SIM900;
+  15:sim900.c      **** volatile uchar licznik_opoznienie_oczekiwania_na_bajt_SIM900;
+  16:sim900.c      **** 
+  17:sim900.c      **** // SMS timestamp synchronization variables (Date)
+  18:sim900.c      **** uchar sms_timestamp_rok = 0;
+  19:sim900.c      **** uchar sms_timestamp_miesiac = 0;
+  20:sim900.c      **** uchar sms_timestamp_dzien = 0;
+  21:sim900.c      **** uchar sms_timestamp_godzina = 0;
+  22:sim900.c      **** uchar sms_timestamp_minuta = 0;
+  23:sim900.c      **** uchar sms_timestamp_sekunda = 0;
+  24:sim900.c      **** 
+  25:sim900.c      **** volatile uint nr_wyslanego_znaku_SIM900;
+  26:sim900.c      **** volatile uchar sprawdzaj_wejscie_CTS_SIM900 = FALSE;
+  27:sim900.c      **** volatile uint liczba_wysylanych_znakow_SIM900;
+  28:sim900.c      **** 
+  29:sim900.c      **** volatile uchar komenda_SIM900 = BRAK_KOMENDY_SIM900;
+  30:sim900.c      **** uchar podlaczony_modul_gsm_SIM900 = FALSE;
+  31:sim900.c      **** uchar podlaczona_karta_SIM_SIM900 = FALSE;
+  32:sim900.c      **** uchar wykonywanie_rozmowy_telefonicznej;
+  33:sim900.c      **** 
+  34:sim900.c      **** volatile uint liczba_znakow_pdu_do_odebrania;
+  35:sim900.c      **** 
+  36:sim900.c      **** volatile uint zakonczenie_polecenia_SIM900;
+  37:sim900.c      **** volatile uint poczatek_polecenia_SIM900;
+  38:sim900.c      **** volatile uchar czy_jest_nowe_polecenie_SIM900;
+  39:sim900.c      **** volatile uchar czekanie_na_odebranie_zachety;
+  40:sim900.c      **** volatile uchar flaga_odebrany_znak_zachety;
+  41:sim900.c      **** volatile uint polozenie_otrzymanych_komend_SIM900
+  42:sim900.c      ****     [LICZBA_POLOZEN_OTRZYMANYCH_KOMEND_SIM900];
+  43:sim900.c      **** 
+  44:sim900.c      **** void wyslij_znaki_SIM900(const uint liczba_znakow) {
+  16               		.loc 1 44 52 view -0
+  17               		.cfi_startproc
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  45:sim900.c      ****   liczba_wysylanych_znakow_SIM900 = liczba_znakow;
+  22               		.loc 1 45 3 view .LVU1
+  23               		.loc 1 45 35 is_stmt 0 view .LVU2
+  24 0000 9093 0000 		sts liczba_wysylanych_znakow_SIM900+1,r25
+  25 0004 8093 0000 		sts liczba_wysylanych_znakow_SIM900,r24
+  46:sim900.c      ****   nr_wyslanego_znaku_SIM900 = 0;
+  26               		.loc 1 46 3 is_stmt 1 view .LVU3
+  27               		.loc 1 46 29 is_stmt 0 view .LVU4
+  28 0008 1092 0000 		sts nr_wyslanego_znaku_SIM900+1,__zero_reg__
+  29 000c 1092 0000 		sts nr_wyslanego_znaku_SIM900,__zero_reg__
+  47:sim900.c      ****   UCSRA_SIM900 |= BIT(TXC);
+  30               		.loc 1 47 3 is_stmt 1 view .LVU5
+  31               		.loc 1 47 16 is_stmt 0 view .LVU6
+  32 0010 E0EC      		ldi r30,lo8(-64)
+  33 0012 F0E0      		ldi r31,0
+  34 0014 8081      		ld r24,Z
+  35               	.LVL1:
+  36               		.loc 1 47 16 view .LVU7
+  37 0016 8064      		ori r24,lo8(64)
+  38 0018 8083      		st Z,r24
+  48:sim900.c      ****   WYKONAJ_CLI_SEI(WLACZ_PRZERWANIE_WYSYLANIA_DANYCH_SIM900());
+  39               		.loc 1 48 3 is_stmt 1 view .LVU8
+  40               		.loc 1 48 3 view .LVU9
+  41               	/* #APP */
+  42               	 ;  48 "sim900.c" 1
+  43 001a F894      		cli
+  44               	 ;  0 "" 2
+  45               		.loc 1 48 3 view .LVU10
+  46               	/* #NOAPP */
+  47 001c E1EC      		ldi r30,lo8(-63)
+  48 001e F0E0      		ldi r31,0
+  49 0020 8081      		ld r24,Z
+  50 0022 8064      		ori r24,lo8(64)
+  51 0024 8083      		st Z,r24
+  52               		.loc 1 48 3 view .LVU11
+  53               	/* #APP */
+  54               	 ;  48 "sim900.c" 1
+  55 0026 7894      		sei
+  56               	 ;  0 "" 2
+  57               		.loc 1 48 3 view .LVU12
+  58               	 ;  48 "sim900.c" 1
+  59 0028 0000      		nop
+  60               	 ;  0 "" 2
+  61               		.loc 1 48 3 view .LVU13
+  49:sim900.c      ****   sprawdzaj_wejscie_CTS_SIM900 = TRUE;
+  62               		.loc 1 49 3 view .LVU14
+  63               		.loc 1 49 32 is_stmt 0 view .LVU15
+  64               	/* #NOAPP */
+  65 002a 8FEF      		ldi r24,lo8(-1)
+  66 002c 8093 0000 		sts sprawdzaj_wejscie_CTS_SIM900,r24
+  67               	/* epilogue start */
+  50:sim900.c      **** }
+  68               		.loc 1 50 1 view .LVU16
+  69 0030 0895      		ret
+  70               		.cfi_endproc
+  71               	.LFE1:
+  73               	.global	wyslij_polecenie_ROM_SIM900
+  75               	wyslij_polecenie_ROM_SIM900:
+  76               	.LVL2:
+  77               	.LFB2:
+  51:sim900.c      **** 
+  52:sim900.c      **** void wyslij_polecenie_ROM_SIM900(PGM_P polecenie) {
+  78               		.loc 1 52 51 is_stmt 1 view -0
+  79               		.cfi_startproc
+  80               		.loc 1 52 51 is_stmt 0 view .LVU18
+  81 0032 CF93      		push r28
+  82               	.LCFI0:
+  83               		.cfi_def_cfa_offset 3
+  84               		.cfi_offset 28, -2
+  85 0034 DF93      		push r29
+  86               	.LCFI1:
+  87               		.cfi_def_cfa_offset 4
+  88               		.cfi_offset 29, -3
+  89               	/* prologue: function */
+  90               	/* frame size = 0 */
+  91               	/* stack size = 2 */
+  92               	.L__stack_usage = 2
+  53:sim900.c      ****   wysylany_blok_SIM900[0] = 'A';
+  93               		.loc 1 53 3 is_stmt 1 view .LVU19
+  94               		.loc 1 53 27 is_stmt 0 view .LVU20
+  95 0036 21E4      		ldi r18,lo8(65)
+  96 0038 2093 0000 		sts wysylany_blok_SIM900,r18
+  54:sim900.c      ****   wysylany_blok_SIM900[1] = 'T';
+  97               		.loc 1 54 3 is_stmt 1 view .LVU21
+  98               		.loc 1 54 27 is_stmt 0 view .LVU22
+  99 003c 24E5      		ldi r18,lo8(84)
+ 100 003e 2093 0000 		sts wysylany_blok_SIM900+1,r18
+  55:sim900.c      ****   uchar *w = &wysylany_blok_SIM900[2];
+ 101               		.loc 1 55 3 is_stmt 1 view .LVU23
+ 102               	.LVL3:
+  56:sim900.c      ****   uchar l = 3;
+ 103               		.loc 1 56 3 view .LVU24
+  57:sim900.c      ****   while ((*w = pgm_read_byte(polecenie)))
+ 104               		.loc 1 57 3 view .LVU25
+ 105 0042 A0E0      		ldi r26,lo8(wysylany_blok_SIM900+2)
+ 106 0044 B0E0      		ldi r27,hi8(wysylany_blok_SIM900+2)
+ 107               	.LVL4:
+ 108               		.loc 1 57 9 is_stmt 0 view .LVU26
+ 109 0046 FC01      		movw r30,r24
+ 110 0048 93E0      		ldi r25,lo8(3)
+ 111 004a 981B      		sub r25,r24
+ 112               	.LVL5:
+ 113               	.L3:
+ 114               		.loc 1 57 9 view .LVU27
+ 115 004c 892F      		mov r24,r25
+ 116 004e 8E0F      		add r24,r30
+ 117 0050 ED01      		movw r28,r26
+ 118               	.LVL6:
+ 119               		.loc 1 57 9 is_stmt 1 view .LVU28
+ 120               	.LBB2:
+ 121               		.loc 1 57 16 view .LVU29
+ 122               		.loc 1 57 16 view .LVU30
+ 123               		.loc 1 57 16 view .LVU31
+ 124               	/* #APP */
+ 125               	 ;  57 "sim900.c" 1
+ 126 0052 2491      		lpm r18, Z
+ 127               		
+ 128               	 ;  0 "" 2
+ 129               	.LVL7:
+ 130               		.loc 1 57 16 view .LVU32
+ 131               	/* #NOAPP */
+ 132               	.LBE2:
+ 133               		.loc 1 57 14 is_stmt 0 view .LVU33
+ 134 0054 2D93      		st X+,r18
+ 135               		.loc 1 57 9 view .LVU34
+ 136 0056 2111      		cpse r18,__zero_reg__
+ 137 0058 00C0      		rjmp .L4
+  58:sim900.c      ****     ++w, ++polecenie, ++l;
+  59:sim900.c      ****   *w = ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR;
+ 138               		.loc 1 59 3 is_stmt 1 view .LVU35
+ 139               		.loc 1 59 6 is_stmt 0 view .LVU36
+ 140 005a 9DE0      		ldi r25,lo8(13)
+ 141 005c 9883      		st Y,r25
+  60:sim900.c      ****   wyslij_znaki_SIM900(l);
+ 142               		.loc 1 60 3 is_stmt 1 view .LVU37
+ 143 005e 90E0      		ldi r25,0
+ 144               	/* epilogue start */
+  61:sim900.c      **** }
+ 145               		.loc 1 61 1 is_stmt 0 view .LVU38
+ 146 0060 DF91      		pop r29
+ 147 0062 CF91      		pop r28
+ 148               	.LVL8:
+  60:sim900.c      ****   wyslij_znaki_SIM900(l);
+ 149               		.loc 1 60 3 view .LVU39
+ 150 0064 0C94 0000 		jmp wyslij_znaki_SIM900
+ 151               	.LVL9:
+ 152               	.L4:
+  58:sim900.c      ****     ++w, ++polecenie, ++l;
+ 153               		.loc 1 58 5 is_stmt 1 view .LVU40
+  58:sim900.c      ****     ++w, ++polecenie, ++l;
+ 154               		.loc 1 58 10 is_stmt 0 view .LVU41
+ 155 0068 3196      		adiw r30,1
+ 156               	.LVL10:
+  58:sim900.c      ****     ++w, ++polecenie, ++l;
+ 157               		.loc 1 58 10 view .LVU42
+ 158 006a 00C0      		rjmp .L3
+ 159               		.cfi_endproc
+ 160               	.LFE2:
+ 162               	.global	wyslij_polecenie_RAM_SIM900
+ 164               	wyslij_polecenie_RAM_SIM900:
+ 165               	.LFB3:
+  62:sim900.c      **** 
+  63:sim900.c      **** void wyslij_polecenie_RAM_SIM900(void) {
+ 166               		.loc 1 63 40 is_stmt 1 view -0
+ 167               		.cfi_startproc
+ 168               	/* prologue: function */
+ 169               	/* frame size = 0 */
+ 170               	/* stack size = 0 */
+ 171               	.L__stack_usage = 0
+  64:sim900.c      ****   wysylany_blok_SIM900[0] = 'A';
+ 172               		.loc 1 64 3 view .LVU44
+ 173               		.loc 1 64 27 is_stmt 0 view .LVU45
+ 174 006c E0E0      		ldi r30,lo8(wysylany_blok_SIM900)
+ 175 006e F0E0      		ldi r31,hi8(wysylany_blok_SIM900)
+ 176 0070 81E4      		ldi r24,lo8(65)
+ 177 0072 8083      		st Z,r24
+  65:sim900.c      ****   wysylany_blok_SIM900[1] = 'T';
+ 178               		.loc 1 65 3 is_stmt 1 view .LVU46
+ 179               		.loc 1 65 27 is_stmt 0 view .LVU47
+ 180 0074 84E5      		ldi r24,lo8(84)
+ 181 0076 8183      		std Z+1,r24
+  66:sim900.c      ****   const uchar l = strlen(wysylany_blok_SIM900);
+ 182               		.loc 1 66 3 is_stmt 1 view .LVU48
+ 183               		.loc 1 66 19 is_stmt 0 view .LVU49
+ 184               		0:
+ 185 0078 0190      		ld __tmp_reg__,Z+
+ 186 007a 0020      		tst __tmp_reg__
+ 187 007c 01F4      		brne 0b
+ 188 007e CF01      		movw r24,r30
+ 189 0080 8050      		subi r24,lo8(wysylany_blok_SIM900+1)
+ 190 0082 9040      		sbci r25,hi8(wysylany_blok_SIM900+1)
+ 191               	.LVL11:
+  67:sim900.c      ****   wysylany_blok_SIM900[l] = ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR;
+ 192               		.loc 1 67 3 is_stmt 1 view .LVU50
+ 193               		.loc 1 67 23 is_stmt 0 view .LVU51
+ 194 0084 9927      		clr r25
+ 195               	.LVL12:
+ 196               		.loc 1 67 27 view .LVU52
+ 197 0086 FC01      		movw r30,r24
+ 198               	.LVL13:
+ 199               		.loc 1 67 27 view .LVU53
+ 200 0088 E050      		subi r30,lo8(-(wysylany_blok_SIM900))
+ 201 008a F040      		sbci r31,hi8(-(wysylany_blok_SIM900))
+ 202 008c 2DE0      		ldi r18,lo8(13)
+ 203 008e 2083      		st Z,r18
+  68:sim900.c      ****   wyslij_znaki_SIM900(l + 1);
+ 204               		.loc 1 68 3 is_stmt 1 view .LVU54
+ 205 0090 0196      		adiw r24,1
+ 206 0092 0C94 0000 		jmp wyslij_znaki_SIM900
+ 207               	.LVL14:
+ 208               		.cfi_endproc
+ 209               	.LFE3:
+ 211               	.global	__vector_20
+ 213               	__vector_20:
+ 214               	.LFB4:
+  69:sim900.c      **** }
+  70:sim900.c      **** 
+  71:sim900.c      **** ISR(USART_TX_vect_SIM900, ISR_NOBLOCK) {
+ 215               		.loc 1 71 40 view -0
+ 216               		.cfi_startproc
+ 217 0096 7894      		sei
+ 218 0098 2F93 2FB7 		__gcc_isr 1
+ 218      2F93 
+ 219 009e 3F93      		push r19
+ 220               	.LCFI2:
+ 221               		.cfi_def_cfa_offset 3
+ 222               		.cfi_offset 19, -2
+ 223 00a0 8F93      		push r24
+ 224               	.LCFI3:
+ 225               		.cfi_def_cfa_offset 4
+ 226               		.cfi_offset 24, -3
+ 227 00a2 9F93      		push r25
+ 228               	.LCFI4:
+ 229               		.cfi_def_cfa_offset 5
+ 230               		.cfi_offset 25, -4
+ 231 00a4 EF93      		push r30
+ 232               	.LCFI5:
+ 233               		.cfi_def_cfa_offset 6
+ 234               		.cfi_offset 30, -5
+ 235 00a6 FF93      		push r31
+ 236               	.LCFI6:
+ 237               		.cfi_def_cfa_offset 7
+ 238               		.cfi_offset 31, -6
+ 239               	/* prologue: Interrupt */
+ 240               	/* frame size = 0 */
+ 241               	/* stack size = 5...9 */
+ 242               	.L__stack_usage = 5 + __gcc_isr.n_pushed
+  72:sim900.c      ****   if (nr_wyslanego_znaku_SIM900 >= liczba_wysylanych_znakow_SIM900) {
+ 243               		.loc 1 72 3 view .LVU56
+ 244               		.loc 1 72 33 is_stmt 0 view .LVU57
+ 245 00a8 2091 0000 		lds r18,nr_wyslanego_znaku_SIM900
+ 246 00ac 3091 0000 		lds r19,nr_wyslanego_znaku_SIM900+1
+ 247 00b0 8091 0000 		lds r24,liczba_wysylanych_znakow_SIM900
+ 248 00b4 9091 0000 		lds r25,liczba_wysylanych_znakow_SIM900+1
+ 249               		.loc 1 72 6 view .LVU58
+ 250 00b8 2817      		cp r18,r24
+ 251 00ba 3907      		cpc r19,r25
+ 252 00bc 00F0      		brlo .L7
+  73:sim900.c      ****     zakoncz_wysylanie_SIM900();
+ 253               		.loc 1 73 5 is_stmt 1 view .LVU59
+ 254               		.loc 1 73 5 view .LVU60
+ 255               	/* #APP */
+ 256               	 ;  73 "sim900.c" 1
+ 257 00be F894      		cli
+ 258               	 ;  0 "" 2
+ 259               		.loc 1 73 5 view .LVU61
+ 260               	/* #NOAPP */
+ 261 00c0 8091 C100 		lds r24,193
+ 262 00c4 8F7B      		andi r24,lo8(-65)
+ 263 00c6 8093 C100 		sts 193,r24
+ 264               		.loc 1 73 5 view .LVU62
+ 265               	/* #APP */
+ 266               	 ;  73 "sim900.c" 1
+ 267 00ca 7894      		sei
+ 268               	 ;  0 "" 2
+ 269               		.loc 1 73 5 view .LVU63
+ 270               	 ;  73 "sim900.c" 1
+ 271 00cc 0000      		nop
+ 272               	 ;  0 "" 2
+ 273               		.loc 1 73 5 view .LVU64
+ 274               		.loc 1 73 31 view .LVU65
+  74:sim900.c      ****     return;
+ 275               		.loc 1 74 5 view .LVU66
+ 276               	/* #NOAPP */
+ 277               	.L6:
+ 278               	/* epilogue start */
+  75:sim900.c      ****   }
+  76:sim900.c      ****   if (CZY_HANDSHAKING_CTS_ZEZWALA_NA_TRANSMISJE_SIM900()) {
+  77:sim900.c      ****     WSTAW_ZNAK_DO_BUFORA_SIM900();
+  78:sim900.c      ****   } else
+  79:sim900.c      ****     sprawdzaj_wejscie_CTS_SIM900 = TRUE;
+  80:sim900.c      **** }
+ 279               		.loc 1 80 1 is_stmt 0 view .LVU67
+ 280 00ce FF91      		pop r31
+ 281 00d0 EF91      		pop r30
+ 282 00d2 9F91      		pop r25
+ 283 00d4 8F91      		pop r24
+ 284 00d6 3F91      		pop r19
+ 285 00d8 2F91 2FBF 		__gcc_isr 2
+ 285      2F91 
+ 286 00de 1895      		reti
+ 287               	.L7:
+  76:sim900.c      ****     WSTAW_ZNAK_DO_BUFORA_SIM900();
+ 288               		.loc 1 76 3 is_stmt 1 view .LVU68
+  76:sim900.c      ****     WSTAW_ZNAK_DO_BUFORA_SIM900();
+ 289               		.loc 1 76 6 is_stmt 0 view .LVU69
+ 290 00e0 3299      		sbic 0x6,2
+ 291 00e2 00C0      		rjmp .L9
+ 292               	.LBB3:
+  77:sim900.c      ****   } else
+ 293               		.loc 1 77 5 is_stmt 1 view .LVU70
+ 294 00e4 8091 0000 		lds r24,nr_wyslanego_znaku_SIM900
+ 295 00e8 9091 0000 		lds r25,nr_wyslanego_znaku_SIM900+1
+ 296               	.LVL15:
+  77:sim900.c      ****   } else
+ 297               		.loc 1 77 5 view .LVU71
+ 298 00ec FC01      		movw r30,r24
+ 299 00ee E050      		subi r30,lo8(-(wysylany_blok_SIM900))
+ 300 00f0 F040      		sbci r31,hi8(-(wysylany_blok_SIM900))
+ 301 00f2 2081      		ld r18,Z
+ 302               	.LVL16:
+  77:sim900.c      ****   } else
+ 303               		.loc 1 77 5 view .LVU72
+ 304 00f4 0196      		adiw r24,1
+ 305               	.LVL17:
+  77:sim900.c      ****   } else
+ 306               		.loc 1 77 5 is_stmt 0 view .LVU73
+ 307 00f6 9093 0000 		sts nr_wyslanego_znaku_SIM900+1,r25
+ 308 00fa 8093 0000 		sts nr_wyslanego_znaku_SIM900,r24
+  77:sim900.c      ****   } else
+ 309               		.loc 1 77 5 is_stmt 1 view .LVU74
+ 310 00fe 2093 C600 		sts 198,r18
+ 311               	.LBE3:
+  77:sim900.c      ****   } else
+ 312               		.loc 1 77 34 view .LVU75
+ 313 0102 00C0      		rjmp .L6
+ 314               	.LVL18:
+ 315               	.L9:
+  79:sim900.c      **** }
+ 316               		.loc 1 79 5 view .LVU76
+  79:sim900.c      **** }
+ 317               		.loc 1 79 34 is_stmt 0 view .LVU77
+ 318 0104 8FEF      		ldi r24,lo8(-1)
+ 319 0106 8093 0000 		sts sprawdzaj_wejscie_CTS_SIM900,r24
+ 320 010a 00C0      		rjmp .L6
+ 321               		__gcc_isr 0,r18
+ 322               		.cfi_endproc
+ 323               	.LFE4:
+ 325               	.global	__vector_18
+ 327               	__vector_18:
+ 328               	.LFB5:
+  81:sim900.c      **** 
+  82:sim900.c      **** #ifdef WLACZ_PODGLAD_TRANSMISJI_ODBIORU_SIMCOM_NA_USB
+  83:sim900.c      **** #warning "GSM: Wlaczony podglad odbioru danych SIM900 po USB"
+  84:sim900.c      **** #endif
+  85:sim900.c      **** 
+  86:sim900.c      **** #ifdef WLACZ_PODGLAD_TRANSMISJI_WYSYLANIA_SIMCOM_NA_USB
+  87:sim900.c      **** #warning "GSM: Wlaczony podglad transmisji danych SIM900 po USB"
+  88:sim900.c      **** #endif
+  89:sim900.c      **** 
+  90:sim900.c      **** ISR(USART_RX_vect_SIM900, ISR_NAKED) {
+ 329               		.loc 1 90 38 is_stmt 1 view -0
+ 330               		.cfi_startproc
+ 331               	/* prologue: naked */
+ 332               	/* frame size = 0 */
+ 333               	/* stack size = 0 */
+ 334               	.L__stack_usage = 0
+  91:sim900.c      ****   volatile register uchar tmp asm("r24");
+ 335               		.loc 1 91 3 view .LVU79
+  92:sim900.c      ****   register uchar znak_UDR asm("r20");
+ 336               		.loc 1 92 3 view .LVU80
+  93:sim900.c      ****   register uint l asm("r18");
+ 337               		.loc 1 93 3 view .LVU81
+  94:sim900.c      ****   register uchar *ptr asm("r30");
+ 338               		.loc 1 94 3 view .LVU82
+  95:sim900.c      ****   PUSH(tmp);
+ 339               		.loc 1 95 3 view .LVU83
+ 340               	/* #APP */
+ 341               	 ;  95 "sim900.c" 1
+ 342 010c 8F93      		push r24
+ 343               		
+ 344               	 ;  0 "" 2
+  96:sim900.c      ****   tmp = SREG;
+ 345               		.loc 1 96 3 view .LVU84
+ 346               		.loc 1 96 9 is_stmt 0 view .LVU85
+ 347               	/* #NOAPP */
+ 348 010e 8FB7      		in r24,__SREG__
+  97:sim900.c      ****   PUSH(tmp);
+ 349               		.loc 1 97 3 is_stmt 1 view .LVU86
+ 350               	/* #APP */
+ 351               	 ;  97 "sim900.c" 1
+ 352 0110 8F93      		push r24
+ 353               		
+ 354               	 ;  0 "" 2
+  98:sim900.c      ****   WYLACZ_PRZERWANIE_ODBIORU_DANYCH_SIM900();
+ 355               		.loc 1 98 3 view .LVU87
+ 356               	/* #NOAPP */
+ 357 0112 8091 C100 		lds r24,193
+ 358 0116 8F77      		andi r24,lo8(127)
+ 359 0118 8093 C100 		sts 193,r24
+  99:sim900.c      ****   sei();
+ 360               		.loc 1 99 3 view .LVU88
+ 361               	/* #APP */
+ 362               	 ;  99 "sim900.c" 1
+ 363 011c 7894      		sei
+ 364               	 ;  0 "" 2
+ 100:sim900.c      **** #ifdef RAMPZ
+ 101:sim900.c      ****   tmp = RAMPZ;
+ 102:sim900.c      ****   PUSH(tmp);
+ 103:sim900.c      **** #endif
+ 104:sim900.c      ****   asm volatile("lds %0, " ADRES_UDR_SIM900 " " : "=r"(tmp) :);
+ 365               		.loc 1 104 3 view .LVU89
+ 366               	 ;  104 "sim900.c" 1
+ 367 011e 8091 C600 		lds r24, 0x00C6 
+ 368               	 ;  0 "" 2
+ 105:sim900.c      **** #ifdef WLACZ_PODGLAD_TRANSMISJI_ODBIORU_SIMCOM_NA_USB
+ 106:sim900.c      ****   asm volatile("sts " ADRES_UDR_USB ", %0 " : "=r"(tmp) :);
+ 107:sim900.c      **** #endif
+ 108:sim900.c      ****   PUSH_TXT("r0");
+ 369               		.loc 1 108 3 view .LVU90
+ 370               	 ;  108 "sim900.c" 1
+ 371 0122 0F92      		push r0
+ 372               		
+ 373               	 ;  0 "" 2
+ 109:sim900.c      ****   PUSH(znak_UDR);
+ 374               		.loc 1 109 3 view .LVU91
+ 375               	 ;  109 "sim900.c" 1
+ 376 0124 4F93      		push r20
+ 377               		
+ 378               	 ;  0 "" 2
+ 110:sim900.c      ****   znak_UDR = tmp;
+ 379               		.loc 1 110 3 view .LVU92
+ 111:sim900.c      ****   PUSH_TXT("__zero_reg__");
+ 380               		.loc 1 111 3 view .LVU93
+ 381               	 ;  111 "sim900.c" 1
+ 382 0126 1F92      		push __zero_reg__
+ 383               		
+ 384               	 ;  0 "" 2
+ 112:sim900.c      ****   CLEAR_TXT("__zero_reg__");
+ 385               		.loc 1 112 3 view .LVU94
+ 386               	 ;  112 "sim900.c" 1
+ 387 0128 1124      		eor __zero_reg__ , __zero_reg__
+ 388               		
+ 389               	 ;  0 "" 2
+ 113:sim900.c      ****   PUSH_TXT("r18");
+ 390               		.loc 1 113 3 view .LVU95
+ 391               	 ;  113 "sim900.c" 1
+ 392 012a 2F93      		push r18
+ 393               		
+ 394               	 ;  0 "" 2
+ 114:sim900.c      ****   PUSH_TXT("r19");
+ 395               		.loc 1 114 3 view .LVU96
+ 396               	 ;  114 "sim900.c" 1
+ 397 012c 3F93      		push r19
+ 398               		
+ 399               	 ;  0 "" 2
+ 115:sim900.c      ****   PUSH_TXT("r30");
+ 400               		.loc 1 115 3 view .LVU97
+ 401               	 ;  115 "sim900.c" 1
+ 402 012e EF93      		push r30
+ 403               		
+ 404               	 ;  0 "" 2
+ 116:sim900.c      ****   PUSH_TXT("r31");
+ 405               		.loc 1 116 3 view .LVU98
+ 406               	 ;  116 "sim900.c" 1
+ 407 0130 FF93      		push r31
+ 408               		
+ 409               	 ;  0 "" 2
+ 117:sim900.c      ****   PUSH_TXT("r26");
+ 410               		.loc 1 117 3 view .LVU99
+ 411               	 ;  117 "sim900.c" 1
+ 412 0132 AF93      		push r26
+ 413               		
+ 414               	 ;  0 "" 2
+ 118:sim900.c      ****   PUSH_TXT("r27");
+ 415               		.loc 1 118 3 view .LVU100
+ 416               	 ;  118 "sim900.c" 1
+ 417 0134 BF93      		push r27
+ 418               		
+ 419               	 ;  0 "" 2
+ 119:sim900.c      ****   PUSH_TXT("r25");
+ 420               		.loc 1 119 3 view .LVU101
+ 421               	 ;  119 "sim900.c" 1
+ 422 0136 9F93      		push r25
+ 423               		
+ 424               	 ;  0 "" 2
+ 120:sim900.c      ****   l = liczba_odebranych_znakow_SIM900;
+ 425               		.loc 1 120 3 view .LVU102
+ 426               		.loc 1 120 5 is_stmt 0 view .LVU103
+ 427               	/* #NOAPP */
+ 428 0138 2091 0000 		lds r18,liczba_odebranych_znakow_SIM900
+ 429 013c 3091 0000 		lds r19,liczba_odebranych_znakow_SIM900+1
+ 121:sim900.c      ****   if (tmp != 0xFF) {
+ 430               		.loc 1 121 3 is_stmt 1 view .LVU104
+ 431               		.loc 1 121 6 is_stmt 0 view .LVU105
+ 432 0140 8F3F      		cpi r24,lo8(-1)
+ 433 0142 01F4      		brne .+2
+ 434 0144 00C0      		rjmp .L11
+ 122:sim900.c      ****     ptr = odebrany_blok_SIM900;
+ 435               		.loc 1 122 5 is_stmt 1 view .LVU106
+ 436               		.loc 1 122 9 is_stmt 0 view .LVU107
+ 437 0146 E0E0      		ldi r30,lo8(odebrany_blok_SIM900)
+ 438 0148 F0E0      		ldi r31,hi8(odebrany_blok_SIM900)
+ 123:sim900.c      ****     if (l < MAX_LICZBA_ODBIERANYCH_ZNAKOW_SIM900) {
+ 439               		.loc 1 123 5 is_stmt 1 view .LVU108
+ 440               		.loc 1 123 11 is_stmt 0 view .LVU109
+ 441 014a A901      		movw r20,r18
+ 442               		.loc 1 123 8 view .LVU110
+ 443 014c 2C37      		cpi r18,124
+ 444 014e 91E0      		ldi r25,1
+ 445 0150 3907      		cpc r19,r25
+ 446 0152 00F0      		brlo .+2
+ 447 0154 00C0      		rjmp .L12
+ 124:sim900.c      ****       if (l != 0) {
+ 448               		.loc 1 124 7 is_stmt 1 view .LVU111
+ 449               		.loc 1 124 10 is_stmt 0 view .LVU112
+ 450 0156 2115      		cp r18,__zero_reg__
+ 451 0158 3105      		cpc r19,__zero_reg__
+ 452 015a 01F4      		brne .L13
+ 453               	.L17:
+ 125:sim900.c      ****         tmp = *ptr;
+ 126:sim900.c      ****         if (znak_UDR == ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR &&
+ 127:sim900.c      ****             tmp != ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR &&
+ 128:sim900.c      ****             tmp != ZNAK_KONCA_ODBIERANIA_ZNAKOW_LF) {
+ 129:sim900.c      ****           if (!czy_jest_nowe_polecenie_SIM900) {
+ 130:sim900.c      ****             komenda_SIM900 = KOMENDA_SIM900_WYSLANE_POLECENIE;
+ 131:sim900.c      ****             zakoncz_odbieranie_SIM900();
+ 132:sim900.c      ****             poczatek_polecenia_SIM900 = 0;
+ 133:sim900.c      ****             zakonczenie_polecenia_SIM900 = 0;
+ 134:sim900.c      ****             czy_jest_nowe_polecenie_SIM900 = FALSE;
+ 135:sim900.c      ****           }
+ 136:sim900.c      ****         }
+ 137:sim900.c      ****       }
+ 138:sim900.c      ****       if ((l == 0 || ptr[0] != ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR) &&
+ 454               		.loc 1 138 64 view .LVU113
+ 455 015c 8A30      		cpi r24,lo8(10)
+ 456 015e 01F0      		breq .+2
+ 457 0160 00C0      		rjmp .L18
+ 458 0162 00C0      		rjmp .L14
+ 459               	.L13:
+ 125:sim900.c      ****         tmp = *ptr;
+ 460               		.loc 1 125 9 is_stmt 1 view .LVU114
+ 125:sim900.c      ****         tmp = *ptr;
+ 461               		.loc 1 125 15 is_stmt 0 view .LVU115
+ 462 0164 9091 0000 		lds r25,odebrany_blok_SIM900
+ 126:sim900.c      ****             tmp != ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR &&
+ 463               		.loc 1 126 9 is_stmt 1 view .LVU116
+ 126:sim900.c      ****             tmp != ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR &&
+ 464               		.loc 1 126 12 is_stmt 0 view .LVU117
+ 465 0168 8D30      		cpi r24,lo8(13)
+ 466 016a 01F4      		brne .L16
+ 126:sim900.c      ****             tmp != ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR &&
+ 467               		.loc 1 126 56 discriminator 1 view .LVU118
+ 468 016c 9D30      		cpi r25,lo8(13)
+ 469 016e 01F0      		breq .L16
+ 127:sim900.c      ****             tmp != ZNAK_KONCA_ODBIERANIA_ZNAKOW_LF) {
+ 470               		.loc 1 127 51 view .LVU119
+ 471 0170 9A30      		cpi r25,lo8(10)
+ 472 0172 01F0      		breq .L16
+ 129:sim900.c      ****             komenda_SIM900 = KOMENDA_SIM900_WYSLANE_POLECENIE;
+ 473               		.loc 1 129 11 is_stmt 1 view .LVU120
+ 129:sim900.c      ****             komenda_SIM900 = KOMENDA_SIM900_WYSLANE_POLECENIE;
+ 474               		.loc 1 129 15 is_stmt 0 view .LVU121
+ 475 0174 9091 0000 		lds r25,czy_jest_nowe_polecenie_SIM900
+ 129:sim900.c      ****             komenda_SIM900 = KOMENDA_SIM900_WYSLANE_POLECENIE;
+ 476               		.loc 1 129 14 view .LVU122
+ 477 0178 9111      		cpse r25,__zero_reg__
+ 478 017a 00C0      		rjmp .L16
+ 130:sim900.c      ****             zakoncz_odbieranie_SIM900();
+ 479               		.loc 1 130 13 is_stmt 1 view .LVU123
+ 130:sim900.c      ****             zakoncz_odbieranie_SIM900();
+ 480               		.loc 1 130 28 is_stmt 0 view .LVU124
+ 481 017c 91E8      		ldi r25,lo8(-127)
+ 482 017e 9093 0000 		sts komenda_SIM900,r25
+ 131:sim900.c      ****             poczatek_polecenia_SIM900 = 0;
+ 483               		.loc 1 131 13 is_stmt 1 view .LVU125
+ 484 0182 439A      		sbi 0x8,3
+ 131:sim900.c      ****             poczatek_polecenia_SIM900 = 0;
+ 485               		.loc 1 131 13 view .LVU126
+ 131:sim900.c      ****             poczatek_polecenia_SIM900 = 0;
+ 486               		.loc 1 131 13 view .LVU127
+ 487               	/* #APP */
+ 488               	 ;  131 "sim900.c" 1
+ 489 0184 F894      		cli
+ 490               	 ;  0 "" 2
+ 131:sim900.c      ****             poczatek_polecenia_SIM900 = 0;
+ 491               		.loc 1 131 13 view .LVU128
+ 492               	/* #NOAPP */
+ 493 0186 9091 C100 		lds r25,193
+ 494 018a 9F77      		andi r25,lo8(127)
+ 495 018c 9093 C100 		sts 193,r25
+ 131:sim900.c      ****             poczatek_polecenia_SIM900 = 0;
+ 496               		.loc 1 131 13 view .LVU129
+ 497 0190 90B7      		in r25,0x30
+ 498 0192 9D7F      		andi r25,lo8(-3)
+ 499 0194 90BF      		out 0x30,r25
+ 131:sim900.c      ****             poczatek_polecenia_SIM900 = 0;
+ 500               		.loc 1 131 13 view .LVU130
+ 501               	/* #APP */
+ 502               	 ;  131 "sim900.c" 1
+ 503 0196 7894      		sei
+ 504               	 ;  0 "" 2
+ 131:sim900.c      ****             poczatek_polecenia_SIM900 = 0;
+ 505               		.loc 1 131 13 view .LVU131
+ 506               	 ;  131 "sim900.c" 1
+ 507 0198 0000      		nop
+ 508               	 ;  0 "" 2
+ 131:sim900.c      ****             poczatek_polecenia_SIM900 = 0;
+ 509               		.loc 1 131 13 view .LVU132
+ 131:sim900.c      ****             poczatek_polecenia_SIM900 = 0;
+ 510               		.loc 1 131 40 view .LVU133
+ 132:sim900.c      ****             zakonczenie_polecenia_SIM900 = 0;
+ 511               		.loc 1 132 13 view .LVU134
+ 132:sim900.c      ****             zakonczenie_polecenia_SIM900 = 0;
+ 512               		.loc 1 132 39 is_stmt 0 view .LVU135
+ 513               	/* #NOAPP */
+ 514 019a 1092 0000 		sts poczatek_polecenia_SIM900+1,__zero_reg__
+ 515 019e 1092 0000 		sts poczatek_polecenia_SIM900,__zero_reg__
+ 133:sim900.c      ****             czy_jest_nowe_polecenie_SIM900 = FALSE;
+ 516               		.loc 1 133 13 is_stmt 1 view .LVU136
+ 133:sim900.c      ****             czy_jest_nowe_polecenie_SIM900 = FALSE;
+ 517               		.loc 1 133 42 is_stmt 0 view .LVU137
+ 518 01a2 1092 0000 		sts zakonczenie_polecenia_SIM900+1,__zero_reg__
+ 519 01a6 1092 0000 		sts zakonczenie_polecenia_SIM900,__zero_reg__
+ 134:sim900.c      ****           }
+ 520               		.loc 1 134 13 is_stmt 1 view .LVU138
+ 134:sim900.c      ****           }
+ 521               		.loc 1 134 44 is_stmt 0 view .LVU139
+ 522 01aa 1092 0000 		sts czy_jest_nowe_polecenie_SIM900,__zero_reg__
+ 523               	.L16:
+ 524               		.loc 1 138 7 is_stmt 1 view .LVU140
+ 525               		.loc 1 138 10 is_stmt 0 view .LVU141
+ 526 01ae 2115      		cp r18,__zero_reg__
+ 527 01b0 3105      		cpc r19,__zero_reg__
+ 528 01b2 01F0      		breq .L17
+ 529               		.loc 1 138 19 discriminator 2 view .LVU142
+ 530 01b4 9081      		ld r25,Z
+ 531 01b6 9D30      		cpi r25,lo8(13)
+ 532 01b8 01F4      		brne .L17
+ 533 01ba 00C0      		rjmp .L18
+ 534               	.L14:
+ 139:sim900.c      ****           znak_UDR == ZNAK_KONCA_ODBIERANIA_ZNAKOW_LF) {
+ 140:sim900.c      ****         if (!czy_jest_nowe_polecenie_SIM900) {
+ 535               		.loc 1 140 9 is_stmt 1 view .LVU143
+ 536               		.loc 1 140 13 is_stmt 0 view .LVU144
+ 537 01bc 9091 0000 		lds r25,czy_jest_nowe_polecenie_SIM900
+ 538               		.loc 1 140 12 view .LVU145
+ 539 01c0 9111      		cpse r25,__zero_reg__
+ 540 01c2 00C0      		rjmp .L18
+ 141:sim900.c      ****           komenda_SIM900 = KOMENDA_SIM900_WYSLANE_POLECENIE;
+ 541               		.loc 1 141 11 is_stmt 1 view .LVU146
+ 542               		.loc 1 141 26 is_stmt 0 view .LVU147
+ 543 01c4 91E8      		ldi r25,lo8(-127)
+ 544 01c6 9093 0000 		sts komenda_SIM900,r25
+ 142:sim900.c      ****           zakoncz_odbieranie_SIM900();
+ 545               		.loc 1 142 11 is_stmt 1 view .LVU148
+ 546 01ca 439A      		sbi 0x8,3
+ 547               		.loc 1 142 11 view .LVU149
+ 548               		.loc 1 142 11 view .LVU150
+ 549               	/* #APP */
+ 550               	 ;  142 "sim900.c" 1
+ 551 01cc F894      		cli
+ 552               	 ;  0 "" 2
+ 553               		.loc 1 142 11 view .LVU151
+ 554               	/* #NOAPP */
+ 555 01ce 9091 C100 		lds r25,193
+ 556 01d2 9F77      		andi r25,lo8(127)
+ 557 01d4 9093 C100 		sts 193,r25
+ 558               		.loc 1 142 11 view .LVU152
+ 559 01d8 90B7      		in r25,0x30
+ 560 01da 9D7F      		andi r25,lo8(-3)
+ 561 01dc 90BF      		out 0x30,r25
+ 562               		.loc 1 142 11 view .LVU153
+ 563               	/* #APP */
+ 564               	 ;  142 "sim900.c" 1
+ 565 01de 7894      		sei
+ 566               	 ;  0 "" 2
+ 567               		.loc 1 142 11 view .LVU154
+ 568               	 ;  142 "sim900.c" 1
+ 569 01e0 0000      		nop
+ 570               	 ;  0 "" 2
+ 571               		.loc 1 142 11 view .LVU155
+ 572               		.loc 1 142 38 view .LVU156
+ 143:sim900.c      ****           poczatek_polecenia_SIM900 = 0;
+ 573               		.loc 1 143 11 view .LVU157
+ 574               		.loc 1 143 37 is_stmt 0 view .LVU158
+ 575               	/* #NOAPP */
+ 576 01e2 1092 0000 		sts poczatek_polecenia_SIM900+1,__zero_reg__
+ 577 01e6 1092 0000 		sts poczatek_polecenia_SIM900,__zero_reg__
+ 144:sim900.c      ****           zakonczenie_polecenia_SIM900 = 0;
+ 578               		.loc 1 144 11 is_stmt 1 view .LVU159
+ 579               		.loc 1 144 40 is_stmt 0 view .LVU160
+ 580 01ea 1092 0000 		sts zakonczenie_polecenia_SIM900+1,__zero_reg__
+ 581 01ee 1092 0000 		sts zakonczenie_polecenia_SIM900,__zero_reg__
+ 145:sim900.c      ****           czy_jest_nowe_polecenie_SIM900 = FALSE;
+ 582               		.loc 1 145 11 is_stmt 1 view .LVU161
+ 583               		.loc 1 145 42 is_stmt 0 view .LVU162
+ 584 01f2 1092 0000 		sts czy_jest_nowe_polecenie_SIM900,__zero_reg__
+ 585               	.L18:
+ 146:sim900.c      ****         }
+ 147:sim900.c      ****       }
+ 148:sim900.c      ****       if (CZY_ODBIERANIE_DANYCH_SIM900() && l > 3 &&
+ 586               		.loc 1 148 7 is_stmt 1 view .LVU163
+ 587 01f6 8F01      		movw r16,r30
+ 588 01f8 A901      		movw r20,r18
+ 589 01fa 4F5F      		subi r20,-1
+ 590 01fc 5F4F      		sbci r21,-1
+ 591 01fe DF01      		movw r26,r30
+ 592 0200 A20F      		add r26,r18
+ 593 0202 B31F      		adc r27,r19
+ 594               		.loc 1 148 10 is_stmt 0 view .LVU164
+ 595 0204 00B6      		in __tmp_reg__,0x30
+ 596 0206 01FE      		sbrs __tmp_reg__,1
+ 597 0208 00C0      		rjmp .L19
+ 598               		.loc 1 148 42 discriminator 1 view .LVU165
+ 599 020a 2430      		cpi r18,4
+ 600 020c 3105      		cpc r19,__zero_reg__
+ 601 020e 00F4      		brsh .+2
+ 602 0210 00C0      		rjmp .L19
+ 603               		.loc 1 148 51 discriminator 2 view .LVU166
+ 604 0212 8A30      		cpi r24,lo8(10)
+ 605 0214 01F0      		breq .+2
+ 606 0216 00C0      		rjmp .L19
+ 149:sim900.c      ****           znak_UDR == ZNAK_KONCA_ODBIERANIA_ZNAKOW_LF &&
+ 150:sim900.c      ****           ptr[l - 1] == ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR &&
+ 607               		.loc 1 150 14 view .LVU167
+ 608 0218 BD01      		movw r22,r26
+ 609 021a 6150      		subi r22,1
+ 610 021c 7109      		sbc r23,__zero_reg__
+ 149:sim900.c      ****           znak_UDR == ZNAK_KONCA_ODBIERANIA_ZNAKOW_LF &&
+ 611               		.loc 1 149 55 view .LVU168
+ 612 021e EB01      		movw r28,r22
+ 613 0220 9881      		ld r25,Y
+ 614 0222 9D30      		cpi r25,lo8(13)
+ 615 0224 01F0      		breq .+2
+ 616 0226 00C0      		rjmp .L19
+ 151:sim900.c      ****           ptr[l - 2] != ZNAK_KONCA_ODBIERANIA_ZNAKOW_LF &&
+ 617               		.loc 1 151 14 view .LVU169
+ 618 0228 6150      		subi r22,1
+ 619 022a 7109      		sbc r23,__zero_reg__
+ 150:sim900.c      ****           ptr[l - 2] != ZNAK_KONCA_ODBIERANIA_ZNAKOW_LF &&
+ 620               		.loc 1 150 56 view .LVU170
+ 621 022c EB01      		movw r28,r22
+ 622 022e 9881      		ld r25,Y
+ 623 0230 9A30      		cpi r25,lo8(10)
+ 624 0232 01F4      		brne .+2
+ 625 0234 00C0      		rjmp .L19
+ 152:sim900.c      ****           ptr[l - 3] != ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR &&
+ 626               		.loc 1 152 14 view .LVU171
+ 627 0236 6150      		subi r22,1
+ 628 0238 7109      		sbc r23,__zero_reg__
+ 151:sim900.c      ****           ptr[l - 2] != ZNAK_KONCA_ODBIERANIA_ZNAKOW_LF &&
+ 629               		.loc 1 151 57 view .LVU172
+ 630 023a EB01      		movw r28,r22
+ 631 023c 9881      		ld r25,Y
+ 632 023e 9D30      		cpi r25,lo8(13)
+ 633 0240 01F4      		brne .+2
+ 634 0242 00C0      		rjmp .L19
+ 635               		.loc 1 152 56 view .LVU173
+ 636 0244 EF01      		movw r28,r30
+ 637 0246 9181      		ldd r25,Z+1
+ 638 0248 9A30      		cpi r25,lo8(10)
+ 639 024a 01F4      		brne .L19
+ 153:sim900.c      ****           ptr[1] == ZNAK_KONCA_ODBIERANIA_ZNAKOW_LF &&
+ 640               		.loc 1 153 53 view .LVU174
+ 641 024c 9081      		ld r25,Z
+ 642 024e 9D30      		cpi r25,lo8(13)
+ 643 0250 01F4      		brne .L19
+ 154:sim900.c      ****           ptr[0] == ZNAK_KONCA_WYSYLANIA_ZNAKOW_CR) {
+ 155:sim900.c      ****         poczatek_polecenia_SIM900 = zakonczenie_polecenia_SIM900;
+ 644               		.loc 1 155 9 is_stmt 1 view .LVU175
+ 645               		.loc 1 155 35 is_stmt 0 view .LVU176
+ 646 0252 6091 0000 		lds r22,zakonczenie_polecenia_SIM900
+ 647 0256 7091 0000 		lds r23,zakonczenie_polecenia_SIM900+1
+ 648 025a 7093 0000 		sts poczatek_polecenia_SIM900+1,r23
+ 649 025e 6093 0000 		sts poczatek_polecenia_SIM900,r22
+ 156:sim900.c      ****         zakonczenie_polecenia_SIM900 = l + 1;
+ 650               		.loc 1 156 9 is_stmt 1 view .LVU177
+ 651               		.loc 1 156 38 is_stmt 0 view .LVU178
+ 652 0262 5093 0000 		sts zakonczenie_polecenia_SIM900+1,r21
+ 653 0266 4093 0000 		sts zakonczenie_polecenia_SIM900,r20
+ 157:sim900.c      ****         ++czy_jest_nowe_polecenie_SIM900;
+ 654               		.loc 1 157 9 is_stmt 1 view .LVU179
+ 655 026a 9091 0000 		lds r25,czy_jest_nowe_polecenie_SIM900
+ 656 026e 9F5F      		subi r25,lo8(-(1))
+ 657 0270 9093 0000 		sts czy_jest_nowe_polecenie_SIM900,r25
+ 158:sim900.c      ****         polozenie_otrzymanych_komend_SIM900[4] =
+ 658               		.loc 1 158 9 view .LVU180
+ 159:sim900.c      ****             polozenie_otrzymanych_komend_SIM900[3];
+ 659               		.loc 1 159 48 is_stmt 0 view .LVU181
+ 660 0274 6091 0000 		lds r22,polozenie_otrzymanych_komend_SIM900+6
+ 661 0278 7091 0000 		lds r23,polozenie_otrzymanych_komend_SIM900+6+1
+ 158:sim900.c      ****         polozenie_otrzymanych_komend_SIM900[4] =
+ 662               		.loc 1 158 48 view .LVU182
+ 663 027c 7093 0000 		sts polozenie_otrzymanych_komend_SIM900+8+1,r23
+ 664 0280 6093 0000 		sts polozenie_otrzymanych_komend_SIM900+8,r22
+ 160:sim900.c      ****         polozenie_otrzymanych_komend_SIM900[3] =
+ 665               		.loc 1 160 9 is_stmt 1 view .LVU183
+ 161:sim900.c      ****             polozenie_otrzymanych_komend_SIM900[2];
+ 666               		.loc 1 161 48 is_stmt 0 view .LVU184
+ 667 0284 6091 0000 		lds r22,polozenie_otrzymanych_komend_SIM900+4
+ 668 0288 7091 0000 		lds r23,polozenie_otrzymanych_komend_SIM900+4+1
+ 160:sim900.c      ****         polozenie_otrzymanych_komend_SIM900[3] =
+ 669               		.loc 1 160 48 view .LVU185
+ 670 028c 7093 0000 		sts polozenie_otrzymanych_komend_SIM900+6+1,r23
+ 671 0290 6093 0000 		sts polozenie_otrzymanych_komend_SIM900+6,r22
+ 162:sim900.c      ****         polozenie_otrzymanych_komend_SIM900[2] =
+ 672               		.loc 1 162 9 is_stmt 1 view .LVU186
+ 163:sim900.c      ****             polozenie_otrzymanych_komend_SIM900[1];
+ 673               		.loc 1 163 48 is_stmt 0 view .LVU187
+ 674 0294 6091 0000 		lds r22,polozenie_otrzymanych_komend_SIM900+2
+ 675 0298 7091 0000 		lds r23,polozenie_otrzymanych_komend_SIM900+2+1
+ 162:sim900.c      ****         polozenie_otrzymanych_komend_SIM900[2] =
+ 676               		.loc 1 162 48 view .LVU188
+ 677 029c 7093 0000 		sts polozenie_otrzymanych_komend_SIM900+4+1,r23
+ 678 02a0 6093 0000 		sts polozenie_otrzymanych_komend_SIM900+4,r22
+ 164:sim900.c      ****         polozenie_otrzymanych_komend_SIM900[1] = poczatek_polecenia_SIM900;
+ 679               		.loc 1 164 9 is_stmt 1 view .LVU189
+ 680               		.loc 1 164 48 is_stmt 0 view .LVU190
+ 681 02a4 6091 0000 		lds r22,poczatek_polecenia_SIM900
+ 682 02a8 7091 0000 		lds r23,poczatek_polecenia_SIM900+1
+ 683 02ac 7093 0000 		sts polozenie_otrzymanych_komend_SIM900+2+1,r23
+ 684 02b0 6093 0000 		sts polozenie_otrzymanych_komend_SIM900+2,r22
+ 165:sim900.c      ****         polozenie_otrzymanych_komend_SIM900[0] = zakonczenie_polecenia_SIM900;
+ 685               		.loc 1 165 9 is_stmt 1 view .LVU191
+ 686               		.loc 1 165 48 is_stmt 0 view .LVU192
+ 687 02b4 6091 0000 		lds r22,zakonczenie_polecenia_SIM900
+ 688 02b8 7091 0000 		lds r23,zakonczenie_polecenia_SIM900+1
+ 689 02bc 7093 0000 		sts polozenie_otrzymanych_komend_SIM900+1,r23
+ 690 02c0 6093 0000 		sts polozenie_otrzymanych_komend_SIM900,r22
+ 691               	.L19:
+ 166:sim900.c      ****       }
+ 167:sim900.c      ****       if (czekanie_na_odebranie_zachety != FALSE && l == 3 && znak_UDR == ' ' &&
+ 692               		.loc 1 167 7 is_stmt 1 view .LVU193
+ 693               		.loc 1 167 41 is_stmt 0 view .LVU194
+ 694 02c4 9091 0000 		lds r25,czekanie_na_odebranie_zachety
+ 695               		.loc 1 167 10 view .LVU195
+ 696 02c8 9923      		tst r25
+ 697 02ca 01F0      		breq .L20
+ 698               		.loc 1 167 50 discriminator 1 view .LVU196
+ 699 02cc 2330      		cpi r18,3
+ 700 02ce 3105      		cpc r19,__zero_reg__
+ 701 02d0 01F4      		brne .L20
+ 702               		.loc 1 167 60 discriminator 2 view .LVU197
+ 703 02d2 8032      		cpi r24,lo8(32)
+ 704 02d4 01F4      		brne .L20
+ 705               		.loc 1 167 79 discriminator 3 view .LVU198
+ 706 02d6 9091 0000 		lds r25,odebrany_blok_SIM900+2
+ 707 02da 9E33      		cpi r25,lo8(62)
+ 708 02dc 01F4      		brne .L20
+ 168:sim900.c      ****           odebrany_blok_SIM900[2] == '>') {
+ 169:sim900.c      ****         flaga_odebrany_znak_zachety = TRUE;
+ 709               		.loc 1 169 9 is_stmt 1 view .LVU199
+ 710               		.loc 1 169 37 is_stmt 0 view .LVU200
+ 711 02de 9FEF      		ldi r25,lo8(-1)
+ 712 02e0 9093 0000 		sts flaga_odebrany_znak_zachety,r25
+ 713               	.L20:
+ 170:sim900.c      ****       }
+ 171:sim900.c      ****       ptr[l] = znak_UDR;
+ 714               		.loc 1 171 7 is_stmt 1 view .LVU201
+ 715               		.loc 1 171 14 is_stmt 0 view .LVU202
+ 716 02e4 8C93      		st X,r24
+ 172:sim900.c      ****       l = l + 1;
+ 717               		.loc 1 172 7 is_stmt 1 view .LVU203
+ 718               		.loc 1 172 9 is_stmt 0 view .LVU204
+ 719 02e6 9A01      		movw r18,r20
+ 173:sim900.c      ****       ptr[l] = '\0';
+ 720               		.loc 1 173 7 is_stmt 1 view .LVU205
+ 721               		.loc 1 173 14 is_stmt 0 view .LVU206
+ 722 02e8 E40F      		add r30,r20
+ 723 02ea F51F      		adc r31,r21
+ 724 02ec 1082      		st Z,__zero_reg__
+ 725 02ee 00C0      		rjmp .L21
+ 726               	.L12:
+ 174:sim900.c      ****     } else {
+ 175:sim900.c      ****       l = 0;
+ 727               		.loc 1 175 7 is_stmt 1 view .LVU207
+ 728               		.loc 1 175 9 is_stmt 0 view .LVU208
+ 729 02f0 30E0      		ldi r19,0
+ 730 02f2 20E0      		ldi r18,0
+ 176:sim900.c      ****       komenda_SIM900 = BLAD_SIM900;
+ 731               		.loc 1 176 7 is_stmt 1 view .LVU209
+ 732               		.loc 1 176 22 is_stmt 0 view .LVU210
+ 733 02f4 80E8      		ldi r24,lo8(-128)
+ 734 02f6 8093 0000 		sts komenda_SIM900,r24
+ 177:sim900.c      ****       poczatek_polecenia_SIM900 = 0;
+ 735               		.loc 1 177 7 is_stmt 1 view .LVU211
+ 736               		.loc 1 177 33 is_stmt 0 view .LVU212
+ 737 02fa 1092 0000 		sts poczatek_polecenia_SIM900+1,__zero_reg__
+ 738 02fe 1092 0000 		sts poczatek_polecenia_SIM900,__zero_reg__
+ 178:sim900.c      ****       zakonczenie_polecenia_SIM900 = 0;
+ 739               		.loc 1 178 7 is_stmt 1 view .LVU213
+ 740               		.loc 1 178 36 is_stmt 0 view .LVU214
+ 741 0302 1092 0000 		sts zakonczenie_polecenia_SIM900+1,__zero_reg__
+ 742 0306 1092 0000 		sts zakonczenie_polecenia_SIM900,__zero_reg__
+ 179:sim900.c      ****       czy_jest_nowe_polecenie_SIM900 = FALSE;
+ 743               		.loc 1 179 7 is_stmt 1 view .LVU215
+ 744               		.loc 1 179 38 is_stmt 0 view .LVU216
+ 745 030a 1092 0000 		sts czy_jest_nowe_polecenie_SIM900,__zero_reg__
+ 746               	.L21:
+ 180:sim900.c      ****     }
+ 181:sim900.c      ****     liczba_odebranych_znakow_SIM900 = l;
+ 747               		.loc 1 181 5 is_stmt 1 view .LVU217
+ 748               		.loc 1 181 37 is_stmt 0 view .LVU218
+ 749 030e 3093 0000 		sts liczba_odebranych_znakow_SIM900+1,r19
+ 750 0312 2093 0000 		sts liczba_odebranych_znakow_SIM900,r18
+ 751               	.L11:
+ 182:sim900.c      ****   }
+ 183:sim900.c      ****   licznik_opoznienie_oczekiwania_na_bajt_SIM900 = 0;
+ 752               		.loc 1 183 3 is_stmt 1 view .LVU219
+ 753               		.loc 1 183 49 is_stmt 0 view .LVU220
+ 754 0316 1092 0000 		sts licznik_opoznienie_oczekiwania_na_bajt_SIM900,__zero_reg__
+ 184:sim900.c      ****   POP_TXT("r25");
+ 755               		.loc 1 184 3 is_stmt 1 view .LVU221
+ 756               	/* #APP */
+ 757               	 ;  184 "sim900.c" 1
+ 758 031a 9F91      		pop r25
+ 759               		
+ 760               	 ;  0 "" 2
+ 185:sim900.c      ****   POP_TXT("r27");
+ 761               		.loc 1 185 3 view .LVU222
+ 762               	 ;  185 "sim900.c" 1
+ 763 031c BF91      		pop r27
+ 764               		
+ 765               	 ;  0 "" 2
+ 186:sim900.c      ****   POP_TXT("r26");
+ 766               		.loc 1 186 3 view .LVU223
+ 767               	 ;  186 "sim900.c" 1
+ 768 031e AF91      		pop r26
+ 769               		
+ 770               	 ;  0 "" 2
+ 187:sim900.c      ****   POP_TXT("r31");
+ 771               		.loc 1 187 3 view .LVU224
+ 772               	 ;  187 "sim900.c" 1
+ 773 0320 FF91      		pop r31
+ 774               		
+ 775               	 ;  0 "" 2
+ 188:sim900.c      ****   POP_TXT("r30");
+ 776               		.loc 1 188 3 view .LVU225
+ 777               	 ;  188 "sim900.c" 1
+ 778 0322 EF91      		pop r30
+ 779               		
+ 780               	 ;  0 "" 2
+ 189:sim900.c      ****   POP_TXT("r19");
+ 781               		.loc 1 189 3 view .LVU226
+ 782               	 ;  189 "sim900.c" 1
+ 783 0324 3F91      		pop r19
+ 784               		
+ 785               	 ;  0 "" 2
+ 190:sim900.c      ****   POP_TXT("r18");
+ 786               		.loc 1 190 3 view .LVU227
+ 787               	 ;  190 "sim900.c" 1
+ 788 0326 2F91      		pop r18
+ 789               		
+ 790               	 ;  0 "" 2
+ 191:sim900.c      ****   POP_TXT("__zero_reg__");
+ 791               		.loc 1 191 3 view .LVU228
+ 792               	 ;  191 "sim900.c" 1
+ 793 0328 1F90      		pop __zero_reg__
+ 794               		
+ 795               	 ;  0 "" 2
+ 192:sim900.c      ****   POP(znak_UDR);
+ 796               		.loc 1 192 3 view .LVU229
+ 797               	 ;  192 "sim900.c" 1
+ 798 032a 4F91      		pop r20
+ 799               		
+ 800               	 ;  0 "" 2
+ 193:sim900.c      ****   if (IS_HI(ACSR_SIM900, ACIS1)) {
+ 801               		.loc 1 193 3 view .LVU230
+ 802               		.loc 1 193 6 is_stmt 0 view .LVU231
+ 803               	/* #NOAPP */
+ 804 032c 00B6      		in __tmp_reg__,0x30
+ 805 032e 01FE      		sbrs __tmp_reg__,1
+ 806 0330 00C0      		rjmp .L22
+ 194:sim900.c      ****     cli();
+ 807               		.loc 1 194 5 is_stmt 1 view .LVU232
+ 808               	/* #APP */
+ 809               	 ;  194 "sim900.c" 1
+ 810 0332 F894      		cli
+ 811               	 ;  0 "" 2
+ 195:sim900.c      ****     LDS(tmp, ADRES_UCSRB_SIM900);
+ 812               		.loc 1 195 5 view .LVU233
+ 813               	 ;  195 "sim900.c" 1
+ 814 0334 8091 C100 		lds r24, 0x00C1
+ 815               		
+ 816               	 ;  0 "" 2
+ 817               		.loc 1 195 33 view .LVU234
+ 196:sim900.c      ****     ORI(tmp, BIT(RXCIE));
+ 818               		.loc 1 196 5 view .LVU235
+ 819               	 ;  196 "sim900.c" 1
+ 820 0338 8068      		ori r24, 128
+ 821               		
+ 822               	 ;  0 "" 2
+ 197:sim900.c      ****     STS(tmp, ADRES_UCSRB_SIM900);
+ 823               		.loc 1 197 5 view .LVU236
+ 824               	 ;  197 "sim900.c" 1
+ 825 033a 8093 C100 		sts 0x00C1, r24
+ 826               		
+ 827               	 ;  0 "" 2
+ 828               		.loc 1 197 33 view .LVU237
+ 198:sim900.c      ****     sei();
+ 829               		.loc 1 198 5 view .LVU238
+ 830               	 ;  198 "sim900.c" 1
+ 831 033e 7894      		sei
+ 832               	 ;  0 "" 2
+ 199:sim900.c      ****     NOP();
+ 833               		.loc 1 199 5 view .LVU239
+ 834               	 ;  199 "sim900.c" 1
+ 835 0340 0000      		nop
+ 836               	 ;  0 "" 2
+ 837               	/* #NOAPP */
+ 838               	.L22:
+ 200:sim900.c      ****   }
+ 201:sim900.c      ****   POP_TXT("r0");
+ 839               		.loc 1 201 3 view .LVU240
+ 840               	/* #APP */
+ 841               	 ;  201 "sim900.c" 1
+ 842 0342 0F90      		pop r0
+ 843               		
+ 844               	 ;  0 "" 2
+ 202:sim900.c      **** #ifdef RAMPZ
+ 203:sim900.c      ****   POP(tmp);
+ 204:sim900.c      ****   RAMPZ = tmp;
+ 205:sim900.c      **** #endif
+ 206:sim900.c      ****   POP(tmp);
+ 845               		.loc 1 206 3 view .LVU241
+ 846               	 ;  206 "sim900.c" 1
+ 847 0344 8F91      		pop r24
+ 848               		
+ 849               	 ;  0 "" 2
+ 207:sim900.c      ****   SREG = tmp;
+ 850               		.loc 1 207 3 view .LVU242
+ 851               		.loc 1 207 8 is_stmt 0 view .LVU243
+ 852               	/* #NOAPP */
+ 853 0346 8FBF      		out __SREG__,r24
+ 208:sim900.c      ****   POP(tmp);
+ 854               		.loc 1 208 3 is_stmt 1 view .LVU244
+ 855               	/* #APP */
+ 856               	 ;  208 "sim900.c" 1
+ 857 0348 8F91      		pop r24
+ 858               		
+ 859               	 ;  0 "" 2
+ 209:sim900.c      ****   reti();
+ 860               		.loc 1 209 3 view .LVU245
+ 861               	 ;  209 "sim900.c" 1
+ 862 034a 1895      		reti
+ 863               	 ;  0 "" 2
+ 864               	/* #NOAPP */
+ 865               	/* epilogue start */
+ 210:sim900.c      **** }
+ 866               		.loc 1 210 1 is_stmt 0 view .LVU246
+ 867               		.cfi_endproc
+ 868               	.LFE5:
+ 870               	.global	inicjalizacja_SIM900
+ 872               	inicjalizacja_SIM900:
+ 873               	.LFB8:
+ 211:sim900.c      **** 
+ 212:sim900.c      **** static void ustaw_piny_SIM900(void) {
+ 213:sim900.c      ****   SET_HI(DDR_UART_SIM900, TXD_WYJSCIE_SIM900);
+ 214:sim900.c      ****   SET_HI2(PORT_UART_SIM900, TXD_WYJSCIE_SIM900, RXD_WEJSCIE_SIM900);
+ 215:sim900.c      ****   SET_HI(DDR_RTS_SIM900, RTS_WYJSCIE_SIM900);
+ 216:sim900.c      ****   SET_HI(PORT_RTS_SIM900, RTS_WYJSCIE_SIM900);
+ 217:sim900.c      ****   SET_HI(PORT_CTS_SIM900, CTS_WEJSCIE_SIM900);
+ 218:sim900.c      **** }
+ 219:sim900.c      **** 
+ 220:sim900.c      **** static void wylacz_piny_SIM900(void) {
+ 221:sim900.c      ****   SET_LO2(PORT_UART_SIM900, TXD_WYJSCIE_SIM900, RXD_WEJSCIE_SIM900);
+ 222:sim900.c      ****   SET_LO(DDR_UART_SIM900, TXD_WYJSCIE_SIM900);
+ 223:sim900.c      ****   SET_LO(PORT_CTS_SIM900, CTS_WEJSCIE_SIM900);
+ 224:sim900.c      ****   SET_LO(PORT_RTS_SIM900, RTS_WYJSCIE_SIM900);
+ 225:sim900.c      ****   SET_LO(DDR_RTS_SIM900, RTS_WYJSCIE_SIM900);
+ 226:sim900.c      **** }
+ 227:sim900.c      **** 
+ 228:sim900.c      **** void inicjalizacja_SIM900(void) {
+ 874               		.loc 1 228 33 is_stmt 1 view -0
+ 875               		.cfi_startproc
+ 876               	/* prologue: function */
+ 877               	/* frame size = 0 */
+ 878               	/* stack size = 0 */
+ 879               	.L__stack_usage = 0
+ 229:sim900.c      ****   UBRRL_SIM900 = VUBRR_FABRYCZNA_PREDKOSC_STARTOWA_SIM900 % 256;
+ 880               		.loc 1 229 3 view .LVU248
+ 881               		.loc 1 229 16 is_stmt 0 view .LVU249
+ 882 034c 83E0      		ldi r24,lo8(3)
+ 883 034e 8093 C400 		sts 196,r24
+ 230:sim900.c      ****   UBRRH_SIM900 = VUBRR_FABRYCZNA_PREDKOSC_STARTOWA_SIM900 / 256;
+ 884               		.loc 1 230 3 is_stmt 1 view .LVU250
+ 885               		.loc 1 230 16 is_stmt 0 view .LVU251
+ 886 0352 1092 C500 		sts 197,__zero_reg__
+ 231:sim900.c      ****   UCSRB_SIM900 |= BIT(TXEN) | BIT(RXEN);
+ 887               		.loc 1 231 3 is_stmt 1 view .LVU252
+ 888               		.loc 1 231 16 is_stmt 0 view .LVU253
+ 889 0356 E1EC      		ldi r30,lo8(-63)
+ 890 0358 F0E0      		ldi r31,0
+ 891 035a 8081      		ld r24,Z
+ 892 035c 8861      		ori r24,lo8(24)
+ 893 035e 8083      		st Z,r24
+ 232:sim900.c      ****   wylacz_piny_SIM900();
+ 894               		.loc 1 232 3 is_stmt 1 view .LVU254
+ 895               	.LBB6:
+ 896               	.LBI6:
+ 220:sim900.c      ****   SET_LO2(PORT_UART_SIM900, TXD_WYJSCIE_SIM900, RXD_WEJSCIE_SIM900);
+ 897               		.loc 1 220 13 view .LVU255
+ 898               	.LBB7:
+ 221:sim900.c      ****   SET_LO(DDR_UART_SIM900, TXD_WYJSCIE_SIM900);
+ 899               		.loc 1 221 3 view .LVU256
+ 900 0360 8BB1      		in r24,0xb
+ 901 0362 8C7F      		andi r24,lo8(-4)
+ 902 0364 8BB9      		out 0xb,r24
+ 222:sim900.c      ****   SET_LO(PORT_CTS_SIM900, CTS_WEJSCIE_SIM900);
+ 903               		.loc 1 222 3 view .LVU257
+ 904 0366 5198      		cbi 0xa,1
+ 223:sim900.c      ****   SET_LO(PORT_RTS_SIM900, RTS_WYJSCIE_SIM900);
+ 905               		.loc 1 223 3 view .LVU258
+ 906 0368 4298      		cbi 0x8,2
+ 224:sim900.c      ****   SET_LO(DDR_RTS_SIM900, RTS_WYJSCIE_SIM900);
+ 907               		.loc 1 224 3 view .LVU259
+ 908 036a 4398      		cbi 0x8,3
+ 225:sim900.c      **** }
+ 909               		.loc 1 225 3 view .LVU260
+ 910 036c 3B98      		cbi 0x7,3
+ 911               	/* epilogue start */
+ 912               	.LBE7:
+ 913               	.LBE6:
+ 233:sim900.c      **** }
+ 914               		.loc 1 233 1 is_stmt 0 view .LVU261
+ 915 036e 0895      		ret
+ 916               		.cfi_endproc
+ 917               	.LFE8:
+ 919               	.global	zakonczenie_procedury_inicjalizacyjnej
+ 921               	zakonczenie_procedury_inicjalizacyjnej:
+ 922               	.LFB9:
+ 234:sim900.c      **** 
+ 235:sim900.c      **** uchar licznik_100ms_procedura_inicjalizacyjna_SIM900 = 1;
+ 236:sim900.c      **** 
+ 237:sim900.c      **** uchar zakonczenie_procedury_inicjalizacyjnej(void) {
+ 923               		.loc 1 237 52 is_stmt 1 view -0
+ 924               		.cfi_startproc
+ 925               	/* prologue: function */
+ 926               	/* frame size = 0 */
+ 927               	/* stack size = 0 */
+ 928               	.L__stack_usage = 0
+ 238:sim900.c      ****   if (STATUS_WLACZONY_SIM900()) {
+ 929               		.loc 1 238 3 view .LVU263
+ 930               		.loc 1 238 7 is_stmt 0 view .LVU264
+ 931 0370 99B1      		in r25,0x9
+ 932               		.loc 1 238 6 view .LVU265
+ 933 0372 892F      		mov r24,r25
+ 934 0374 8870      		andi r24,lo8(8)
+ 935 0376 93FF      		sbrs r25,3
+ 936 0378 00C0      		rjmp .L51
+ 937               	.LBB12:
+ 938               	.LBI12:
+ 237:sim900.c      ****   if (STATUS_WLACZONY_SIM900()) {
+ 939               		.loc 1 237 7 is_stmt 1 view .LVU266
+ 940               	.LBB13:
+ 239:sim900.c      ****     licznik_100ms_procedura_inicjalizacyjna_SIM900 = 0;
+ 941               		.loc 1 239 5 view .LVU267
+ 942               		.loc 1 239 52 is_stmt 0 view .LVU268
+ 943 037a 1092 0000 		sts licznik_100ms_procedura_inicjalizacyjna_SIM900,__zero_reg__
+ 240:sim900.c      ****     liczba_odebranych_znakow_SIM900 = 0;
+ 944               		.loc 1 240 5 is_stmt 1 view .LVU269
+ 945               		.loc 1 240 37 is_stmt 0 view .LVU270
+ 946 037e 1092 0000 		sts liczba_odebranych_znakow_SIM900+1,__zero_reg__
+ 947 0382 1092 0000 		sts liczba_odebranych_znakow_SIM900,__zero_reg__
+ 241:sim900.c      ****     ustaw_piny_SIM900();
+ 948               		.loc 1 241 5 is_stmt 1 view .LVU271
+ 949               	.LBB14:
+ 950               	.LBI14:
+ 212:sim900.c      ****   SET_HI(DDR_UART_SIM900, TXD_WYJSCIE_SIM900);
+ 951               		.loc 1 212 13 view .LVU272
+ 952               	.LBB15:
+ 213:sim900.c      ****   SET_HI2(PORT_UART_SIM900, TXD_WYJSCIE_SIM900, RXD_WEJSCIE_SIM900);
+ 953               		.loc 1 213 3 view .LVU273
+ 954 0386 519A      		sbi 0xa,1
+ 214:sim900.c      ****   SET_HI(DDR_RTS_SIM900, RTS_WYJSCIE_SIM900);
+ 955               		.loc 1 214 3 view .LVU274
+ 956 0388 8BB1      		in r24,0xb
+ 957 038a 8360      		ori r24,lo8(3)
+ 958 038c 8BB9      		out 0xb,r24
+ 215:sim900.c      ****   SET_HI(PORT_RTS_SIM900, RTS_WYJSCIE_SIM900);
+ 959               		.loc 1 215 3 view .LVU275
+ 960 038e 3B9A      		sbi 0x7,3
+ 216:sim900.c      ****   SET_HI(PORT_CTS_SIM900, CTS_WEJSCIE_SIM900);
+ 961               		.loc 1 216 3 view .LVU276
+ 962 0390 439A      		sbi 0x8,3
+ 217:sim900.c      **** }
+ 963               		.loc 1 217 3 view .LVU277
+ 964 0392 429A      		sbi 0x8,2
+ 965               	.LBE15:
+ 966               	.LBE14:
+ 242:sim900.c      ****     return TRUE;
+ 967               		.loc 1 242 5 view .LVU278
+ 968               	.LBB17:
+ 969               	.LBB16:
+ 217:sim900.c      **** }
+ 970               		.loc 1 217 3 is_stmt 0 view .LVU279
+ 971 0394 8FEF      		ldi r24,lo8(-1)
+ 972               	.L51:
+ 973               	/* epilogue start */
+ 974               	.LBE16:
+ 975               	.LBE17:
+ 976               	.LBE13:
+ 977               	.LBE12:
+ 243:sim900.c      ****   }
+ 244:sim900.c      ****   return FALSE;
+ 245:sim900.c      **** }
+ 978               		.loc 1 245 1 view .LVU280
+ 979 0396 0895      		ret
+ 980               		.cfi_endproc
+ 981               	.LFE9:
+ 983               	.global	procedura_inicjalizacyjna_SIM900_100MS
+ 985               	procedura_inicjalizacyjna_SIM900_100MS:
+ 986               	.LFB10:
+ 246:sim900.c      **** 
+ 247:sim900.c      **** uchar procedura_inicjalizacyjna_SIM900_100MS(void) {
+ 987               		.loc 1 247 52 is_stmt 1 view -0
+ 988               		.cfi_startproc
+ 989               	/* prologue: function */
+ 990               	/* frame size = 0 */
+ 991               	/* stack size = 0 */
+ 992               	.L__stack_usage = 0
+ 248:sim900.c      ****   if (licznik_100ms_procedura_inicjalizacyjna_SIM900) {
+ 993               		.loc 1 248 3 view .LVU282
+ 994               		.loc 1 248 7 is_stmt 0 view .LVU283
+ 995 0398 8091 0000 		lds r24,licznik_100ms_procedura_inicjalizacyjna_SIM900
+ 996               		.loc 1 248 6 view .LVU284
+ 997 039c 8823      		tst r24
+ 998 039e 01F0      		breq .L56
+ 249:sim900.c      ****     ++licznik_100ms_procedura_inicjalizacyjna_SIM900;
+ 999               		.loc 1 249 5 is_stmt 1 view .LVU285
+ 1000 03a0 91E0      		ldi r25,lo8(1)
+ 1001 03a2 980F      		add r25,r24
+ 1002 03a4 9093 0000 		sts licznik_100ms_procedura_inicjalizacyjna_SIM900,r25
+ 250:sim900.c      ****     switch (licznik_100ms_procedura_inicjalizacyjna_SIM900) {
+ 1003               		.loc 1 250 5 view .LVU286
+ 1004 03a8 913A      		cpi r25,lo8(-95)
+ 1005 03aa 01F0      		breq .L58
+ 1006 03ac 00F4      		brsh .L59
+ 1007 03ae 9F30      		cpi r25,lo8(15)
+ 1008 03b0 01F0      		breq .L67
+ 1009 03b2 00F4      		brsh .L61
+ 1010 03b4 9230      		cpi r25,lo8(2)
+ 1011 03b6 01F0      		breq .L62
+ 1012 03b8 9330      		cpi r25,lo8(3)
+ 1013 03ba 01F0      		breq .L66
+ 1014               	.L69:
+ 251:sim900.c      ****     case 2: {
+ 252:sim900.c      ****       WYLACZ_PWRKEY_SIM900();
+ 253:sim900.c      ****       if (zakonczenie_procedury_inicjalizacyjnej())
+ 254:sim900.c      ****         return TRUE;
+ 255:sim900.c      ****     }
+ 256:sim900.c      ****     case 3:
+ 257:sim900.c      ****       WLACZ_PWRKEY_SIM900();
+ 258:sim900.c      ****       break;
+ 259:sim900.c      ****     case 15:
+ 260:sim900.c      ****       WYLACZ_PWRKEY_SIM900();
+ 261:sim900.c      ****       break;
+ 262:sim900.c      ****     case 40:
+ 263:sim900.c      ****     case 41:
+ 264:sim900.c      ****     case 42:
+ 265:sim900.c      ****     case 43: {
+ 266:sim900.c      ****       if (zakonczenie_procedury_inicjalizacyjnej())
+ 267:sim900.c      ****         return TRUE;
+ 268:sim900.c      ****       break;
+ 269:sim900.c      ****     }
+ 270:sim900.c      ****     case 161: {
+ 271:sim900.c      ****       podlaczony_modul_gsm_SIM900 = FALSE;
+ 272:sim900.c      ****       podlaczona_karta_SIM_SIM900 = FALSE;
+ 273:sim900.c      ****       break;
+ 274:sim900.c      ****     }
+ 275:sim900.c      ****     case 163:
+ 276:sim900.c      ****       break;
+ 277:sim900.c      ****     case 200:
+ 278:sim900.c      ****       WLACZ_PWRKEY_SIM900();
+ 279:sim900.c      ****       break;
+ 280:sim900.c      ****     case 215:
+ 281:sim900.c      ****       WYLACZ_PWRKEY_SIM900();
+ 282:sim900.c      ****       break;
+ 283:sim900.c      ****     case 245:
+ 284:sim900.c      ****     case 246:
+ 285:sim900.c      ****     case 247:
+ 286:sim900.c      ****     case 248:
+ 287:sim900.c      ****     case 249:
+ 288:sim900.c      ****     case 250:
+ 289:sim900.c      ****     case 251:
+ 290:sim900.c      ****     case 252:
+ 291:sim900.c      ****     case 253:
+ 292:sim900.c      ****     case 254: {
+ 293:sim900.c      ****       if (zakonczenie_procedury_inicjalizacyjnej())
+ 294:sim900.c      ****         return TRUE;
+ 295:sim900.c      ****       break;
+ 296:sim900.c      ****     }
+ 297:sim900.c      ****     case 255:
+ 298:sim900.c      ****       WYKONAJ_PROCEDURE_INICJALIZACYJNA_SIM900();
+ 299:sim900.c      ****       break;
+ 300:sim900.c      ****     }
+ 301:sim900.c      ****   }
+ 302:sim900.c      ****   return FALSE;
+ 1015               		.loc 1 302 10 is_stmt 0 view .LVU287
+ 1016 03bc 80E0      		ldi r24,0
+ 1017 03be 0895      		ret
+ 1018               	.L61:
+ 250:sim900.c      ****     switch (licznik_100ms_procedura_inicjalizacyjna_SIM900) {
+ 1019               		.loc 1 250 5 view .LVU288
+ 1020 03c0 8752      		subi r24,lo8(-(-39))
+ 1021 03c2 8430      		cpi r24,lo8(4)
+ 1022 03c4 00F4      		brsh .L69
+ 1023               	.L64:
+ 266:sim900.c      ****         return TRUE;
+ 1024               		.loc 1 266 7 is_stmt 1 view .LVU289
+ 266:sim900.c      ****         return TRUE;
+ 1025               		.loc 1 266 11 is_stmt 0 view .LVU290
+ 1026 03c6 0E94 0000 		call zakonczenie_procedury_inicjalizacyjnej
+ 1027               	.LVL19:
+ 266:sim900.c      ****         return TRUE;
+ 1028               		.loc 1 266 10 view .LVU291
+ 1029 03ca 91E0      		ldi r25,lo8(1)
+ 1030 03cc 8111      		cpse r24,__zero_reg__
+ 1031 03ce 00C0      		rjmp .L68
+ 1032 03d0 90E0      		ldi r25,0
+ 1033               	.L68:
+ 1034 03d2 892F      		mov r24,r25
+ 1035 03d4 8195      		neg r24
+ 1036 03d6 0895      		ret
+ 1037               	.L59:
+ 250:sim900.c      ****     switch (licznik_100ms_procedura_inicjalizacyjna_SIM900) {
+ 1038               		.loc 1 250 5 view .LVU292
+ 1039 03d8 9F3F      		cpi r25,lo8(-1)
+ 1040 03da 00F4      		brsh .L65
+ 1041 03dc 953F      		cpi r25,lo8(-11)
+ 1042 03de 00F4      		brsh .L64
+ 1043 03e0 983C      		cpi r25,lo8(-56)
+ 1044 03e2 01F0      		breq .L66
+ 1045 03e4 973D      		cpi r25,lo8(-41)
+ 1046 03e6 01F4      		brne .L69
+ 1047               	.L67:
+ 281:sim900.c      ****       break;
+ 1048               		.loc 1 281 7 is_stmt 1 view .LVU293
+ 1049 03e8 5498      		cbi 0xa,4
+ 282:sim900.c      ****     case 245:
+ 1050               		.loc 1 282 7 view .LVU294
+ 1051 03ea 00C0      		rjmp .L69
+ 1052               	.L62:
+ 252:sim900.c      ****       if (zakonczenie_procedury_inicjalizacyjnej())
+ 1053               		.loc 1 252 7 view .LVU295
+ 1054 03ec 5498      		cbi 0xa,4
+ 253:sim900.c      ****         return TRUE;
+ 1055               		.loc 1 253 7 view .LVU296
+ 253:sim900.c      ****         return TRUE;
+ 1056               		.loc 1 253 11 is_stmt 0 view .LVU297
+ 1057 03ee 0E94 0000 		call zakonczenie_procedury_inicjalizacyjnej
+ 1058               	.LVL20:
+ 253:sim900.c      ****         return TRUE;
+ 1059               		.loc 1 253 10 view .LVU298
+ 1060 03f2 8111      		cpse r24,__zero_reg__
+ 1061 03f4 00C0      		rjmp .L70
+ 1062               	.L66:
+ 278:sim900.c      ****       break;
+ 1063               		.loc 1 278 7 is_stmt 1 view .LVU299
+ 1064 03f6 549A      		sbi 0xa,4
+ 279:sim900.c      ****     case 215:
+ 1065               		.loc 1 279 7 view .LVU300
+ 1066 03f8 00C0      		rjmp .L69
+ 1067               	.L58:
+ 271:sim900.c      ****       podlaczona_karta_SIM_SIM900 = FALSE;
+ 1068               		.loc 1 271 7 view .LVU301
+ 271:sim900.c      ****       podlaczona_karta_SIM_SIM900 = FALSE;
+ 1069               		.loc 1 271 35 is_stmt 0 view .LVU302
+ 1070 03fa 1092 0000 		sts podlaczony_modul_gsm_SIM900,__zero_reg__
+ 272:sim900.c      ****       break;
+ 1071               		.loc 1 272 7 is_stmt 1 view .LVU303
+ 272:sim900.c      ****       break;
+ 1072               		.loc 1 272 35 is_stmt 0 view .LVU304
+ 1073 03fe 1092 0000 		sts podlaczona_karta_SIM_SIM900,__zero_reg__
+ 273:sim900.c      ****     }
+ 1074               		.loc 1 273 7 is_stmt 1 view .LVU305
+ 1075 0402 00C0      		rjmp .L69
+ 1076               	.L65:
+ 298:sim900.c      ****       break;
+ 1077               		.loc 1 298 7 view .LVU306
+ 298:sim900.c      ****       break;
+ 1078               		.loc 1 298 7 view .LVU307
+ 1079 0404 81E0      		ldi r24,lo8(1)
+ 1080 0406 8093 0000 		sts licznik_100ms_procedura_inicjalizacyjna_SIM900,r24
+ 298:sim900.c      ****       break;
+ 1081               		.loc 1 298 7 view .LVU308
+ 299:sim900.c      ****     }
+ 1082               		.loc 1 299 7 view .LVU309
+ 1083 040a 00C0      		rjmp .L69
+ 1084               	.L70:
+ 254:sim900.c      ****     }
+ 1085               		.loc 1 254 16 is_stmt 0 view .LVU310
+ 1086 040c 8FEF      		ldi r24,lo8(-1)
+ 1087               	.L56:
+ 1088               	/* epilogue start */
+ 303:sim900.c      **** }...
+ 1089               		.loc 1 303 1 view .LVU311
+ 1090 040e 0895      		ret
+ 1091               		.cfi_endproc
+ 1092               	.LFE10:
+ 1094               	.global	licznik_100ms_procedura_inicjalizacyjna_SIM900
+ 1095               		.data
+ 1098               	licznik_100ms_procedura_inicjalizacyjna_SIM900:
+ 1099 0000 01        		.byte	1
+ 1100               		.comm	polozenie_otrzymanych_komend_SIM900,10,1
+ 1101               		.comm	flaga_odebrany_znak_zachety,1,1
+ 1102               		.comm	czekanie_na_odebranie_zachety,1,1
+ 1103               		.comm	czy_jest_nowe_polecenie_SIM900,1,1
+ 1104               		.comm	poczatek_polecenia_SIM900,2,1
+ 1105               		.comm	zakonczenie_polecenia_SIM900,2,1
+ 1106               		.comm	liczba_znakow_pdu_do_odebrania,2,1
+ 1107               		.comm	wykonywanie_rozmowy_telefonicznej,1,1
+ 1108               	.global	podlaczona_karta_SIM_SIM900
+ 1109               		.section .bss
+ 1112               	podlaczona_karta_SIM_SIM900:
+ 1113 0000 00        		.zero	1
+ 1114               	.global	podlaczony_modul_gsm_SIM900
+ 1117               	podlaczony_modul_gsm_SIM900:
+ 1118 0001 00        		.zero	1
+ 1119               	.global	komenda_SIM900
+ 1122               	komenda_SIM900:
+ 1123 0002 00        		.zero	1
+ 1124               		.comm	liczba_wysylanych_znakow_SIM900,2,1
+ 1125               	.global	sprawdzaj_wejscie_CTS_SIM900
+ 1128               	sprawdzaj_wejscie_CTS_SIM900:
+ 1129 0003 00        		.zero	1
+ 1130               		.comm	nr_wyslanego_znaku_SIM900,2,1
+ 1131               	.global	sms_timestamp_sekunda
+ 1134               	sms_timestamp_sekunda:
+ 1135 0004 00        		.zero	1
+ 1136               	.global	sms_timestamp_minuta
+ 1139               	sms_timestamp_minuta:
+ 1140 0005 00        		.zero	1
+ 1141               	.global	sms_timestamp_godzina
+ 1144               	sms_timestamp_godzina:
+ 1145 0006 00        		.zero	1
+ 1146               	.global	sms_timestamp_dzien
+ 1149               	sms_timestamp_dzien:
+ 1150 0007 00        		.zero	1
+ 1151               	.global	sms_timestamp_miesiac
+ 1154               	sms_timestamp_miesiac:
+ 1155 0008 00        		.zero	1
+ 1156               	.global	sms_timestamp_rok
+ 1159               	sms_timestamp_rok:
+ 1160 0009 00        		.zero	1
+ 1161               		.comm	licznik_opoznienie_oczekiwania_na_bajt_SIM900,1,1
+ 1162               		.comm	liczba_odebranych_znakow_SIM900,2,1
+ 1163               		.comm	odebrany_blok_SIM900,381,1
+ 1164               		.text
+ 1165               	.Letext0:
+ 1166               		.file 2 "narzedzia.h"
+ 1167               		.file 3 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/avr/include/stdint.h"
+ 1168               		.file 4 "poleceniagsm.h"
+ 1169               		.file 5 "pamiec_ram.h"
+ 1170               		.file 6 "sim900.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 sim900.c
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2      *ABS*:0000003e __SP_H__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:3      *ABS*:0000003d __SP_L__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:4      *ABS*:0000003f __SREG__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:12     .text:00000000 wyslij_znaki_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:16     .text:00000000 .Loc.0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:17     .text:00000000 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:22     .text:00000000 .Loc.1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:23     .text:00000000 .Loc.2
+                            *COM*:00000002 liczba_wysylanych_znakow_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:26     .text:00000008 .Loc.3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:27     .text:00000008 .Loc.4
+                            *COM*:00000002 nr_wyslanego_znaku_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:30     .text:00000010 .Loc.5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:31     .text:00000010 .Loc.6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:36     .text:00000016 .Loc.7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:39     .text:0000001a .Loc.8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:40     .text:0000001a .Loc.9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:45     .text:0000001c .Loc.10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:52     .text:00000026 .Loc.11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:57     .text:00000028 .Loc.12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:61     .text:0000002a .Loc.13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:62     .text:0000002a .Loc.14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:63     .text:0000002a .Loc.15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1128   .bss:00000003 sprawdzaj_wejscie_CTS_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:68     .text:00000030 .Loc.16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:70     .text:00000032 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:75     .text:00000032 wyslij_polecenie_ROM_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:78     .text:00000032 .Loc.17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:79     .text:00000032 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:80     .text:00000032 .Loc.18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:93     .text:00000036 .Loc.19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:94     .text:00000036 .Loc.20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:97     .text:0000003c .Loc.21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:98     .text:0000003c .Loc.22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:101    .text:00000042 .Loc.23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:103    .text:00000042 .Loc.24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:104    .text:00000042 .Loc.25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:108    .text:00000046 .Loc.26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:114    .text:0000004c .Loc.27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:119    .text:00000052 .Loc.28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:121    .text:00000052 .Loc.29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:122    .text:00000052 .Loc.30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:123    .text:00000052 .Loc.31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:130    .text:00000054 .Loc.32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:133    .text:00000054 .Loc.33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:135    .text:00000056 .Loc.34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:138    .text:0000005a .Loc.35
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:139    .text:0000005a .Loc.36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:142    .text:0000005e .Loc.37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:145    .text:00000060 .Loc.38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:149    .text:00000064 .Loc.39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:153    .text:00000068 .Loc.40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:154    .text:00000068 .Loc.41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:157    .text:0000006a .Loc.42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:159    .text:0000006c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:164    .text:0000006c wyslij_polecenie_RAM_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:166    .text:0000006c .Loc.43
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:167    .text:0000006c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:172    .text:0000006c .Loc.44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:173    .text:0000006c .Loc.45
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:178    .text:00000074 .Loc.46
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:179    .text:00000074 .Loc.47
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:182    .text:00000078 .Loc.48
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:183    .text:00000078 .Loc.49
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:192    .text:00000084 .Loc.50
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:193    .text:00000084 .Loc.51
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:196    .text:00000086 .Loc.52
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:199    .text:00000088 .Loc.53
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:204    .text:00000090 .Loc.54
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:208    .text:00000096 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:213    .text:00000096 __vector_20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:215    .text:00000096 .Loc.55
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:216    .text:00000096 L0
+                            *ABS*:00000002 __gcc_isr.n_pushed.001
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:243    .text:000000a8 .Loc.56
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:244    .text:000000a8 .Loc.57
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:249    .text:000000b8 .Loc.58
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:253    .text:000000be .Loc.59
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:254    .text:000000be .Loc.60
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:259    .text:000000c0 .Loc.61
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:264    .text:000000ca .Loc.62
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:269    .text:000000cc .Loc.63
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:273    .text:000000ce .Loc.64
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:274    .text:000000ce .Loc.65
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:275    .text:000000ce .Loc.66
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:279    .text:000000ce .Loc.67
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:288    .text:000000e0 .Loc.68
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:289    .text:000000e0 .Loc.69
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:293    .text:000000e4 .Loc.70
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:297    .text:000000ec .Loc.71
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:303    .text:000000f4 .Loc.72
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:306    .text:000000f6 .Loc.73
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:309    .text:000000fe .Loc.74
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:312    .text:00000102 .Loc.75
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:316    .text:00000104 .Loc.76
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:317    .text:00000104 .Loc.77
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:322    .text:0000010c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:327    .text:0000010c __vector_18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:329    .text:0000010c .Loc.78
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:330    .text:0000010c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:335    .text:0000010c .Loc.79
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:336    .text:0000010c .Loc.80
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:337    .text:0000010c .Loc.81
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:338    .text:0000010c .Loc.82
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:339    .text:0000010c .Loc.83
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:345    .text:0000010e .Loc.84
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:346    .text:0000010e .Loc.85
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:349    .text:00000110 .Loc.86
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:355    .text:00000112 .Loc.87
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:360    .text:0000011c .Loc.88
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:365    .text:0000011e .Loc.89
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:369    .text:00000122 .Loc.90
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:374    .text:00000124 .Loc.91
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:379    .text:00000126 .Loc.92
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:380    .text:00000126 .Loc.93
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:385    .text:00000128 .Loc.94
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:390    .text:0000012a .Loc.95
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:395    .text:0000012c .Loc.96
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:400    .text:0000012e .Loc.97
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:405    .text:00000130 .Loc.98
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:410    .text:00000132 .Loc.99
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:415    .text:00000134 .Loc.100
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:420    .text:00000136 .Loc.101
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:425    .text:00000138 .Loc.102
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:426    .text:00000138 .Loc.103
+                            *COM*:00000002 liczba_odebranych_znakow_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:430    .text:00000140 .Loc.104
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:431    .text:00000140 .Loc.105
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:433    .text:00000144 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:435    .text:00000146 .Loc.106
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:436    .text:00000146 .Loc.107
+                            *COM*:0000017d odebrany_blok_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:439    .text:0000014a .Loc.108
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:440    .text:0000014a .Loc.109
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:442    .text:0000014c .Loc.110
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:446    .text:00000154 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:448    .text:00000156 .Loc.111
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:449    .text:00000156 .Loc.112
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:454    .text:0000015c .Loc.113
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:456    .text:00000160 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:460    .text:00000164 .Loc.114
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:461    .text:00000164 .Loc.115
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:463    .text:00000168 .Loc.116
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:464    .text:00000168 .Loc.117
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:467    .text:0000016c .Loc.118
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:470    .text:00000170 .Loc.119
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:473    .text:00000174 .Loc.120
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:474    .text:00000174 .Loc.121
+                            *COM*:00000001 czy_jest_nowe_polecenie_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:476    .text:00000178 .Loc.122
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:479    .text:0000017c .Loc.123
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:480    .text:0000017c .Loc.124
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1122   .bss:00000002 komenda_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:483    .text:00000182 .Loc.125
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:485    .text:00000184 .Loc.126
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:486    .text:00000184 .Loc.127
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:491    .text:00000186 .Loc.128
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:496    .text:00000190 .Loc.129
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:500    .text:00000196 .Loc.130
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:505    .text:00000198 .Loc.131
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:509    .text:0000019a .Loc.132
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:510    .text:0000019a .Loc.133
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:511    .text:0000019a .Loc.134
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:512    .text:0000019a .Loc.135
+                            *COM*:00000002 poczatek_polecenia_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:516    .text:000001a2 .Loc.136
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:517    .text:000001a2 .Loc.137
+                            *COM*:00000002 zakonczenie_polecenia_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:520    .text:000001aa .Loc.138
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:521    .text:000001aa .Loc.139
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:524    .text:000001ae .Loc.140
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:525    .text:000001ae .Loc.141
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:529    .text:000001b4 .Loc.142
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:535    .text:000001bc .Loc.143
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:536    .text:000001bc .Loc.144
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:538    .text:000001c0 .Loc.145
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:541    .text:000001c4 .Loc.146
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:542    .text:000001c4 .Loc.147
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:545    .text:000001ca .Loc.148
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:547    .text:000001cc .Loc.149
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:548    .text:000001cc .Loc.150
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:553    .text:000001ce .Loc.151
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:558    .text:000001d8 .Loc.152
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:562    .text:000001de .Loc.153
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:567    .text:000001e0 .Loc.154
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:571    .text:000001e2 .Loc.155
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:572    .text:000001e2 .Loc.156
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:573    .text:000001e2 .Loc.157
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:574    .text:000001e2 .Loc.158
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:578    .text:000001ea .Loc.159
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:579    .text:000001ea .Loc.160
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:582    .text:000001f2 .Loc.161
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:583    .text:000001f2 .Loc.162
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:586    .text:000001f6 .Loc.163
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:594    .text:00000204 .Loc.164
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:598    .text:0000020a .Loc.165
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:601    .text:00000210 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:603    .text:00000212 .Loc.166
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:605    .text:00000216 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:607    .text:00000218 .Loc.167
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:611    .text:0000021e .Loc.168
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:615    .text:00000226 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:617    .text:00000228 .Loc.169
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:620    .text:0000022c .Loc.170
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:624    .text:00000234 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:626    .text:00000236 .Loc.171
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:629    .text:0000023a .Loc.172
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:633    .text:00000242 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:635    .text:00000244 .Loc.173
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:640    .text:0000024c .Loc.174
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:644    .text:00000252 .Loc.175
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:645    .text:00000252 .Loc.176
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:650    .text:00000262 .Loc.177
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:651    .text:00000262 .Loc.178
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:654    .text:0000026a .Loc.179
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:658    .text:00000274 .Loc.180
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:659    .text:00000274 .Loc.181
+                            *COM*:0000000a polozenie_otrzymanych_komend_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:662    .text:0000027c .Loc.182
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:665    .text:00000284 .Loc.183
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:666    .text:00000284 .Loc.184
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:669    .text:0000028c .Loc.185
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:672    .text:00000294 .Loc.186
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:673    .text:00000294 .Loc.187
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:676    .text:0000029c .Loc.188
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:679    .text:000002a4 .Loc.189
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:680    .text:000002a4 .Loc.190
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:685    .text:000002b4 .Loc.191
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:686    .text:000002b4 .Loc.192
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:692    .text:000002c4 .Loc.193
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:693    .text:000002c4 .Loc.194
+                            *COM*:00000001 czekanie_na_odebranie_zachety
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:695    .text:000002c8 .Loc.195
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:698    .text:000002cc .Loc.196
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:702    .text:000002d2 .Loc.197
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:705    .text:000002d6 .Loc.198
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:709    .text:000002de .Loc.199
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:710    .text:000002de .Loc.200
+                            *COM*:00000001 flaga_odebrany_znak_zachety
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:714    .text:000002e4 .Loc.201
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:715    .text:000002e4 .Loc.202
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:717    .text:000002e6 .Loc.203
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:718    .text:000002e6 .Loc.204
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:720    .text:000002e8 .Loc.205
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:721    .text:000002e8 .Loc.206
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:727    .text:000002f0 .Loc.207
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:728    .text:000002f0 .Loc.208
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:731    .text:000002f4 .Loc.209
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:732    .text:000002f4 .Loc.210
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:735    .text:000002fa .Loc.211
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:736    .text:000002fa .Loc.212
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:739    .text:00000302 .Loc.213
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:740    .text:00000302 .Loc.214
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:743    .text:0000030a .Loc.215
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:744    .text:0000030a .Loc.216
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:747    .text:0000030e .Loc.217
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:748    .text:0000030e .Loc.218
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:752    .text:00000316 .Loc.219
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:753    .text:00000316 .Loc.220
+                            *COM*:00000001 licznik_opoznienie_oczekiwania_na_bajt_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:755    .text:0000031a .Loc.221
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:761    .text:0000031c .Loc.222
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:766    .text:0000031e .Loc.223
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:771    .text:00000320 .Loc.224
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:776    .text:00000322 .Loc.225
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:781    .text:00000324 .Loc.226
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:786    .text:00000326 .Loc.227
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:791    .text:00000328 .Loc.228
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:796    .text:0000032a .Loc.229
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:801    .text:0000032c .Loc.230
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:802    .text:0000032c .Loc.231
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:807    .text:00000332 .Loc.232
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:812    .text:00000334 .Loc.233
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:817    .text:00000338 .Loc.234
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:818    .text:00000338 .Loc.235
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:823    .text:0000033a .Loc.236
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:828    .text:0000033e .Loc.237
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:829    .text:0000033e .Loc.238
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:833    .text:00000340 .Loc.239
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:839    .text:00000342 .Loc.240
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:845    .text:00000344 .Loc.241
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:850    .text:00000346 .Loc.242
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:851    .text:00000346 .Loc.243
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:854    .text:00000348 .Loc.244
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:860    .text:0000034a .Loc.245
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:866    .text:0000034c .Loc.246
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:867    .text:0000034c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:872    .text:0000034c inicjalizacja_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:874    .text:0000034c .Loc.247
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:875    .text:0000034c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:880    .text:0000034c .Loc.248
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:881    .text:0000034c .Loc.249
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:884    .text:00000352 .Loc.250
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:885    .text:00000352 .Loc.251
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:887    .text:00000356 .Loc.252
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:888    .text:00000356 .Loc.253
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:894    .text:00000360 .Loc.254
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:897    .text:00000360 .Loc.255
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:899    .text:00000360 .Loc.256
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:903    .text:00000366 .Loc.257
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:905    .text:00000368 .Loc.258
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:907    .text:0000036a .Loc.259
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:909    .text:0000036c .Loc.260
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:914    .text:0000036e .Loc.261
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:916    .text:00000370 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:921    .text:00000370 zakonczenie_procedury_inicjalizacyjnej
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:923    .text:00000370 .Loc.262
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:924    .text:00000370 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:929    .text:00000370 .Loc.263
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:930    .text:00000370 .Loc.264
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:932    .text:00000372 .Loc.265
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:939    .text:0000037a .Loc.266
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:941    .text:0000037a .Loc.267
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:942    .text:0000037a .Loc.268
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1098   .data:00000000 licznik_100ms_procedura_inicjalizacyjna_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:944    .text:0000037e .Loc.269
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:945    .text:0000037e .Loc.270
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:948    .text:00000386 .Loc.271
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:951    .text:00000386 .Loc.272
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:953    .text:00000386 .Loc.273
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:955    .text:00000388 .Loc.274
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:959    .text:0000038e .Loc.275
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:961    .text:00000390 .Loc.276
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:963    .text:00000392 .Loc.277
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:967    .text:00000394 .Loc.278
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:970    .text:00000394 .Loc.279
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:978    .text:00000396 .Loc.280
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:980    .text:00000398 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:985    .text:00000398 procedura_inicjalizacyjna_SIM900_100MS
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:987    .text:00000398 .Loc.281
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:988    .text:00000398 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:993    .text:00000398 .Loc.282
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:994    .text:00000398 .Loc.283
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:996    .text:0000039c .Loc.284
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:999    .text:000003a0 .Loc.285
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1003   .text:000003a8 .Loc.286
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1015   .text:000003bc .Loc.287
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1019   .text:000003c0 .Loc.288
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1024   .text:000003c6 .Loc.289
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1025   .text:000003c6 .Loc.290
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1028   .text:000003ca .Loc.291
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1038   .text:000003d8 .Loc.292
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1048   .text:000003e8 .Loc.293
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1050   .text:000003ea .Loc.294
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1053   .text:000003ec .Loc.295
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1055   .text:000003ee .Loc.296
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1056   .text:000003ee .Loc.297
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1059   .text:000003f2 .Loc.298
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1063   .text:000003f6 .Loc.299
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1065   .text:000003f8 .Loc.300
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1068   .text:000003fa .Loc.301
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1069   .text:000003fa .Loc.302
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1117   .bss:00000001 podlaczony_modul_gsm_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1071   .text:000003fe .Loc.303
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1072   .text:000003fe .Loc.304
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1112   .bss:00000000 podlaczona_karta_SIM_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1074   .text:00000402 .Loc.305
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1077   .text:00000404 .Loc.306
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1078   .text:00000404 .Loc.307
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1081   .text:0000040a .Loc.308
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1082   .text:0000040a .Loc.309
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1085   .text:0000040c .Loc.310
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1089   .text:0000040e .Loc.311
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1091   .text:00000410 L0
+                            *COM*:00000002 liczba_znakow_pdu_do_odebrania
+                            *COM*:00000001 wykonywanie_rozmowy_telefonicznej
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1134   .bss:00000004 sms_timestamp_sekunda
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1139   .bss:00000005 sms_timestamp_minuta
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1144   .bss:00000006 sms_timestamp_godzina
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1149   .bss:00000007 sms_timestamp_dzien
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1154   .bss:00000008 sms_timestamp_miesiac
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1159   .bss:00000009 sms_timestamp_rok
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1171   .text:00000410 L0
+                     .debug_frame:00000000 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:152    .text:00000068 .L4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:113    .text:0000004c .L3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:184    .text:00000078 .L01
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:287    .text:000000e0 .L7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:315    .text:00000104 .L9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:277    .text:000000ce .L6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:751    .text:00000316 .L11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:726    .text:000002f0 .L12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:459    .text:00000164 .L13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:585    .text:000001f6 .L18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:534    .text:000001bc .L14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:523    .text:000001ae .L16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:453    .text:0000015c .L17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:691    .text:000002c4 .L19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:713    .text:000002e4 .L20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:746    .text:0000030e .L21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:838    .text:00000342 .L22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:972    .text:00000396 .L51
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1087   .text:0000040e .L56
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1067   .text:000003fa .L58
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1037   .text:000003d8 .L59
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1047   .text:000003e8 .L67
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1018   .text:000003c0 .L61
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1052   .text:000003ec .L62
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1062   .text:000003f6 .L66
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1014   .text:000003bc .L69
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1033   .text:000003d2 .L68
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1076   .text:00000404 .L65
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1023   .text:000003c6 .L64
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1084   .text:0000040c .L70
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2083   .debug_abbrev:00000000 .Ldebug_abbrev0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:8      .text:00000000 .Ltext0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1165   .text:00000410 .Letext0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2910   .debug_line:00000000 .Ldebug_line0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:986    .text:00000398 .LFB10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1092   .text:00000410 .LFE10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1027   .text:000003ca .LVL19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1058   .text:000003f2 .LVL20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:873    .text:0000034c .LFB8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:917    .text:00000370 .LFE8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:896    .text:00000360 .LBI6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:895    .text:00000360 .LBB6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:913    .text:0000036e .LBE6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:328    .text:0000010c .LFB5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:868    .text:0000034c .LFE5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:214    .text:00000096 .LFB4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:323    .text:0000010c .LFE4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2604   .debug_loc:00000000 .LLST8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:292    .text:000000e4 .LBB3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:311    .text:00000102 .LBE3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2646   .debug_loc:00000058 .LLST9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2643   .debug_loc:00000056 .LVUS9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2661   .debug_loc:00000072 .LLST10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2658   .debug_loc:00000070 .LVUS10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:165    .text:0000006c .LFB3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:209    .text:00000096 .LFE3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2671   .debug_loc:00000087 .LLST7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2668   .debug_loc:00000085 .LVUS7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:207    .text:00000096 .LVL14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:77     .text:00000032 .LFB2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:160    .text:0000006c .LFE2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2678   .debug_loc:0000009a .LLST1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2706   .debug_loc:000000cf .LLST2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2699   .debug_loc:000000c9 .LVUS2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2747   .debug_loc:00000111 .LLST3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2736   .debug_loc:00000107 .LVUS3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2799   .debug_loc:0000016c .LLST4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2792   .debug_loc:00000166 .LVUS4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:120    .text:00000052 .LBB2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:132    .text:00000054 .LBE2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2822   .debug_loc:0000019c .LLST5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2815   .debug_loc:00000196 .LVUS5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2854   .debug_loc:000001d5 .LLST6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2849   .debug_loc:000001d1 .LVUS6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:151    .text:00000068 .LVL9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:14     .text:00000000 .LFB1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:71     .text:00000032 .LFE1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2870   .debug_loc:000001f7 .LLST0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2865   .debug_loc:000001f3 .LVUS0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:922    .text:00000370 .LFB9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:981    .text:00000398 .LFE9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:938    .text:0000037a .LBI12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:937    .text:0000037a .LBB12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:977    .text:00000396 .LBE12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:950    .text:00000386 .LBI14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:2902   .debug_ranges:00000000 .Ldebug_ranges0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:220    .text:000000a0 .LCFI2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:224    .text:000000a2 .LCFI3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:228    .text:000000a4 .LCFI4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:232    .text:000000a6 .LCFI5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:236    .text:000000a8 .LCFI6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:296    .text:000000ec .LVL15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:314    .text:00000104 .LVL18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:302    .text:000000f4 .LVL16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:191    .text:00000084 .LVL11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:195    .text:00000086 .LVL12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:82     .text:00000034 .LCFI0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:86     .text:00000036 .LCFI1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:76     .text:00000032 .LVL2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:112    .text:0000004c .LVL5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:107    .text:00000046 .LVL4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:118    .text:00000052 .LVL6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:148    .text:00000064 .LVL8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:102    .text:00000042 .LVL3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:156    .text:0000006a .LVL10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:129    .text:00000054 .LVL7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:13     .text:00000000 .LVL0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:35     .text:00000016 .LVL1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:1172   .debug_info:00000000 .Ldebug_info0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:949    .text:00000386 .LBB14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:966    .text:00000394 .LBE14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:968    .text:00000394 .LBB17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccctQr1P.s:975    .text:00000396 .LBE17
+
+UNDEFINED SYMBOLS
+wysylany_blok_SIM900
+__do_copy_data
+__do_clear_bss

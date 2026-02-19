@@ -1,0 +1,7 @@
+konfiguracja.c:8:7:konwersja_znaku_telefonu	2	static
+konfiguracja.c:22:6:konwertuj_telefon_na_blok_eeprom	11	static
+konfiguracja.c:44:7:konwersja_znaku_telefonu_eeprom	2	static
+konfiguracja.c:51:7:konwertuj_blok_eeprom_na_telefon	4	static
+konfiguracja.c:84:7:kopiuj_blok_eeprom_na_telefon	12	static
+konfiguracja.c:92:7:porownaj_numer_telefonu_blok	6	static
+konfiguracja.c:118:7:porownaj_numer_telefonu	11	static

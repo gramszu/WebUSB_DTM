@@ -1,0 +1,2056 @@
+   1               		.file	"poleceniagsm.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	porownaj_znaki
+  12               	porownaj_znaki:
+  13               	.LVL0:
+  14               	.LFB5:
+  15               		.file 1 "poleceniagsm.c"
+   1:poleceniagsm.c **** 
+   2:poleceniagsm.c **** #include "sim900.h"
+   3:poleceniagsm.c **** #include "poleceniagsm.h"
+   4:poleceniagsm.c **** #include <stdlib.h>
+   5:poleceniagsm.c **** #include <avr/pgmspace.h>
+   6:poleceniagsm.c **** #include <string.h>
+   7:poleceniagsm.c **** //#include "bufpomoc.h"
+   8:poleceniagsm.c **** //#include "USB.h"
+   9:poleceniagsm.c **** 
+  10:poleceniagsm.c **** uchar bledny_PIN = FALSE;
+  11:poleceniagsm.c **** 
+  12:poleceniagsm.c **** uchar poziom_sieci_gsm = POZIOM_SIECI_BLAD;
+  13:poleceniagsm.c **** 
+  14:poleceniagsm.c **** uchar porownaj_znaki(PGM_P polecenie, const uint poczatek, 
+  15:poleceniagsm.c **** 	const uchar liczba_znakow, const uint odebrane)
+  16:poleceniagsm.c **** {
+  16               		.loc 1 16 1 view -0
+  17               		.cfi_startproc
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  22               		.loc 1 16 1 is_stmt 0 view .LVU1
+  23 0000 FC01      		movw r30,r24
+  17:poleceniagsm.c **** 	if ( liczba_znakow <= odebrane )
+  24               		.loc 1 17 2 is_stmt 1 view .LVU2
+  25               		.loc 1 17 5 is_stmt 0 view .LVU3
+  26 0002 4217      		cp r20,r18
+  27 0004 1306      		cpc __zero_reg__,r19
+  28 0006 01F0      		breq .+2
+  29 0008 00F4      		brsh .L8
+  30               	.LVL1:
+  31               	.LBB8:
+  32               	.LBI8:
+  14:poleceniagsm.c **** 	const uchar liczba_znakow, const uint odebrane)
+  33               		.loc 1 14 7 is_stmt 1 view .LVU4
+  34               	.LBB9:
+  18:poleceniagsm.c **** 	{
+  19:poleceniagsm.c **** 		uchar* w = &odebrany_blok_SIM900[poczatek];
+  35               		.loc 1 19 3 view .LVU5
+  20:poleceniagsm.c **** 		uchar l = 0;
+  36               		.loc 1 20 3 view .LVU6
+  21:poleceniagsm.c **** 		while ( l < liczba_znakow && *w == pgm_read_byte(polecenie) )
+  37               		.loc 1 21 3 view .LVU7
+  19:poleceniagsm.c **** 		uchar l = 0;
+  38               		.loc 1 19 10 is_stmt 0 view .LVU8
+  39 000a DB01      		movw r26,r22
+  40 000c A050      		subi r26,lo8(-(odebrany_blok_SIM900))
+  41 000e B040      		sbci r27,hi8(-(odebrany_blok_SIM900))
+  42               	.LVL2:
+  20:poleceniagsm.c **** 		uchar l = 0;
+  43               		.loc 1 20 9 view .LVU9
+  44 0010 90E0      		ldi r25,0
+  45               	.LVL3:
+  46               	.L3:
+  47               		.loc 1 21 9 is_stmt 1 view .LVU10
+  48 0012 4913      		cpse r20,r25
+  49 0014 00C0      		rjmp .L4
+  50               		.loc 1 21 9 is_stmt 0 view .LVU11
+  51 0016 942F      		mov r25,r20
+  52               	.LVL4:
+  53               	.L7:
+  22:poleceniagsm.c **** 			++w, ++polecenie, ++l;
+  23:poleceniagsm.c **** 		return l == liczba_znakow;
+  54               		.loc 1 23 3 is_stmt 1 view .LVU12
+  55               		.loc 1 23 12 is_stmt 0 view .LVU13
+  56 0018 81E0      		ldi r24,lo8(1)
+  57 001a 4913      		cpse r20,r25
+  58               	.LVL5:
+  59               	.L8:
+  60               		.loc 1 23 12 view .LVU14
+  61               	.LBE9:
+  62               	.LBE8:
+  24:poleceniagsm.c **** 	}
+  25:poleceniagsm.c **** 	return FALSE;
+  63               		.loc 1 25 9 view .LVU15
+  64 001c 80E0      		ldi r24,0
+  65               	.L1:
+  66               	/* epilogue start */
+  26:poleceniagsm.c **** }
+  67               		.loc 1 26 1 view .LVU16
+  68 001e 0895      		ret
+  69               	.LVL6:
+  70               	.L4:
+  71               	.LBB12:
+  72               	.LBB11:
+  21:poleceniagsm.c **** 			++w, ++polecenie, ++l;
+  73               		.loc 1 21 32 view .LVU17
+  74 0020 2D91      		ld r18,X+
+  75               	.LVL7:
+  76               	.LBB10:
+  21:poleceniagsm.c **** 			++w, ++polecenie, ++l;
+  77               		.loc 1 21 38 is_stmt 1 view .LVU18
+  21:poleceniagsm.c **** 			++w, ++polecenie, ++l;
+  78               		.loc 1 21 38 view .LVU19
+  21:poleceniagsm.c **** 			++w, ++polecenie, ++l;
+  79               		.loc 1 21 38 view .LVU20
+  80               	/* #APP */
+  81               	 ;  21 "poleceniagsm.c" 1
+  82 0022 8491      		lpm r24, Z
+  83               		
+  84               	 ;  0 "" 2
+  85               	.LVL8:
+  21:poleceniagsm.c **** 			++w, ++polecenie, ++l;
+  86               		.loc 1 21 38 view .LVU21
+  87               	/* #NOAPP */
+  88               	.LBE10:
+  21:poleceniagsm.c **** 			++w, ++polecenie, ++l;
+  89               		.loc 1 21 29 is_stmt 0 view .LVU22
+  90 0024 2813      		cpse r18,r24
+  91 0026 00C0      		rjmp .L7
+  22:poleceniagsm.c **** 		return l == liczba_znakow;
+  92               		.loc 1 22 4 is_stmt 1 view .LVU23
+  93               	.LVL9:
+  22:poleceniagsm.c **** 		return l == liczba_znakow;
+  94               		.loc 1 22 9 is_stmt 0 view .LVU24
+  95 0028 3196      		adiw r30,1
+  96               	.LVL10:
+  22:poleceniagsm.c **** 		return l == liczba_znakow;
+  97               		.loc 1 22 22 view .LVU25
+  98 002a 9F5F      		subi r25,lo8(-(1))
+  99               	.LVL11:
+  22:poleceniagsm.c **** 		return l == liczba_znakow;
+ 100               		.loc 1 22 22 view .LVU26
+ 101 002c 00C0      		rjmp .L3
+ 102               	.LBE11:
+ 103               	.LBE12:
+ 104               		.cfi_endproc
+ 105               	.LFE5:
+ 107               	.global	resetuj_polecenie_konczace
+ 109               	resetuj_polecenie_konczace:
+ 110               	.LFB6:
+  27:poleceniagsm.c **** 
+  28:poleceniagsm.c **** void resetuj_polecenie_konczace(void)
+  29:poleceniagsm.c **** {
+ 111               		.loc 1 29 1 is_stmt 1 view -0
+ 112               		.cfi_startproc
+ 113               	/* prologue: function */
+ 114               	/* frame size = 0 */
+ 115               	/* stack size = 0 */
+ 116               	.L__stack_usage = 0
+  30:poleceniagsm.c **** 	const uchar sreg = SREG;
+ 117               		.loc 1 30 2 view .LVU28
+ 118               		.loc 1 30 14 is_stmt 0 view .LVU29
+ 119 002e 8FB7      		in r24,__SREG__
+ 120               	.LVL12:
+  31:poleceniagsm.c **** 	cli();
+ 121               		.loc 1 31 2 is_stmt 1 view .LVU30
+ 122               	/* #APP */
+ 123               	 ;  31 "poleceniagsm.c" 1
+ 124 0030 F894      		cli
+ 125               	 ;  0 "" 2
+  32:poleceniagsm.c **** 	poczatek_polecenia_SIM900 = 0;
+ 126               		.loc 1 32 2 view .LVU31
+ 127               		.loc 1 32 28 is_stmt 0 view .LVU32
+ 128               	/* #NOAPP */
+ 129 0032 1092 0000 		sts poczatek_polecenia_SIM900+1,__zero_reg__
+ 130 0036 1092 0000 		sts poczatek_polecenia_SIM900,__zero_reg__
+  33:poleceniagsm.c **** 	zakonczenie_polecenia_SIM900 = 0;
+ 131               		.loc 1 33 2 is_stmt 1 view .LVU33
+ 132               		.loc 1 33 31 is_stmt 0 view .LVU34
+ 133 003a 1092 0000 		sts zakonczenie_polecenia_SIM900+1,__zero_reg__
+ 134 003e 1092 0000 		sts zakonczenie_polecenia_SIM900,__zero_reg__
+  34:poleceniagsm.c **** 	SREG = sreg;
+ 135               		.loc 1 34 2 is_stmt 1 view .LVU35
+ 136               		.loc 1 34 7 is_stmt 0 view .LVU36
+ 137 0042 8FBF      		out __SREG__,r24
+  35:poleceniagsm.c **** 	return;
+ 138               		.loc 1 35 2 is_stmt 1 view .LVU37
+ 139               	/* epilogue start */
+  36:poleceniagsm.c **** }
+ 140               		.loc 1 36 1 is_stmt 0 view .LVU38
+ 141 0044 0895      		ret
+ 142               		.cfi_endproc
+ 143               	.LFE6:
+ 145               	.global	polecenia_konczace_gsm
+ 147               	polecenia_konczace_gsm:
+ 148               	.LFB7:
+  37:poleceniagsm.c **** 
+  38:poleceniagsm.c **** uint numer_bledu_cme = 0;
+  39:poleceniagsm.c **** uint numer_bledu_cms = 0;
+  40:poleceniagsm.c **** 
+  41:poleceniagsm.c **** #define MAX_LICZBA_ZAREJESTROWANYCH_KOMEND_OD_SIM900	(2*LICZBA_POLOZEN_OTRZYMANYCH_KOMEND_SIM900)
+  42:poleceniagsm.c **** enum KomendySIM900 zarejestrowane_komendy_od_SIM900[MAX_LICZBA_ZAREJESTROWANYCH_KOMEND_OD_SIM900];
+  43:poleceniagsm.c **** uchar liczba_komend_w_kolejce_SIM900;
+  44:poleceniagsm.c **** 
+  45:poleceniagsm.c **** uchar polecenia_konczace_gsm(void)
+  46:poleceniagsm.c **** {
+ 149               		.loc 1 46 1 is_stmt 1 view -0
+ 150               		.cfi_startproc
+ 151 0046 2F92      		push r2
+ 152               	.LCFI0:
+ 153               		.cfi_def_cfa_offset 3
+ 154               		.cfi_offset 2, -2
+ 155 0048 3F92      		push r3
+ 156               	.LCFI1:
+ 157               		.cfi_def_cfa_offset 4
+ 158               		.cfi_offset 3, -3
+ 159 004a 4F92      		push r4
+ 160               	.LCFI2:
+ 161               		.cfi_def_cfa_offset 5
+ 162               		.cfi_offset 4, -4
+ 163 004c 5F92      		push r5
+ 164               	.LCFI3:
+ 165               		.cfi_def_cfa_offset 6
+ 166               		.cfi_offset 5, -5
+ 167 004e 6F92      		push r6
+ 168               	.LCFI4:
+ 169               		.cfi_def_cfa_offset 7
+ 170               		.cfi_offset 6, -6
+ 171 0050 7F92      		push r7
+ 172               	.LCFI5:
+ 173               		.cfi_def_cfa_offset 8
+ 174               		.cfi_offset 7, -7
+ 175 0052 8F92      		push r8
+ 176               	.LCFI6:
+ 177               		.cfi_def_cfa_offset 9
+ 178               		.cfi_offset 8, -8
+ 179 0054 9F92      		push r9
+ 180               	.LCFI7:
+ 181               		.cfi_def_cfa_offset 10
+ 182               		.cfi_offset 9, -9
+ 183 0056 AF92      		push r10
+ 184               	.LCFI8:
+ 185               		.cfi_def_cfa_offset 11
+ 186               		.cfi_offset 10, -10
+ 187 0058 BF92      		push r11
+ 188               	.LCFI9:
+ 189               		.cfi_def_cfa_offset 12
+ 190               		.cfi_offset 11, -11
+ 191 005a CF92      		push r12
+ 192               	.LCFI10:
+ 193               		.cfi_def_cfa_offset 13
+ 194               		.cfi_offset 12, -12
+ 195 005c DF92      		push r13
+ 196               	.LCFI11:
+ 197               		.cfi_def_cfa_offset 14
+ 198               		.cfi_offset 13, -13
+ 199 005e EF92      		push r14
+ 200               	.LCFI12:
+ 201               		.cfi_def_cfa_offset 15
+ 202               		.cfi_offset 14, -14
+ 203 0060 FF92      		push r15
+ 204               	.LCFI13:
+ 205               		.cfi_def_cfa_offset 16
+ 206               		.cfi_offset 15, -15
+ 207 0062 0F93      		push r16
+ 208               	.LCFI14:
+ 209               		.cfi_def_cfa_offset 17
+ 210               		.cfi_offset 16, -16
+ 211 0064 1F93      		push r17
+ 212               	.LCFI15:
+ 213               		.cfi_def_cfa_offset 18
+ 214               		.cfi_offset 17, -17
+ 215 0066 CF93      		push r28
+ 216               	.LCFI16:
+ 217               		.cfi_def_cfa_offset 19
+ 218               		.cfi_offset 28, -18
+ 219 0068 DF93      		push r29
+ 220               	.LCFI17:
+ 221               		.cfi_def_cfa_offset 20
+ 222               		.cfi_offset 29, -19
+ 223               	/* prologue: function */
+ 224               	/* frame size = 0 */
+ 225               	/* stack size = 18 */
+ 226               	.L__stack_usage = 18
+  47:poleceniagsm.c **** 	for(uchar i = 8; i != 0; --i)
+ 227               		.loc 1 47 2 view .LVU40
+ 228               	.LBB13:
+ 229               		.loc 1 47 6 view .LVU41
+ 230               	.LVL13:
+ 231               		.loc 1 47 19 view .LVU42
+ 232               	.LBE13:
+  46:poleceniagsm.c **** 	for(uchar i = 8; i != 0; --i)
+ 233               		.loc 1 46 1 is_stmt 0 view .LVU43
+ 234 006a C8E0      		ldi r28,lo8(8)
+ 235               	.LBB17:
+ 236               	.LBB14:
+  48:poleceniagsm.c **** 	{
+  49:poleceniagsm.c **** 		const uchar sreg = SREG;
+  50:poleceniagsm.c **** 		cli();
+  51:poleceniagsm.c **** 		uchar pom = czy_jest_nowe_polecenie_SIM900;
+  52:poleceniagsm.c **** 		if ( !pom )
+  53:poleceniagsm.c **** 		{
+  54:poleceniagsm.c **** 			SREG = sreg;
+  55:poleceniagsm.c **** 			if ( liczba_komend_w_kolejce_SIM900 != 0 )
+  56:poleceniagsm.c **** 			{
+  57:poleceniagsm.c **** 				komenda_SIM900 = zarejestrowane_komendy_od_SIM900[--liczba_komend_w_kolejce_SIM900];
+  58:poleceniagsm.c **** 				zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900] = BRAK_KOMENDY_SIM900;
+  59:poleceniagsm.c **** 				return komenda_SIM900;
+  60:poleceniagsm.c **** 			}
+  61:poleceniagsm.c **** 			return komenda_SIM900 = BRAK_KOMENDY_SIM900;
+  62:poleceniagsm.c **** 		}
+  63:poleceniagsm.c **** 		if ( pom >= LICZBA_POLOZEN_OTRZYMANYCH_KOMEND_SIM900 )
+  64:poleceniagsm.c **** 			pom = LICZBA_POLOZEN_OTRZYMANYCH_KOMEND_SIM900-1;
+  65:poleceniagsm.c **** 		const uint poczatek = polozenie_otrzymanych_komend_SIM900[pom];
+  66:poleceniagsm.c **** 		polozenie_otrzymanych_komend_SIM900[pom] = 0;
+  67:poleceniagsm.c **** 		const uint zakonczenie = polozenie_otrzymanych_komend_SIM900[--pom];
+  68:poleceniagsm.c **** 		//podglad(poczatek & 0xff);
+  69:poleceniagsm.c **** 		//podglad(zakonczenie & 0xff);
+  70:poleceniagsm.c **** 		czy_jest_nowe_polecenie_SIM900 = pom;
+  71:poleceniagsm.c **** 		SREG = sreg;
+  72:poleceniagsm.c **** 		if ( zakonczenie <= poczatek )
+  73:poleceniagsm.c **** 			continue;
+  74:poleceniagsm.c **** 		if ( liczba_komend_w_kolejce_SIM900 >= MAX_LICZBA_ZAREJESTROWANYCH_KOMEND_OD_SIM900 )
+  75:poleceniagsm.c **** 		{
+  76:poleceniagsm.c **** 			liczba_komend_w_kolejce_SIM900 = MAX_LICZBA_ZAREJESTROWANYCH_KOMEND_OD_SIM900 - 1;
+  77:poleceniagsm.c **** 		}
+  78:poleceniagsm.c **** 		const uint z = zakonczenie - poczatek - 4;
+  79:poleceniagsm.c **** 		const uint p = poczatek+2;
+  80:poleceniagsm.c **** #define czy_polecenie_sim(POL)	porownaj_znaki(POL, p, strlen_R(POL), z)
+  81:poleceniagsm.c **** #define czy_polecenie_sim_od_tylu(POL)	porownaj_znaki_od_tylu(POL, zakonczenie - 3, strlen_R(POL), 
+  82:poleceniagsm.c **** 		const uchar d0 = odebrany_blok_SIM900[zakonczenie-3];
+  83:poleceniagsm.c **** 		const uchar d1 = odebrany_blok_SIM900[zakonczenie-4];
+  84:poleceniagsm.c **** 		const uchar d2 = odebrany_blok_SIM900[zakonczenie-5];
+  85:poleceniagsm.c **** 		const uchar d5 = odebrany_blok_SIM900[poczatek+5];
+  86:poleceniagsm.c **** 	//	static const char polecenie_OK[] PROGMEM = "OK";
+  87:poleceniagsm.c **** 		if ( d0 == 'K' && d1 == 'O' && d2 != ' ' && zakonczenie > 5 )
+  88:poleceniagsm.c **** 		{
+  89:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = OK_KOMENDA_SIM900;
+  90:poleceniagsm.c **** 			continue;
+  91:poleceniagsm.c **** 		}
+  92:poleceniagsm.c **** 		static const char polecenie_CMGS[] PROGMEM = "+CMGS:";
+  93:poleceniagsm.c **** 		if ( d5 == 'G' && czy_polecenie_sim(polecenie_CMGS) )
+  94:poleceniagsm.c **** 		{
+  95:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = CMGS_KOMENDA_SIM900;
+  96:poleceniagsm.c **** 			continue;
+  97:poleceniagsm.c **** 		}
+  98:poleceniagsm.c **** 		static const char polecenie_ERROR[] PROGMEM = "ERROR";
+  99:poleceniagsm.c **** 		if ( d1 == 'O' && czy_polecenie_sim(polecenie_ERROR) )
+ 100:poleceniagsm.c **** 		{
+ 101:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = ERROR_KOMENDA_SIM900;
+ 102:poleceniagsm.c **** 			continue;
+ 103:poleceniagsm.c **** 		}
+ 104:poleceniagsm.c **** 		static const char polecenie_MO_RING[] PROGMEM = "MO RING";
+ 105:poleceniagsm.c **** 		if ( d0 == 'G' && czy_polecenie_sim(polecenie_MO_RING) )
+ 106:poleceniagsm.c **** 		{
+ 107:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = MO_RING_KOMENDA_SIM900;
+ 108:poleceniagsm.c **** 			continue;
+ 109:poleceniagsm.c **** 		}
+ 110:poleceniagsm.c **** 		static const char polecenie_MO_CONNECTED[] PROGMEM = "MO CONNECTED";
+ 111:poleceniagsm.c **** 		if ( d0 == 'D' && czy_polecenie_sim(polecenie_MO_CONNECTED) )
+ 112:poleceniagsm.c **** 		{
+ 113:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = MO_CONNECTED_KOMENDA_SIM900
+ 114:poleceniagsm.c **** 			continue;
+ 115:poleceniagsm.c **** 		}
+ 116:poleceniagsm.c **** 		//static const char polecenie_CONNECT[] PROGMEM = "CONNECT";
+ 117:poleceniagsm.c **** 		//if ( d0 == 'T' && czy_polecenie_sim(polecenie_CONNECT) )
+ 118:poleceniagsm.c **** 		//{
+ 119:poleceniagsm.c **** 		//	zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = CONNECT_KOMENDA_SIM900;
+ 120:poleceniagsm.c **** 		//	continue;
+ 121:poleceniagsm.c **** 		//}
+ 122:poleceniagsm.c **** 		static const char polecenie_CLIP[] PROGMEM = "+CLIP:";
+ 123:poleceniagsm.c **** 		if ( d5 == 'I' && czy_polecenie_sim(polecenie_CLIP) )
+ 124:poleceniagsm.c **** 		{
+ 125:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = CLIP_KOMENDA_SIM900;
+ 126:poleceniagsm.c **** 			continue;
+ 127:poleceniagsm.c **** 		}
+ 128:poleceniagsm.c **** 		static const char polecenie_DTMF[] PROGMEM = "+DTMF:";
+ 129:poleceniagsm.c **** 		if ( d5 == 'M' && czy_polecenie_sim(polecenie_DTMF) )
+ 130:poleceniagsm.c **** 		{
+ 131:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = DTMF_KOMENDA_SIM900;
+ 132:poleceniagsm.c **** 			continue;
+ 133:poleceniagsm.c **** 		}
+ 134:poleceniagsm.c **** 		static const char polecenie_CMTI[] PROGMEM = "+CMTI:";	// nowy SMS
+ 135:poleceniagsm.c **** 		if ( d5 == 'T' && czy_polecenie_sim(polecenie_CMTI) )
+ 136:poleceniagsm.c **** 		{
+ 137:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = CMTI_KOMENDA_SIM900;
+ 138:poleceniagsm.c **** 			continue;
+ 139:poleceniagsm.c **** 		}
+ 140:poleceniagsm.c **** 		static const char polecenie_NO_CARRIER[] PROGMEM = "NO CARRIER";
+ 141:poleceniagsm.c **** 		if ( d1 == 'E' && czy_polecenie_sim(polecenie_NO_CARRIER) )
+ 142:poleceniagsm.c **** 		{
+ 143:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = NO_CARRIER_KOMENDA_SIM900;
+ 144:poleceniagsm.c **** 			continue;
+ 145:poleceniagsm.c **** 		}
+ 146:poleceniagsm.c **** 		static const char polecenie_NO_DIALTONE[] PROGMEM = "NO DIALTONE";
+ 147:poleceniagsm.c **** 		if ( d0 == 'E' && czy_polecenie_sim(polecenie_NO_DIALTONE) )
+ 148:poleceniagsm.c **** 		{
+ 149:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = NO_DIALTONE_KOMENDA_SIM900;
+ 150:poleceniagsm.c **** 			continue;
+ 151:poleceniagsm.c **** 		}
+ 152:poleceniagsm.c **** 		static const char polecenie_BUSY[] PROGMEM = "BUSY";
+ 153:poleceniagsm.c **** 		if ( d0 == 'Y' && czy_polecenie_sim(polecenie_BUSY) )
+ 154:poleceniagsm.c **** 		{
+ 155:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = BUSY_KOMENDA_SIM900;
+ 237               		.loc 1 155 71 view .LVU44
+ 238 006c 47E0      		ldi r20,lo8(7)
+ 239 006e 842E      		mov r8,r20
+ 149:poleceniagsm.c **** 			continue;
+ 240               		.loc 1 149 71 view .LVU45
+ 241 0070 59E0      		ldi r21,lo8(9)
+ 242 0072 952E      		mov r9,r21
+ 143:poleceniagsm.c **** 			continue;
+ 243               		.loc 1 143 71 view .LVU46
+ 244 0074 63E0      		ldi r22,lo8(3)
+ 245 0076 762E      		mov r7,r22
+ 137:poleceniagsm.c **** 			continue;
+ 246               		.loc 1 137 71 view .LVU47
+ 247 0078 78E0      		ldi r23,lo8(8)
+ 248 007a 672E      		mov r6,r23
+ 131:poleceniagsm.c **** 			continue;
+ 249               		.loc 1 131 71 view .LVU48
+ 250 007c E5E1      		ldi r30,lo8(21)
+ 251 007e 5E2E      		mov r5,r30
+ 107:poleceniagsm.c **** 			continue;
+ 252               		.loc 1 107 71 view .LVU49
+ 253 0080 F2E0      		ldi r31,lo8(2)
+ 254 0082 4F2E      		mov r4,r31
+  95:poleceniagsm.c **** 			continue;
+ 255               		.loc 1 95 71 view .LVU50
+ 256 0084 ADE0      		ldi r26,lo8(13)
+ 257 0086 3A2E      		mov r3,r26
+  89:poleceniagsm.c **** 			continue;
+ 258               		.loc 1 89 71 view .LVU51
+ 259 0088 2224      		clr r2
+ 260 008a 2394      		inc r2
+ 261               	.LVL14:
+ 262               	.L34:
+  49:poleceniagsm.c **** 		cli();
+ 263               		.loc 1 49 3 is_stmt 1 view .LVU52
+  49:poleceniagsm.c **** 		cli();
+ 264               		.loc 1 49 15 is_stmt 0 view .LVU53
+ 265 008c 9FB7      		in r25,__SREG__
+ 266               	.LVL15:
+  50:poleceniagsm.c **** 		uchar pom = czy_jest_nowe_polecenie_SIM900;
+ 267               		.loc 1 50 3 is_stmt 1 view .LVU54
+ 268               	/* #APP */
+ 269               	 ;  50 "poleceniagsm.c" 1
+ 270 008e F894      		cli
+ 271               	 ;  0 "" 2
+  51:poleceniagsm.c **** 		if ( !pom )
+ 272               		.loc 1 51 3 view .LVU55
+  51:poleceniagsm.c **** 		if ( !pom )
+ 273               		.loc 1 51 9 is_stmt 0 view .LVU56
+ 274               	/* #NOAPP */
+ 275 0090 8091 0000 		lds r24,czy_jest_nowe_polecenie_SIM900
+ 276               	.LVL16:
+  52:poleceniagsm.c **** 		{
+ 277               		.loc 1 52 3 is_stmt 1 view .LVU57
+  52:poleceniagsm.c **** 		{
+ 278               		.loc 1 52 6 is_stmt 0 view .LVU58
+ 279 0094 8111      		cpse r24,__zero_reg__
+ 280 0096 00C0      		rjmp .L11
+  54:poleceniagsm.c **** 			if ( liczba_komend_w_kolejce_SIM900 != 0 )
+ 281               		.loc 1 54 4 is_stmt 1 view .LVU59
+  54:poleceniagsm.c **** 			if ( liczba_komend_w_kolejce_SIM900 != 0 )
+ 282               		.loc 1 54 9 is_stmt 0 view .LVU60
+ 283 0098 9FBF      		out __SREG__,r25
+  55:poleceniagsm.c **** 			{
+ 284               		.loc 1 55 4 is_stmt 1 view .LVU61
+  55:poleceniagsm.c **** 			{
+ 285               		.loc 1 55 40 is_stmt 0 view .LVU62
+ 286 009a C091 0000 		lds r28,liczba_komend_w_kolejce_SIM900
+ 287               	.LVL17:
+  55:poleceniagsm.c **** 			{
+ 288               		.loc 1 55 7 view .LVU63
+ 289 009e CC23      		tst r28
+ 290 00a0 01F0      		breq .L12
+  57:poleceniagsm.c **** 				zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900] = BRAK_KOMENDY_SIM900;
+ 291               		.loc 1 57 5 is_stmt 1 view .LVU64
+  57:poleceniagsm.c **** 				zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900] = BRAK_KOMENDY_SIM900;
+ 292               		.loc 1 57 55 is_stmt 0 view .LVU65
+ 293 00a2 C150      		subi r28,lo8(-(-1))
+  57:poleceniagsm.c **** 				zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900] = BRAK_KOMENDY_SIM900;
+ 294               		.loc 1 57 20 view .LVU66
+ 295 00a4 C093 0000 		sts liczba_komend_w_kolejce_SIM900,r28
+  57:poleceniagsm.c **** 				zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900] = BRAK_KOMENDY_SIM900;
+ 296               		.loc 1 57 55 view .LVU67
+ 297 00a8 D0E0      		ldi r29,0
+  57:poleceniagsm.c **** 				zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900] = BRAK_KOMENDY_SIM900;
+ 298               		.loc 1 57 54 view .LVU68
+ 299 00aa C050      		subi r28,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 300 00ac D040      		sbci r29,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 301 00ae 8881      		ld r24,Y
+ 302               	.LVL18:
+  57:poleceniagsm.c **** 				zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900] = BRAK_KOMENDY_SIM900;
+ 303               		.loc 1 57 20 view .LVU69
+ 304 00b0 8093 0000 		sts komenda_SIM900,r24
+  58:poleceniagsm.c **** 				return komenda_SIM900;
+ 305               		.loc 1 58 5 is_stmt 1 view .LVU70
+  58:poleceniagsm.c **** 				return komenda_SIM900;
+ 306               		.loc 1 58 70 is_stmt 0 view .LVU71
+ 307 00b4 1882      		st Y,__zero_reg__
+  59:poleceniagsm.c **** 			}
+ 308               		.loc 1 59 5 is_stmt 1 view .LVU72
+  59:poleceniagsm.c **** 			}
+ 309               		.loc 1 59 12 is_stmt 0 view .LVU73
+ 310 00b6 C091 0000 		lds r28,komenda_SIM900
+ 311               	.LVL19:
+ 312               	.L10:
+  59:poleceniagsm.c **** 			}
+ 313               		.loc 1 59 12 view .LVU74
+ 314               	.LBE14:
+ 315               	.LBE17:
+ 156:poleceniagsm.c **** 			continue;
+ 157:poleceniagsm.c **** 		}
+ 158:poleceniagsm.c **** 		static const char polecenie_CMEERROR[] PROGMEM = "+CME ERROR:";
+ 159:poleceniagsm.c **** 		if ( d5 == 'E' && czy_polecenie_sim(polecenie_CMEERROR) )
+ 160:poleceniagsm.c **** 		{
+ 161:poleceniagsm.c **** 			numer_bledu_cme = (uint) 
+ 162:poleceniagsm.c **** 				strtoul(&odebrany_blok_SIM900[p+strlen_R(polecenie_CMEERROR)+1], NULL, 10);
+ 163:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = CME_ERROR_KOMENDA_SIM900;
+ 164:poleceniagsm.c **** 			continue;
+ 165:poleceniagsm.c **** 		}
+ 166:poleceniagsm.c **** 		static const char polecenie_CMSERROR[] PROGMEM = "+CMS ERROR:";
+ 167:poleceniagsm.c **** 		if ( d5 == 'S' && czy_polecenie_sim(polecenie_CMSERROR) )
+ 168:poleceniagsm.c **** 		{
+ 169:poleceniagsm.c **** 			numer_bledu_cms = (uint) 
+ 170:poleceniagsm.c **** 				strtoul(&odebrany_blok_SIM900[p+strlen_R(polecenie_CMSERROR)+1], NULL, 10);
+ 171:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = CMS_ERROR_KOMENDA_SIM900;
+ 172:poleceniagsm.c **** 			continue;
+ 173:poleceniagsm.c **** 		}
+ 174:poleceniagsm.c **** 		static const char polecenie_CUSD[] PROGMEM = "+CUSD:";	// nowy Report 
+ 175:poleceniagsm.c **** 		if ( d5 == 'S' && czy_polecenie_sim(polecenie_CUSD) )
+ 176:poleceniagsm.c **** 		{
+ 177:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = CUSD_KOMENDA_SIM900;
+ 178:poleceniagsm.c **** 			continue;
+ 179:poleceniagsm.c **** 		}
+ 180:poleceniagsm.c **** 	}
+ 181:poleceniagsm.c **** 	return BRAK_KOMENDY_SIM900;
+ 182:poleceniagsm.c **** }
+ 316               		.loc 1 182 1 view .LVU75
+ 317 00ba 8C2F      		mov r24,r28
+ 318               	/* epilogue start */
+ 319 00bc DF91      		pop r29
+ 320 00be CF91      		pop r28
+ 321 00c0 1F91      		pop r17
+ 322 00c2 0F91      		pop r16
+ 323 00c4 FF90      		pop r15
+ 324 00c6 EF90      		pop r14
+ 325 00c8 DF90      		pop r13
+ 326 00ca CF90      		pop r12
+ 327 00cc BF90      		pop r11
+ 328 00ce AF90      		pop r10
+ 329 00d0 9F90      		pop r9
+ 330 00d2 8F90      		pop r8
+ 331 00d4 7F90      		pop r7
+ 332 00d6 6F90      		pop r6
+ 333 00d8 5F90      		pop r5
+ 334 00da 4F90      		pop r4
+ 335 00dc 3F90      		pop r3
+ 336 00de 2F90      		pop r2
+ 337 00e0 0895      		ret
+ 338               	.LVL20:
+ 339               	.L12:
+ 340               	.LBB18:
+ 341               	.LBB15:
+  61:poleceniagsm.c **** 		}
+ 342               		.loc 1 61 4 is_stmt 1 view .LVU76
+  61:poleceniagsm.c **** 		}
+ 343               		.loc 1 61 26 is_stmt 0 view .LVU77
+ 344 00e2 1092 0000 		sts komenda_SIM900,__zero_reg__
+ 345 00e6 00C0      		rjmp .L10
+ 346               	.LVL21:
+ 347               	.L11:
+  63:poleceniagsm.c **** 			pom = LICZBA_POLOZEN_OTRZYMANYCH_KOMEND_SIM900-1;
+ 348               		.loc 1 63 3 is_stmt 1 view .LVU78
+ 349 00e8 8530      		cpi r24,lo8(5)
+ 350 00ea 00F0      		brlo .L14
+ 351 00ec 84E0      		ldi r24,lo8(4)
+ 352               	.LVL22:
+ 353               	.L14:
+  65:poleceniagsm.c **** 		polozenie_otrzymanych_komend_SIM900[pom] = 0;
+ 354               		.loc 1 65 3 view .LVU79
+  65:poleceniagsm.c **** 		polozenie_otrzymanych_komend_SIM900[pom] = 0;
+ 355               		.loc 1 65 60 is_stmt 0 view .LVU80
+ 356 00ee E82F      		mov r30,r24
+ 357 00f0 F0E0      		ldi r31,0
+  65:poleceniagsm.c **** 		polozenie_otrzymanych_komend_SIM900[pom] = 0;
+ 358               		.loc 1 65 14 view .LVU81
+ 359 00f2 EE0F      		lsl r30
+ 360 00f4 FF1F      		rol r31
+ 361 00f6 E050      		subi r30,lo8(-(polozenie_otrzymanych_komend_SIM900))
+ 362 00f8 F040      		sbci r31,hi8(-(polozenie_otrzymanych_komend_SIM900))
+ 363 00fa C080      		ld r12,Z
+ 364 00fc D180      		ldd r13,Z+1
+ 365               	.LVL23:
+  66:poleceniagsm.c **** 		const uint zakonczenie = polozenie_otrzymanych_komend_SIM900[--pom];
+ 366               		.loc 1 66 3 is_stmt 1 view .LVU82
+  66:poleceniagsm.c **** 		const uint zakonczenie = polozenie_otrzymanych_komend_SIM900[--pom];
+ 367               		.loc 1 66 44 is_stmt 0 view .LVU83
+ 368 00fe 1182      		std Z+1,__zero_reg__
+ 369 0100 1082      		st Z,__zero_reg__
+  67:poleceniagsm.c **** 		//podglad(poczatek & 0xff);
+ 370               		.loc 1 67 3 is_stmt 1 view .LVU84
+  67:poleceniagsm.c **** 		//podglad(poczatek & 0xff);
+ 371               		.loc 1 67 14 is_stmt 0 view .LVU85
+ 372 0102 8150      		subi r24,lo8(-(-1))
+ 373               	.LVL24:
+  67:poleceniagsm.c **** 		//podglad(poczatek & 0xff);
+ 374               		.loc 1 67 64 view .LVU86
+ 375 0104 E82F      		mov r30,r24
+ 376 0106 F0E0      		ldi r31,0
+  67:poleceniagsm.c **** 		//podglad(poczatek & 0xff);
+ 377               		.loc 1 67 14 view .LVU87
+ 378 0108 EE0F      		lsl r30
+ 379 010a FF1F      		rol r31
+ 380 010c E050      		subi r30,lo8(-(polozenie_otrzymanych_komend_SIM900))
+ 381 010e F040      		sbci r31,hi8(-(polozenie_otrzymanych_komend_SIM900))
+ 382 0110 2081      		ld r18,Z
+ 383 0112 3181      		ldd r19,Z+1
+ 384               	.LVL25:
+  70:poleceniagsm.c **** 		SREG = sreg;
+ 385               		.loc 1 70 3 is_stmt 1 view .LVU88
+  70:poleceniagsm.c **** 		SREG = sreg;
+ 386               		.loc 1 70 34 is_stmt 0 view .LVU89
+ 387 0114 8093 0000 		sts czy_jest_nowe_polecenie_SIM900,r24
+  71:poleceniagsm.c **** 		if ( zakonczenie <= poczatek )
+ 388               		.loc 1 71 3 is_stmt 1 view .LVU90
+  71:poleceniagsm.c **** 		if ( zakonczenie <= poczatek )
+ 389               		.loc 1 71 8 is_stmt 0 view .LVU91
+ 390 0118 9FBF      		out __SREG__,r25
+  72:poleceniagsm.c **** 			continue;
+ 391               		.loc 1 72 3 is_stmt 1 view .LVU92
+  72:poleceniagsm.c **** 			continue;
+ 392               		.loc 1 72 6 is_stmt 0 view .LVU93
+ 393 011a C216      		cp r12,r18
+ 394 011c D306      		cpc r13,r19
+ 395 011e 00F4      		brsh .L16
+  74:poleceniagsm.c **** 		{
+ 396               		.loc 1 74 3 is_stmt 1 view .LVU94
+  74:poleceniagsm.c **** 		{
+ 397               		.loc 1 74 6 is_stmt 0 view .LVU95
+ 398 0120 8091 0000 		lds r24,liczba_komend_w_kolejce_SIM900
+ 399               	.LVL26:
+  74:poleceniagsm.c **** 		{
+ 400               		.loc 1 74 6 view .LVU96
+ 401 0124 8A30      		cpi r24,lo8(10)
+ 402 0126 00F0      		brlo .L17
+  76:poleceniagsm.c **** 		}
+ 403               		.loc 1 76 4 is_stmt 1 view .LVU97
+  76:poleceniagsm.c **** 		}
+ 404               		.loc 1 76 35 is_stmt 0 view .LVU98
+ 405 0128 9092 0000 		sts liczba_komend_w_kolejce_SIM900,r9
+ 406               	.L17:
+  78:poleceniagsm.c **** 		const uint p = poczatek+2;
+ 407               		.loc 1 78 3 is_stmt 1 view .LVU99
+  78:poleceniagsm.c **** 		const uint p = poczatek+2;
+ 408               		.loc 1 78 30 is_stmt 0 view .LVU100
+ 409 012c 8901      		movw r16,r18
+ 410 012e 0C19      		sub r16,r12
+ 411 0130 1D09      		sbc r17,r13
+  78:poleceniagsm.c **** 		const uint p = poczatek+2;
+ 412               		.loc 1 78 14 view .LVU101
+ 413 0132 0450      		subi r16,4
+ 414 0134 1109      		sbc r17,__zero_reg__
+ 415               	.LVL27:
+  79:poleceniagsm.c **** #define czy_polecenie_sim(POL)	porownaj_znaki(POL, p, strlen_R(POL), z)
+ 416               		.loc 1 79 3 is_stmt 1 view .LVU102
+  79:poleceniagsm.c **** #define czy_polecenie_sim(POL)	porownaj_znaki(POL, p, strlen_R(POL), z)
+ 417               		.loc 1 79 14 is_stmt 0 view .LVU103
+ 418 0136 7601      		movw r14,r12
+ 419 0138 42E0      		ldi r20,2
+ 420 013a E40E      		add r14,r20
+ 421 013c F11C      		adc r15,__zero_reg__
+ 422               	.LVL28:
+  82:poleceniagsm.c **** 		const uchar d1 = odebrany_blok_SIM900[zakonczenie-4];
+ 423               		.loc 1 82 3 is_stmt 1 view .LVU104
+  82:poleceniagsm.c **** 		const uchar d1 = odebrany_blok_SIM900[zakonczenie-4];
+ 424               		.loc 1 82 15 is_stmt 0 view .LVU105
+ 425 013e C901      		movw r24,r18
+ 426 0140 8050      		subi r24,lo8(-(odebrany_blok_SIM900))
+ 427 0142 9040      		sbci r25,hi8(-(odebrany_blok_SIM900))
+ 428 0144 FC01      		movw r30,r24
+ 429 0146 3397      		sbiw r30,3
+ 430 0148 B080      		ld r11,Z
+ 431               	.LVL29:
+  83:poleceniagsm.c **** 		const uchar d2 = odebrany_blok_SIM900[zakonczenie-5];
+ 432               		.loc 1 83 3 is_stmt 1 view .LVU106
+  83:poleceniagsm.c **** 		const uchar d2 = odebrany_blok_SIM900[zakonczenie-5];
+ 433               		.loc 1 83 15 is_stmt 0 view .LVU107
+ 434 014a 3197      		sbiw r30,1
+ 435 014c A080      		ld r10,Z
+ 436               	.LVL30:
+  84:poleceniagsm.c **** 		const uchar d5 = odebrany_blok_SIM900[poczatek+5];
+ 437               		.loc 1 84 3 is_stmt 1 view .LVU108
+  85:poleceniagsm.c **** 	//	static const char polecenie_OK[] PROGMEM = "OK";
+ 438               		.loc 1 85 3 view .LVU109
+  85:poleceniagsm.c **** 	//	static const char polecenie_OK[] PROGMEM = "OK";
+ 439               		.loc 1 85 15 is_stmt 0 view .LVU110
+ 440 014e F601      		movw r30,r12
+ 441 0150 E050      		subi r30,lo8(-(odebrany_blok_SIM900))
+ 442 0152 F040      		sbci r31,hi8(-(odebrany_blok_SIM900))
+ 443 0154 D581      		ldd r29,Z+5
+ 444               	.LVL31:
+  87:poleceniagsm.c **** 		{
+ 445               		.loc 1 87 3 is_stmt 1 view .LVU111
+  87:poleceniagsm.c **** 		{
+ 446               		.loc 1 87 6 is_stmt 0 view .LVU112
+ 447 0156 EBE4      		ldi r30,lo8(75)
+ 448 0158 BE12      		cpse r11,r30
+ 449 015a 00C0      		rjmp .L18
+  87:poleceniagsm.c **** 		{
+ 450               		.loc 1 87 18 discriminator 1 view .LVU113
+ 451 015c FFE4      		ldi r31,lo8(79)
+ 452 015e AF12      		cpse r10,r31
+ 453 0160 00C0      		rjmp .L19
+  84:poleceniagsm.c **** 		const uchar d5 = odebrany_blok_SIM900[poczatek+5];
+ 454               		.loc 1 84 15 discriminator 2 view .LVU114
+ 455 0162 0597      		sbiw r24,5
+  87:poleceniagsm.c **** 		{
+ 456               		.loc 1 87 31 discriminator 2 view .LVU115
+ 457 0164 FC01      		movw r30,r24
+ 458 0166 8081      		ld r24,Z
+ 459 0168 8032      		cpi r24,lo8(32)
+ 460 016a 01F4      		brne .+2
+ 461 016c 00C0      		rjmp .L20
+  87:poleceniagsm.c **** 		{
+ 462               		.loc 1 87 44 discriminator 3 view .LVU116
+ 463 016e 2630      		cpi r18,6
+ 464 0170 3105      		cpc r19,__zero_reg__
+ 465 0172 00F4      		brsh .+2
+ 466 0174 00C0      		rjmp .L20
+  89:poleceniagsm.c **** 			continue;
+ 467               		.loc 1 89 4 is_stmt 1 view .LVU117
+  89:poleceniagsm.c **** 			continue;
+ 468               		.loc 1 89 67 is_stmt 0 view .LVU118
+ 469 0176 E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 470 017a 81E0      		ldi r24,lo8(1)
+ 471 017c 8E0F      		add r24,r30
+ 472 017e 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 473 0182 F0E0      		ldi r31,0
+  89:poleceniagsm.c **** 			continue;
+ 474               		.loc 1 89 71 view .LVU119
+ 475 0184 E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 476 0186 F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 477 0188 2082      		st Z,r2
+  90:poleceniagsm.c **** 		}
+ 478               		.loc 1 90 4 is_stmt 1 view .LVU120
+ 479               	.LVL32:
+ 480               	.L16:
+  90:poleceniagsm.c **** 		}
+ 481               		.loc 1 90 4 is_stmt 0 view .LVU121
+ 482               	.LBE15:
+  47:poleceniagsm.c **** 	{
+ 483               		.loc 1 47 27 is_stmt 1 discriminator 2 view .LVU122
+  47:poleceniagsm.c **** 	{
+ 484               		.loc 1 47 19 discriminator 2 view .LVU123
+ 485 018a C150      		subi r28,lo8(-(-1))
+ 486               	.LVL33:
+  47:poleceniagsm.c **** 	{
+ 487               		.loc 1 47 2 is_stmt 0 discriminator 2 view .LVU124
+ 488 018c 01F0      		breq .+2
+ 489 018e 00C0      		rjmp .L34
+ 490 0190 00C0      		rjmp .L10
+ 491               	.LVL34:
+ 492               	.L18:
+ 493               	.LBB16:
+  92:poleceniagsm.c **** 		if ( d5 == 'G' && czy_polecenie_sim(polecenie_CMGS) )
+ 494               		.loc 1 92 3 is_stmt 1 view .LVU125
+  93:poleceniagsm.c **** 		{
+ 495               		.loc 1 93 3 view .LVU126
+  93:poleceniagsm.c **** 		{
+ 496               		.loc 1 93 6 is_stmt 0 view .LVU127
+ 497 0192 D734      		cpi r29,lo8(71)
+ 498 0194 01F4      		brne .L21
+ 499               	.L36:
+  93:poleceniagsm.c **** 		{
+ 500               		.loc 1 93 21 discriminator 1 view .LVU128
+ 501 0196 9801      		movw r18,r16
+ 502               	.LVL35:
+  93:poleceniagsm.c **** 		{
+ 503               		.loc 1 93 21 discriminator 1 view .LVU129
+ 504 0198 46E0      		ldi r20,lo8(6)
+ 505 019a B701      		movw r22,r14
+ 506 019c 80E0      		ldi r24,lo8(polecenie_CMGS.2138)
+ 507 019e 90E0      		ldi r25,hi8(polecenie_CMGS.2138)
+ 508 01a0 0E94 0000 		call porownaj_znaki
+ 509               	.LVL36:
+  93:poleceniagsm.c **** 		{
+ 510               		.loc 1 93 18 discriminator 1 view .LVU130
+ 511 01a4 8823      		tst r24
+ 512 01a6 01F0      		breq .L21
+  95:poleceniagsm.c **** 			continue;
+ 513               		.loc 1 95 4 is_stmt 1 view .LVU131
+  95:poleceniagsm.c **** 			continue;
+ 514               		.loc 1 95 67 is_stmt 0 view .LVU132
+ 515 01a8 E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 516 01ac 81E0      		ldi r24,lo8(1)
+ 517 01ae 8E0F      		add r24,r30
+ 518 01b0 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 519 01b4 F0E0      		ldi r31,0
+  95:poleceniagsm.c **** 			continue;
+ 520               		.loc 1 95 71 view .LVU133
+ 521 01b6 E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 522 01b8 F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 523 01ba 3082      		st Z,r3
+  96:poleceniagsm.c **** 		}
+ 524               		.loc 1 96 4 is_stmt 1 view .LVU134
+ 525 01bc 00C0      		rjmp .L16
+ 526               	.L21:
+  98:poleceniagsm.c **** 		if ( d1 == 'O' && czy_polecenie_sim(polecenie_ERROR) )
+ 527               		.loc 1 98 3 view .LVU135
+  99:poleceniagsm.c **** 		{
+ 528               		.loc 1 99 3 view .LVU136
+  99:poleceniagsm.c **** 		{
+ 529               		.loc 1 99 6 is_stmt 0 view .LVU137
+ 530 01be FFE4      		ldi r31,lo8(79)
+ 531 01c0 AF12      		cpse r10,r31
+ 532 01c2 00C0      		rjmp .L22
+ 533               	.L37:
+  99:poleceniagsm.c **** 		{
+ 534               		.loc 1 99 21 view .LVU138
+ 535 01c4 9801      		movw r18,r16
+ 536 01c6 45E0      		ldi r20,lo8(5)
+ 537 01c8 B701      		movw r22,r14
+ 538 01ca 80E0      		ldi r24,lo8(polecenie_ERROR.2139)
+ 539 01cc 90E0      		ldi r25,hi8(polecenie_ERROR.2139)
+ 540 01ce 0E94 0000 		call porownaj_znaki
+ 541               	.LVL37:
+  99:poleceniagsm.c **** 		{
+ 542               		.loc 1 99 18 view .LVU139
+ 543 01d2 8823      		tst r24
+ 544 01d4 01F0      		breq .L22
+ 101:poleceniagsm.c **** 			continue;
+ 545               		.loc 1 101 4 is_stmt 1 view .LVU140
+ 101:poleceniagsm.c **** 			continue;
+ 546               		.loc 1 101 67 is_stmt 0 view .LVU141
+ 547 01d6 E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 548 01da 81E0      		ldi r24,lo8(1)
+ 549 01dc 8E0F      		add r24,r30
+ 550 01de 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 551 01e2 F0E0      		ldi r31,0
+ 101:poleceniagsm.c **** 			continue;
+ 552               		.loc 1 101 71 view .LVU142
+ 553 01e4 E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 554 01e6 F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 555 01e8 44E0      		ldi r20,lo8(4)
+ 556               	.L81:
+ 163:poleceniagsm.c **** 			continue;
+ 557               		.loc 1 163 71 view .LVU143
+ 558 01ea 4083      		st Z,r20
+ 164:poleceniagsm.c **** 		}
+ 559               		.loc 1 164 4 is_stmt 1 view .LVU144
+ 560 01ec 00C0      		rjmp .L16
+ 561               	.L22:
+ 104:poleceniagsm.c **** 		if ( d0 == 'G' && czy_polecenie_sim(polecenie_MO_RING) )
+ 562               		.loc 1 104 3 view .LVU145
+ 105:poleceniagsm.c **** 		{
+ 563               		.loc 1 105 3 view .LVU146
+ 105:poleceniagsm.c **** 		{
+ 564               		.loc 1 105 6 is_stmt 0 view .LVU147
+ 565 01ee 87E4      		ldi r24,lo8(71)
+ 566 01f0 B812      		cpse r11,r24
+ 567 01f2 00C0      		rjmp .L23
+ 105:poleceniagsm.c **** 		{
+ 568               		.loc 1 105 21 discriminator 1 view .LVU148
+ 569 01f4 9801      		movw r18,r16
+ 570 01f6 47E0      		ldi r20,lo8(7)
+ 571 01f8 B701      		movw r22,r14
+ 572 01fa 80E0      		ldi r24,lo8(polecenie_MO_RING.2140)
+ 573 01fc 90E0      		ldi r25,hi8(polecenie_MO_RING.2140)
+ 574 01fe 0E94 0000 		call porownaj_znaki
+ 575               	.LVL38:
+ 105:poleceniagsm.c **** 		{
+ 576               		.loc 1 105 18 discriminator 1 view .LVU149
+ 577 0202 8823      		tst r24
+ 578 0204 01F4      		brne .+2
+ 579 0206 00C0      		rjmp .L24
+ 107:poleceniagsm.c **** 			continue;
+ 580               		.loc 1 107 4 is_stmt 1 view .LVU150
+ 107:poleceniagsm.c **** 			continue;
+ 581               		.loc 1 107 67 is_stmt 0 view .LVU151
+ 582 0208 E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 583 020c 81E0      		ldi r24,lo8(1)
+ 584 020e 8E0F      		add r24,r30
+ 585 0210 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 586 0214 F0E0      		ldi r31,0
+ 107:poleceniagsm.c **** 			continue;
+ 587               		.loc 1 107 71 view .LVU152
+ 588 0216 E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 589 0218 F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 590 021a 4082      		st Z,r4
+ 108:poleceniagsm.c **** 		}
+ 591               		.loc 1 108 4 is_stmt 1 view .LVU153
+ 592 021c 00C0      		rjmp .L16
+ 593               	.L23:
+ 110:poleceniagsm.c **** 		if ( d0 == 'D' && czy_polecenie_sim(polecenie_MO_CONNECTED) )
+ 594               		.loc 1 110 3 view .LVU154
+ 111:poleceniagsm.c **** 		{
+ 595               		.loc 1 111 3 view .LVU155
+ 111:poleceniagsm.c **** 		{
+ 596               		.loc 1 111 6 is_stmt 0 view .LVU156
+ 597 021e E4E4      		ldi r30,lo8(68)
+ 598 0220 BE12      		cpse r11,r30
+ 599 0222 00C0      		rjmp .L24
+ 111:poleceniagsm.c **** 		{
+ 600               		.loc 1 111 21 discriminator 1 view .LVU157
+ 601 0224 9801      		movw r18,r16
+ 602 0226 4CE0      		ldi r20,lo8(12)
+ 603 0228 B701      		movw r22,r14
+ 604 022a 80E0      		ldi r24,lo8(polecenie_MO_CONNECTED.2141)
+ 605 022c 90E0      		ldi r25,hi8(polecenie_MO_CONNECTED.2141)
+ 606 022e 0E94 0000 		call porownaj_znaki
+ 607               	.LVL39:
+ 111:poleceniagsm.c **** 		{
+ 608               		.loc 1 111 18 discriminator 1 view .LVU158
+ 609 0232 8823      		tst r24
+ 610 0234 01F4      		brne .+2
+ 611 0236 00C0      		rjmp .L24
+ 113:poleceniagsm.c **** 			continue;
+ 612               		.loc 1 113 4 is_stmt 1 view .LVU159
+ 113:poleceniagsm.c **** 			continue;
+ 613               		.loc 1 113 67 is_stmt 0 view .LVU160
+ 614 0238 E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 615 023c 81E0      		ldi r24,lo8(1)
+ 616 023e 8E0F      		add r24,r30
+ 617 0240 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 618 0244 F0E0      		ldi r31,0
+ 113:poleceniagsm.c **** 			continue;
+ 619               		.loc 1 113 71 view .LVU161
+ 620 0246 E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 621 0248 F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 622 024a 8CE0      		ldi r24,lo8(12)
+ 623               	.L82:
+ 177:poleceniagsm.c **** 			continue;
+ 624               		.loc 1 177 71 view .LVU162
+ 625 024c 8083      		st Z,r24
+ 178:poleceniagsm.c **** 		}
+ 626               		.loc 1 178 4 is_stmt 1 view .LVU163
+ 627 024e 00C0      		rjmp .L16
+ 628               	.L25:
+ 128:poleceniagsm.c **** 		if ( d5 == 'M' && czy_polecenie_sim(polecenie_DTMF) )
+ 629               		.loc 1 128 3 view .LVU164
+ 129:poleceniagsm.c **** 		{
+ 630               		.loc 1 129 3 view .LVU165
+ 129:poleceniagsm.c **** 		{
+ 631               		.loc 1 129 6 is_stmt 0 view .LVU166
+ 632 0250 DD34      		cpi r29,lo8(77)
+ 633 0252 01F4      		brne .L27
+ 129:poleceniagsm.c **** 		{
+ 634               		.loc 1 129 21 discriminator 1 view .LVU167
+ 635 0254 9801      		movw r18,r16
+ 636 0256 46E0      		ldi r20,lo8(6)
+ 637 0258 B701      		movw r22,r14
+ 638 025a 80E0      		ldi r24,lo8(polecenie_DTMF.2143)
+ 639 025c 90E0      		ldi r25,hi8(polecenie_DTMF.2143)
+ 640 025e 0E94 0000 		call porownaj_znaki
+ 641               	.LVL40:
+ 129:poleceniagsm.c **** 		{
+ 642               		.loc 1 129 18 discriminator 1 view .LVU168
+ 643 0262 8823      		tst r24
+ 644 0264 01F0      		breq .L26
+ 131:poleceniagsm.c **** 			continue;
+ 645               		.loc 1 131 4 is_stmt 1 view .LVU169
+ 131:poleceniagsm.c **** 			continue;
+ 646               		.loc 1 131 67 is_stmt 0 view .LVU170
+ 647 0266 E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 648 026a 81E0      		ldi r24,lo8(1)
+ 649 026c 8E0F      		add r24,r30
+ 650 026e 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 651 0272 F0E0      		ldi r31,0
+ 131:poleceniagsm.c **** 			continue;
+ 652               		.loc 1 131 71 view .LVU171
+ 653 0274 E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 654 0276 F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 655 0278 5082      		st Z,r5
+ 132:poleceniagsm.c **** 		}
+ 656               		.loc 1 132 4 is_stmt 1 view .LVU172
+ 657 027a 00C0      		rjmp .L16
+ 658               	.L27:
+ 134:poleceniagsm.c **** 		if ( d5 == 'T' && czy_polecenie_sim(polecenie_CMTI) )
+ 659               		.loc 1 134 3 view .LVU173
+ 135:poleceniagsm.c **** 		{
+ 660               		.loc 1 135 3 view .LVU174
+ 135:poleceniagsm.c **** 		{
+ 661               		.loc 1 135 6 is_stmt 0 view .LVU175
+ 662 027c D435      		cpi r29,lo8(84)
+ 663 027e 01F4      		brne .L26
+ 135:poleceniagsm.c **** 		{
+ 664               		.loc 1 135 21 discriminator 1 view .LVU176
+ 665 0280 9801      		movw r18,r16
+ 666 0282 46E0      		ldi r20,lo8(6)
+ 667 0284 B701      		movw r22,r14
+ 668 0286 80E0      		ldi r24,lo8(polecenie_CMTI.2144)
+ 669 0288 90E0      		ldi r25,hi8(polecenie_CMTI.2144)
+ 670 028a 0E94 0000 		call porownaj_znaki
+ 671               	.LVL41:
+ 135:poleceniagsm.c **** 		{
+ 672               		.loc 1 135 18 discriminator 1 view .LVU177
+ 673 028e 8823      		tst r24
+ 674 0290 01F0      		breq .L26
+ 137:poleceniagsm.c **** 			continue;
+ 675               		.loc 1 137 4 is_stmt 1 view .LVU178
+ 137:poleceniagsm.c **** 			continue;
+ 676               		.loc 1 137 67 is_stmt 0 view .LVU179
+ 677 0292 E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 678 0296 81E0      		ldi r24,lo8(1)
+ 679 0298 8E0F      		add r24,r30
+ 680 029a 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 681 029e F0E0      		ldi r31,0
+ 137:poleceniagsm.c **** 			continue;
+ 682               		.loc 1 137 71 view .LVU180
+ 683 02a0 E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 684 02a2 F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 685 02a4 6082      		st Z,r6
+ 138:poleceniagsm.c **** 		}
+ 686               		.loc 1 138 4 is_stmt 1 view .LVU181
+ 687 02a6 00C0      		rjmp .L16
+ 688               	.L26:
+ 140:poleceniagsm.c **** 		if ( d1 == 'E' && czy_polecenie_sim(polecenie_NO_CARRIER) )
+ 689               		.loc 1 140 3 view .LVU182
+ 141:poleceniagsm.c **** 		{
+ 690               		.loc 1 141 3 view .LVU183
+ 141:poleceniagsm.c **** 		{
+ 691               		.loc 1 141 6 is_stmt 0 view .LVU184
+ 692 02a8 F5E4      		ldi r31,lo8(69)
+ 693 02aa AF12      		cpse r10,r31
+ 694 02ac 00C0      		rjmp .L28
+ 141:poleceniagsm.c **** 		{
+ 695               		.loc 1 141 21 discriminator 1 view .LVU185
+ 696 02ae 9801      		movw r18,r16
+ 697 02b0 4AE0      		ldi r20,lo8(10)
+ 698 02b2 B701      		movw r22,r14
+ 699 02b4 80E0      		ldi r24,lo8(polecenie_NO_CARRIER.2145)
+ 700 02b6 90E0      		ldi r25,hi8(polecenie_NO_CARRIER.2145)
+ 701 02b8 0E94 0000 		call porownaj_znaki
+ 702               	.LVL42:
+ 141:poleceniagsm.c **** 		{
+ 703               		.loc 1 141 18 discriminator 1 view .LVU186
+ 704 02bc 8823      		tst r24
+ 705 02be 01F0      		breq .L28
+ 143:poleceniagsm.c **** 			continue;
+ 706               		.loc 1 143 4 is_stmt 1 view .LVU187
+ 143:poleceniagsm.c **** 			continue;
+ 707               		.loc 1 143 67 is_stmt 0 view .LVU188
+ 708 02c0 E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 709 02c4 81E0      		ldi r24,lo8(1)
+ 710 02c6 8E0F      		add r24,r30
+ 711 02c8 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 712 02cc F0E0      		ldi r31,0
+ 143:poleceniagsm.c **** 			continue;
+ 713               		.loc 1 143 71 view .LVU189
+ 714 02ce E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 715 02d0 F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 716 02d2 7082      		st Z,r7
+ 144:poleceniagsm.c **** 		}
+ 717               		.loc 1 144 4 is_stmt 1 view .LVU190
+ 718 02d4 00C0      		rjmp .L16
+ 719               	.L28:
+ 146:poleceniagsm.c **** 		if ( d0 == 'E' && czy_polecenie_sim(polecenie_NO_DIALTONE) )
+ 720               		.loc 1 146 3 view .LVU191
+ 147:poleceniagsm.c **** 		{
+ 721               		.loc 1 147 3 view .LVU192
+ 147:poleceniagsm.c **** 		{
+ 722               		.loc 1 147 6 is_stmt 0 view .LVU193
+ 723 02d6 45E4      		ldi r20,lo8(69)
+ 724 02d8 B412      		cpse r11,r20
+ 725 02da 00C0      		rjmp .L29
+ 147:poleceniagsm.c **** 		{
+ 726               		.loc 1 147 21 discriminator 1 view .LVU194
+ 727 02dc 9801      		movw r18,r16
+ 728 02de 4BE0      		ldi r20,lo8(11)
+ 729 02e0 B701      		movw r22,r14
+ 730 02e2 80E0      		ldi r24,lo8(polecenie_NO_DIALTONE.2146)
+ 731 02e4 90E0      		ldi r25,hi8(polecenie_NO_DIALTONE.2146)
+ 732 02e6 0E94 0000 		call porownaj_znaki
+ 733               	.LVL43:
+ 147:poleceniagsm.c **** 		{
+ 734               		.loc 1 147 18 discriminator 1 view .LVU195
+ 735 02ea 8823      		tst r24
+ 736 02ec 01F0      		breq .L30
+ 149:poleceniagsm.c **** 			continue;
+ 737               		.loc 1 149 4 is_stmt 1 view .LVU196
+ 149:poleceniagsm.c **** 			continue;
+ 738               		.loc 1 149 67 is_stmt 0 view .LVU197
+ 739 02ee E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 740 02f2 81E0      		ldi r24,lo8(1)
+ 741 02f4 8E0F      		add r24,r30
+ 742 02f6 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 743 02fa F0E0      		ldi r31,0
+ 149:poleceniagsm.c **** 			continue;
+ 744               		.loc 1 149 71 view .LVU198
+ 745 02fc E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 746 02fe F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 747 0300 9082      		st Z,r9
+ 150:poleceniagsm.c **** 		}
+ 748               		.loc 1 150 4 is_stmt 1 view .LVU199
+ 749 0302 00C0      		rjmp .L16
+ 750               	.L29:
+ 152:poleceniagsm.c **** 		if ( d0 == 'Y' && czy_polecenie_sim(polecenie_BUSY) )
+ 751               		.loc 1 152 3 view .LVU200
+ 153:poleceniagsm.c **** 		{
+ 752               		.loc 1 153 3 view .LVU201
+ 153:poleceniagsm.c **** 		{
+ 753               		.loc 1 153 6 is_stmt 0 view .LVU202
+ 754 0304 89E5      		ldi r24,lo8(89)
+ 755 0306 B812      		cpse r11,r24
+ 756 0308 00C0      		rjmp .L30
+ 153:poleceniagsm.c **** 		{
+ 757               		.loc 1 153 21 discriminator 1 view .LVU203
+ 758 030a 9801      		movw r18,r16
+ 759 030c 44E0      		ldi r20,lo8(4)
+ 760 030e B701      		movw r22,r14
+ 761 0310 80E0      		ldi r24,lo8(polecenie_BUSY.2147)
+ 762 0312 90E0      		ldi r25,hi8(polecenie_BUSY.2147)
+ 763 0314 0E94 0000 		call porownaj_znaki
+ 764               	.LVL44:
+ 153:poleceniagsm.c **** 		{
+ 765               		.loc 1 153 18 discriminator 1 view .LVU204
+ 766 0318 8823      		tst r24
+ 767 031a 01F0      		breq .L30
+ 155:poleceniagsm.c **** 			continue;
+ 768               		.loc 1 155 4 is_stmt 1 view .LVU205
+ 155:poleceniagsm.c **** 			continue;
+ 769               		.loc 1 155 67 is_stmt 0 view .LVU206
+ 770 031c E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 771 0320 81E0      		ldi r24,lo8(1)
+ 772 0322 8E0F      		add r24,r30
+ 773 0324 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 774 0328 F0E0      		ldi r31,0
+ 155:poleceniagsm.c **** 			continue;
+ 775               		.loc 1 155 71 view .LVU207
+ 776 032a E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 777 032c F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 778 032e 8082      		st Z,r8
+ 156:poleceniagsm.c **** 		}
+ 779               		.loc 1 156 4 is_stmt 1 view .LVU208
+ 780 0330 00C0      		rjmp .L16
+ 781               	.L30:
+ 158:poleceniagsm.c **** 		if ( d5 == 'E' && czy_polecenie_sim(polecenie_CMEERROR) )
+ 782               		.loc 1 158 3 view .LVU209
+ 159:poleceniagsm.c **** 		{
+ 783               		.loc 1 159 3 view .LVU210
+ 159:poleceniagsm.c **** 		{
+ 784               		.loc 1 159 6 is_stmt 0 view .LVU211
+ 785 0332 D534      		cpi r29,lo8(69)
+ 786 0334 01F4      		brne .L31
+ 159:poleceniagsm.c **** 		{
+ 787               		.loc 1 159 21 discriminator 1 view .LVU212
+ 788 0336 9801      		movw r18,r16
+ 789 0338 4BE0      		ldi r20,lo8(11)
+ 790 033a B701      		movw r22,r14
+ 791 033c 80E0      		ldi r24,lo8(polecenie_CMEERROR.2148)
+ 792 033e 90E0      		ldi r25,hi8(polecenie_CMEERROR.2148)
+ 793 0340 0E94 0000 		call porownaj_znaki
+ 794               	.LVL45:
+ 159:poleceniagsm.c **** 		{
+ 795               		.loc 1 159 18 discriminator 1 view .LVU213
+ 796 0344 8823      		tst r24
+ 797 0346 01F4      		brne .+2
+ 798 0348 00C0      		rjmp .L16
+ 161:poleceniagsm.c **** 				strtoul(&odebrany_blok_SIM900[p+strlen_R(polecenie_CMEERROR)+1], NULL, 10);
+ 799               		.loc 1 161 4 is_stmt 1 view .LVU214
+ 162:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = CME_ERROR_KOMENDA_SIM900;
+ 800               		.loc 1 162 5 is_stmt 0 view .LVU215
+ 801 034a 4AE0      		ldi r20,lo8(10)
+ 802 034c 50E0      		ldi r21,0
+ 803 034e 70E0      		ldi r23,0
+ 804 0350 60E0      		ldi r22,0
+ 805 0352 C601      		movw r24,r12
+ 806 0354 8050      		subi r24,lo8(-(odebrany_blok_SIM900+14))
+ 807 0356 9040      		sbci r25,hi8(-(odebrany_blok_SIM900+14))
+ 808 0358 0E94 0000 		call strtoul
+ 809               	.LVL46:
+ 161:poleceniagsm.c **** 				strtoul(&odebrany_blok_SIM900[p+strlen_R(polecenie_CMEERROR)+1], NULL, 10);
+ 810               		.loc 1 161 22 view .LVU216
+ 811 035c 7093 0000 		sts numer_bledu_cme+1,r23
+ 812 0360 6093 0000 		sts numer_bledu_cme,r22
+ 163:poleceniagsm.c **** 			continue;
+ 813               		.loc 1 163 4 is_stmt 1 view .LVU217
+ 163:poleceniagsm.c **** 			continue;
+ 814               		.loc 1 163 67 is_stmt 0 view .LVU218
+ 815 0364 E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 816 0368 81E0      		ldi r24,lo8(1)
+ 817 036a 8E0F      		add r24,r30
+ 818 036c 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 819 0370 F0E0      		ldi r31,0
+ 163:poleceniagsm.c **** 			continue;
+ 820               		.loc 1 163 71 view .LVU219
+ 821 0372 E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 822 0374 F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 823 0376 45E0      		ldi r20,lo8(5)
+ 824 0378 00C0      		rjmp .L81
+ 825               	.L31:
+ 166:poleceniagsm.c **** 		if ( d5 == 'S' && czy_polecenie_sim(polecenie_CMSERROR) )
+ 826               		.loc 1 166 3 is_stmt 1 view .LVU220
+ 167:poleceniagsm.c **** 		{
+ 827               		.loc 1 167 3 view .LVU221
+ 167:poleceniagsm.c **** 		{
+ 828               		.loc 1 167 6 is_stmt 0 view .LVU222
+ 829 037a D335      		cpi r29,lo8(83)
+ 830 037c 01F0      		breq .+2
+ 831 037e 00C0      		rjmp .L16
+ 167:poleceniagsm.c **** 		{
+ 832               		.loc 1 167 21 discriminator 1 view .LVU223
+ 833 0380 9801      		movw r18,r16
+ 834 0382 4BE0      		ldi r20,lo8(11)
+ 835 0384 B701      		movw r22,r14
+ 836 0386 80E0      		ldi r24,lo8(polecenie_CMSERROR.2149)
+ 837 0388 90E0      		ldi r25,hi8(polecenie_CMSERROR.2149)
+ 838 038a 0E94 0000 		call porownaj_znaki
+ 839               	.LVL47:
+ 167:poleceniagsm.c **** 		{
+ 840               		.loc 1 167 18 discriminator 1 view .LVU224
+ 841 038e 8823      		tst r24
+ 842 0390 01F0      		breq .L33
+ 169:poleceniagsm.c **** 				strtoul(&odebrany_blok_SIM900[p+strlen_R(polecenie_CMSERROR)+1], NULL, 10);
+ 843               		.loc 1 169 4 is_stmt 1 view .LVU225
+ 170:poleceniagsm.c **** 			zarejestrowane_komendy_od_SIM900[liczba_komend_w_kolejce_SIM900++] = CMS_ERROR_KOMENDA_SIM900;
+ 844               		.loc 1 170 5 is_stmt 0 view .LVU226
+ 845 0392 4AE0      		ldi r20,lo8(10)
+ 846 0394 50E0      		ldi r21,0
+ 847 0396 70E0      		ldi r23,0
+ 848 0398 60E0      		ldi r22,0
+ 849 039a C601      		movw r24,r12
+ 850 039c 8050      		subi r24,lo8(-(odebrany_blok_SIM900+14))
+ 851 039e 9040      		sbci r25,hi8(-(odebrany_blok_SIM900+14))
+ 852 03a0 0E94 0000 		call strtoul
+ 853               	.LVL48:
+ 169:poleceniagsm.c **** 				strtoul(&odebrany_blok_SIM900[p+strlen_R(polecenie_CMSERROR)+1], NULL, 10);
+ 854               		.loc 1 169 22 view .LVU227
+ 855 03a4 7093 0000 		sts numer_bledu_cms+1,r23
+ 856 03a8 6093 0000 		sts numer_bledu_cms,r22
+ 171:poleceniagsm.c **** 			continue;
+ 857               		.loc 1 171 4 is_stmt 1 view .LVU228
+ 171:poleceniagsm.c **** 			continue;
+ 858               		.loc 1 171 67 is_stmt 0 view .LVU229
+ 859 03ac E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 860 03b0 81E0      		ldi r24,lo8(1)
+ 861 03b2 8E0F      		add r24,r30
+ 862 03b4 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 863 03b8 F0E0      		ldi r31,0
+ 171:poleceniagsm.c **** 			continue;
+ 864               		.loc 1 171 71 view .LVU230
+ 865 03ba E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 866 03bc F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 867 03be 86E0      		ldi r24,lo8(6)
+ 868 03c0 00C0      		rjmp .L82
+ 869               	.L33:
+ 174:poleceniagsm.c **** 		if ( d5 == 'S' && czy_polecenie_sim(polecenie_CUSD) )
+ 870               		.loc 1 174 3 is_stmt 1 view .LVU231
+ 175:poleceniagsm.c **** 		{
+ 871               		.loc 1 175 3 view .LVU232
+ 175:poleceniagsm.c **** 		{
+ 872               		.loc 1 175 21 is_stmt 0 view .LVU233
+ 873 03c2 9801      		movw r18,r16
+ 874 03c4 46E0      		ldi r20,lo8(6)
+ 875 03c6 B701      		movw r22,r14
+ 876 03c8 80E0      		ldi r24,lo8(polecenie_CUSD.2150)
+ 877 03ca 90E0      		ldi r25,hi8(polecenie_CUSD.2150)
+ 878 03cc 0E94 0000 		call porownaj_znaki
+ 879               	.LVL49:
+ 175:poleceniagsm.c **** 		{
+ 880               		.loc 1 175 18 view .LVU234
+ 881 03d0 8823      		tst r24
+ 882 03d2 01F4      		brne .+2
+ 883 03d4 00C0      		rjmp .L16
+ 177:poleceniagsm.c **** 			continue;
+ 884               		.loc 1 177 4 is_stmt 1 view .LVU235
+ 177:poleceniagsm.c **** 			continue;
+ 885               		.loc 1 177 67 is_stmt 0 view .LVU236
+ 886 03d6 E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 887 03da 81E0      		ldi r24,lo8(1)
+ 888 03dc 8E0F      		add r24,r30
+ 889 03de 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 890 03e2 F0E0      		ldi r31,0
+ 177:poleceniagsm.c **** 			continue;
+ 891               		.loc 1 177 71 view .LVU237
+ 892 03e4 E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 893 03e6 F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 894 03e8 8EE0      		ldi r24,lo8(14)
+ 895 03ea 00C0      		rjmp .L82
+ 896               	.LVL50:
+ 897               	.L19:
+  92:poleceniagsm.c **** 		if ( d5 == 'G' && czy_polecenie_sim(polecenie_CMGS) )
+ 898               		.loc 1 92 3 is_stmt 1 view .LVU238
+  93:poleceniagsm.c **** 		{
+ 899               		.loc 1 93 3 view .LVU239
+  93:poleceniagsm.c **** 		{
+ 900               		.loc 1 93 6 is_stmt 0 view .LVU240
+ 901 03ec D734      		cpi r29,lo8(71)
+ 902 03ee 01F4      		brne .+2
+ 903 03f0 00C0      		rjmp .L36
+ 904               	.LVL51:
+ 905               	.L24:
+ 122:poleceniagsm.c **** 		if ( d5 == 'I' && czy_polecenie_sim(polecenie_CLIP) )
+ 906               		.loc 1 122 3 is_stmt 1 view .LVU241
+ 123:poleceniagsm.c **** 		{
+ 907               		.loc 1 123 3 view .LVU242
+ 123:poleceniagsm.c **** 		{
+ 908               		.loc 1 123 6 is_stmt 0 view .LVU243
+ 909 03f2 D934      		cpi r29,lo8(73)
+ 910 03f4 01F0      		breq .+2
+ 911 03f6 00C0      		rjmp .L25
+ 123:poleceniagsm.c **** 		{
+ 912               		.loc 1 123 21 discriminator 1 view .LVU244
+ 913 03f8 9801      		movw r18,r16
+ 914 03fa 46E0      		ldi r20,lo8(6)
+ 915 03fc B701      		movw r22,r14
+ 916 03fe 80E0      		ldi r24,lo8(polecenie_CLIP.2142)
+ 917 0400 90E0      		ldi r25,hi8(polecenie_CLIP.2142)
+ 918 0402 0E94 0000 		call porownaj_znaki
+ 919               	.LVL52:
+ 123:poleceniagsm.c **** 		{
+ 920               		.loc 1 123 18 discriminator 1 view .LVU245
+ 921 0406 8823      		tst r24
+ 922 0408 01F4      		brne .+2
+ 923 040a 00C0      		rjmp .L26
+ 125:poleceniagsm.c **** 			continue;
+ 924               		.loc 1 125 4 is_stmt 1 view .LVU246
+ 125:poleceniagsm.c **** 			continue;
+ 925               		.loc 1 125 67 is_stmt 0 view .LVU247
+ 926 040c E091 0000 		lds r30,liczba_komend_w_kolejce_SIM900
+ 927 0410 81E0      		ldi r24,lo8(1)
+ 928 0412 8E0F      		add r24,r30
+ 929 0414 8093 0000 		sts liczba_komend_w_kolejce_SIM900,r24
+ 930 0418 F0E0      		ldi r31,0
+ 125:poleceniagsm.c **** 			continue;
+ 931               		.loc 1 125 71 view .LVU248
+ 932 041a E050      		subi r30,lo8(-(zarejestrowane_komendy_od_SIM900))
+ 933 041c F040      		sbci r31,hi8(-(zarejestrowane_komendy_od_SIM900))
+ 934 041e 8AE0      		ldi r24,lo8(10)
+ 935 0420 00C0      		rjmp .L82
+ 936               	.LVL53:
+ 937               	.L20:
+  92:poleceniagsm.c **** 		if ( d5 == 'G' && czy_polecenie_sim(polecenie_CMGS) )
+ 938               		.loc 1 92 3 is_stmt 1 view .LVU249
+  93:poleceniagsm.c **** 		{
+ 939               		.loc 1 93 3 view .LVU250
+  93:poleceniagsm.c **** 		{
+ 940               		.loc 1 93 6 is_stmt 0 view .LVU251
+ 941 0422 D734      		cpi r29,lo8(71)
+ 942 0424 01F0      		breq .+2
+ 943 0426 00C0      		rjmp .L37
+ 944 0428 00C0      		rjmp .L36
+ 945               	.LBE16:
+ 946               	.LBE18:
+ 947               		.cfi_endproc
+ 948               	.LFE7:
+ 950               	.global	czy_jest_nowa_komenda_SIM900
+ 952               	czy_jest_nowa_komenda_SIM900:
+ 953               	.LFB8:
+ 183:poleceniagsm.c **** 
+ 184:poleceniagsm.c **** uchar czy_jest_nowa_komenda_SIM900(void)
+ 185:poleceniagsm.c **** {
+ 954               		.loc 1 185 1 is_stmt 1 view -0
+ 955               		.cfi_startproc
+ 956 042a CF93      		push r28
+ 957               	.LCFI18:
+ 958               		.cfi_def_cfa_offset 3
+ 959               		.cfi_offset 28, -2
+ 960               	/* prologue: function */
+ 961               	/* frame size = 0 */
+ 962               	/* stack size = 1 */
+ 963               	.L__stack_usage = 1
+ 186:poleceniagsm.c **** 	if ( polecenia_konczace_gsm() )
+ 964               		.loc 1 186 2 view .LVU253
+ 965               		.loc 1 186 7 is_stmt 0 view .LVU254
+ 966 042c 0E94 0000 		call polecenia_konczace_gsm
+ 967               	.LVL54:
+ 968               		.loc 1 186 5 view .LVU255
+ 969 0430 8823      		tst r24
+ 970 0432 01F0      		breq .L83
+ 187:poleceniagsm.c **** 	{
+ 188:poleceniagsm.c **** 		switch ( komenda_SIM900 )
+ 971               		.loc 1 188 3 is_stmt 1 view .LVU256
+ 972 0434 8091 0000 		lds r24,komenda_SIM900
+ 973 0438 8430      		cpi r24,lo8(4)
+ 974 043a 01F0      		breq .L85
+ 975 043c 8331      		cpi r24,lo8(19)
+ 976 043e 01F0      		breq .L85
+ 977 0440 8130      		cpi r24,lo8(1)
+ 978 0442 01F4      		brne .L86
+ 979               	.L85:
+ 980               	.LBB19:
+ 189:poleceniagsm.c **** 		{
+ 190:poleceniagsm.c **** 		case OK_KOMENDA_SIM900:
+ 191:poleceniagsm.c **** 		case ERROR_KOMENDA_SIM900:
+ 192:poleceniagsm.c **** 		case DANE_ZE_STRONY_INTERNETOWEJ_KOMENDA_SIM900:
+ 193:poleceniagsm.c **** 		{
+ 194:poleceniagsm.c **** 			const uchar sreg = SREG;
+ 981               		.loc 1 194 4 view .LVU257
+ 982               		.loc 1 194 16 is_stmt 0 view .LVU258
+ 983 0444 CFB7      		in r28,__SREG__
+ 984               	.LVL55:
+ 195:poleceniagsm.c **** 			cli();
+ 985               		.loc 1 195 4 is_stmt 1 view .LVU259
+ 986               	/* #APP */
+ 987               	 ;  195 "poleceniagsm.c" 1
+ 988 0446 F894      		cli
+ 989               	 ;  0 "" 2
+ 196:poleceniagsm.c **** 			resetuj_polecenie_konczace();
+ 990               		.loc 1 196 4 view .LVU260
+ 991               	/* #NOAPP */
+ 992 0448 0E94 0000 		call resetuj_polecenie_konczace
+ 993               	.LVL56:
+ 197:poleceniagsm.c **** 			zakoncz_odbieranie_SIM900();
+ 994               		.loc 1 197 4 view .LVU261
+ 995 044c 439A      		sbi 0x8,3
+ 996               		.loc 1 197 4 view .LVU262
+ 997               		.loc 1 197 4 view .LVU263
+ 998               	/* #APP */
+ 999               	 ;  197 "poleceniagsm.c" 1
+ 1000 044e F894      		cli
+ 1001               	 ;  0 "" 2
+ 1002               		.loc 1 197 4 view .LVU264
+ 1003               	/* #NOAPP */
+ 1004 0450 8091 C100 		lds r24,193
+ 1005 0454 8F77      		andi r24,lo8(127)
+ 1006 0456 8093 C100 		sts 193,r24
+ 1007               		.loc 1 197 4 view .LVU265
+ 1008 045a 80B7      		in r24,0x30
+ 1009 045c 8D7F      		andi r24,lo8(-3)
+ 1010 045e 80BF      		out 0x30,r24
+ 1011               		.loc 1 197 4 view .LVU266
+ 1012               	/* #APP */
+ 1013               	 ;  197 "poleceniagsm.c" 1
+ 1014 0460 7894      		sei
+ 1015               	 ;  0 "" 2
+ 1016               		.loc 1 197 4 view .LVU267
+ 1017               	 ;  197 "poleceniagsm.c" 1
+ 1018 0462 0000      		nop
+ 1019               	 ;  0 "" 2
+ 1020               		.loc 1 197 4 view .LVU268
+ 1021               		.loc 1 197 31 view .LVU269
+ 198:poleceniagsm.c **** 			SREG = sreg;
+ 1022               		.loc 1 198 4 view .LVU270
+ 1023               		.loc 1 198 9 is_stmt 0 view .LVU271
+ 1024               	/* #NOAPP */
+ 1025 0464 CFBF      		out __SREG__,r28
+ 1026               	.LVL57:
+ 1027               	.L86:
+ 1028               		.loc 1 198 9 view .LVU272
+ 1029               	.LBE19:
+ 199:poleceniagsm.c **** 		}
+ 200:poleceniagsm.c **** 		}
+ 201:poleceniagsm.c **** 		return komenda_SIM900;
+ 1030               		.loc 1 201 3 is_stmt 1 view .LVU273
+ 1031               		.loc 1 201 10 is_stmt 0 view .LVU274
+ 1032 0466 8091 0000 		lds r24,komenda_SIM900
+ 1033               	.L83:
+ 1034               	/* epilogue start */
+ 202:poleceniagsm.c **** 	}
+ 203:poleceniagsm.c **** 	return BRAK_KOMENDY_SIM900;
+ 204:poleceniagsm.c **** }
+ 1035               		.loc 1 204 1 view .LVU275
+ 1036 046a CF91      		pop r28
+ 1037 046c 0895      		ret
+ 1038               		.cfi_endproc
+ 1039               	.LFE8:
+ 1041               		.section	.progmem.data,"a",@progbits
+ 1044               	polecenie_CUSD.2150:
+ 1045 0000 2B43 5553 		.string	"+CUSD:"
+ 1045      443A 00
+ 1048               	polecenie_CMSERROR.2149:
+ 1049 0007 2B43 4D53 		.string	"+CMS ERROR:"
+ 1049      2045 5252 
+ 1049      4F52 3A00 
+ 1052               	polecenie_CMEERROR.2148:
+ 1053 0013 2B43 4D45 		.string	"+CME ERROR:"
+ 1053      2045 5252 
+ 1053      4F52 3A00 
+ 1056               	polecenie_BUSY.2147:
+ 1057 001f 4255 5359 		.string	"BUSY"
+ 1057      00
+ 1060               	polecenie_NO_DIALTONE.2146:
+ 1061 0024 4E4F 2044 		.string	"NO DIALTONE"
+ 1061      4941 4C54 
+ 1061      4F4E 4500 
+ 1064               	polecenie_NO_CARRIER.2145:
+ 1065 0030 4E4F 2043 		.string	"NO CARRIER"
+ 1065      4152 5249 
+ 1065      4552 00
+ 1068               	polecenie_CMTI.2144:
+ 1069 003b 2B43 4D54 		.string	"+CMTI:"
+ 1069      493A 00
+ 1072               	polecenie_DTMF.2143:
+ 1073 0042 2B44 544D 		.string	"+DTMF:"
+ 1073      463A 00
+ 1076               	polecenie_CLIP.2142:
+ 1077 0049 2B43 4C49 		.string	"+CLIP:"
+ 1077      503A 00
+ 1080               	polecenie_MO_CONNECTED.2141:
+ 1081 0050 4D4F 2043 		.string	"MO CONNECTED"
+ 1081      4F4E 4E45 
+ 1081      4354 4544 
+ 1081      00
+ 1084               	polecenie_MO_RING.2140:
+ 1085 005d 4D4F 2052 		.string	"MO RING"
+ 1085      494E 4700 
+ 1088               	polecenie_ERROR.2139:
+ 1089 0065 4552 524F 		.string	"ERROR"
+ 1089      5200 
+ 1092               	polecenie_CMGS.2138:
+ 1093 006b 2B43 4D47 		.string	"+CMGS:"
+ 1093      533A 00
+ 1094               		.comm	liczba_komend_w_kolejce_SIM900,1,1
+ 1095               		.comm	zarejestrowane_komendy_od_SIM900,10,1
+ 1096               	.global	numer_bledu_cms
+ 1097               		.section .bss
+ 1100               	numer_bledu_cms:
+ 1101 0000 0000      		.zero	2
+ 1102               	.global	numer_bledu_cme
+ 1105               	numer_bledu_cme:
+ 1106 0002 0000      		.zero	2
+ 1107               	.global	poziom_sieci_gsm
+ 1108               		.data
+ 1111               	poziom_sieci_gsm:
+ 1112 0000 63        		.byte	99
+ 1113               	.global	bledny_PIN
+ 1114               		.section .bss
+ 1117               	bledny_PIN:
+ 1118 0004 00        		.zero	1
+ 1119               		.text
+ 1120               	.Letext0:
+ 1121               		.file 2 "narzedzia.h"
+ 1122               		.file 3 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/avr/include/stdint.h"
+ 1123               		.file 4 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/include/stddef.h"
+ 1124               		.file 5 "poleceniagsm.h"
+ 1125               		.file 6 "pamiec_ram.h"
+ 1126               		.file 7 "sim900.h"
+ 1127               		.file 8 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/avr/include/stdlib.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 poleceniagsm.c
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:2      *ABS*:0000003e __SP_H__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3      *ABS*:0000003d __SP_L__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:4      *ABS*:0000003f __SREG__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:12     .text:00000000 porownaj_znaki
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:16     .text:00000000 .Loc.0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:17     .text:00000000 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:22     .text:00000000 .Loc.1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:24     .text:00000002 .Loc.2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:25     .text:00000002 .Loc.3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:28     .text:00000008 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:33     .text:0000000a .Loc.4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:35     .text:0000000a .Loc.5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:36     .text:0000000a .Loc.6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:37     .text:0000000a .Loc.7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:38     .text:0000000a .Loc.8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:43     .text:00000010 .Loc.9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:47     .text:00000012 .Loc.10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:50     .text:00000016 .Loc.11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:54     .text:00000018 .Loc.12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:55     .text:00000018 .Loc.13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:60     .text:0000001c .Loc.14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:63     .text:0000001c .Loc.15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:67     .text:0000001e .Loc.16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:73     .text:00000020 .Loc.17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:77     .text:00000022 .Loc.18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:78     .text:00000022 .Loc.19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:79     .text:00000022 .Loc.20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:86     .text:00000024 .Loc.21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:89     .text:00000024 .Loc.22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:92     .text:00000028 .Loc.23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:94     .text:00000028 .Loc.24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:97     .text:0000002a .Loc.25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:100    .text:0000002c .Loc.26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:104    .text:0000002e L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:109    .text:0000002e resetuj_polecenie_konczace
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:111    .text:0000002e .Loc.27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:112    .text:0000002e L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:117    .text:0000002e .Loc.28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:118    .text:0000002e .Loc.29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:121    .text:00000030 .Loc.30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:126    .text:00000032 .Loc.31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:127    .text:00000032 .Loc.32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:131    .text:0000003a .Loc.33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:132    .text:0000003a .Loc.34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:135    .text:00000042 .Loc.35
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:136    .text:00000042 .Loc.36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:138    .text:00000044 .Loc.37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:140    .text:00000044 .Loc.38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:142    .text:00000046 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:147    .text:00000046 polecenia_konczace_gsm
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:149    .text:00000046 .Loc.39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:150    .text:00000046 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:227    .text:0000006a .Loc.40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:229    .text:0000006a .Loc.41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:231    .text:0000006a .Loc.42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:233    .text:0000006a .Loc.43
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:237    .text:0000006c .Loc.44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:240    .text:00000070 .Loc.45
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:243    .text:00000074 .Loc.46
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:246    .text:00000078 .Loc.47
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:249    .text:0000007c .Loc.48
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:252    .text:00000080 .Loc.49
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:255    .text:00000084 .Loc.50
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:258    .text:00000088 .Loc.51
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:263    .text:0000008c .Loc.52
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:264    .text:0000008c .Loc.53
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:267    .text:0000008e .Loc.54
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:272    .text:00000090 .Loc.55
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:273    .text:00000090 .Loc.56
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:277    .text:00000094 .Loc.57
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:278    .text:00000094 .Loc.58
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:281    .text:00000098 .Loc.59
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:282    .text:00000098 .Loc.60
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:284    .text:0000009a .Loc.61
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:285    .text:0000009a .Loc.62
+                            *COM*:00000001 liczba_komend_w_kolejce_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:288    .text:0000009e .Loc.63
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:291    .text:000000a2 .Loc.64
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:292    .text:000000a2 .Loc.65
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:294    .text:000000a4 .Loc.66
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:296    .text:000000a8 .Loc.67
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:298    .text:000000aa .Loc.68
+                            *COM*:0000000a zarejestrowane_komendy_od_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:303    .text:000000b0 .Loc.69
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:305    .text:000000b4 .Loc.70
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:306    .text:000000b4 .Loc.71
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:308    .text:000000b6 .Loc.72
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:309    .text:000000b6 .Loc.73
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:313    .text:000000ba .Loc.74
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:316    .text:000000ba .Loc.75
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:342    .text:000000e2 .Loc.76
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:343    .text:000000e2 .Loc.77
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:348    .text:000000e8 .Loc.78
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:354    .text:000000ee .Loc.79
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:355    .text:000000ee .Loc.80
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:358    .text:000000f2 .Loc.81
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:366    .text:000000fe .Loc.82
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:367    .text:000000fe .Loc.83
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:370    .text:00000102 .Loc.84
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:371    .text:00000102 .Loc.85
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:374    .text:00000104 .Loc.86
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:377    .text:00000108 .Loc.87
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:385    .text:00000114 .Loc.88
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:386    .text:00000114 .Loc.89
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:388    .text:00000118 .Loc.90
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:389    .text:00000118 .Loc.91
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:391    .text:0000011a .Loc.92
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:392    .text:0000011a .Loc.93
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:396    .text:00000120 .Loc.94
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:397    .text:00000120 .Loc.95
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:400    .text:00000124 .Loc.96
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:403    .text:00000128 .Loc.97
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:404    .text:00000128 .Loc.98
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:407    .text:0000012c .Loc.99
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:408    .text:0000012c .Loc.100
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:412    .text:00000132 .Loc.101
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:416    .text:00000136 .Loc.102
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:417    .text:00000136 .Loc.103
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:423    .text:0000013e .Loc.104
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:424    .text:0000013e .Loc.105
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:432    .text:0000014a .Loc.106
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:433    .text:0000014a .Loc.107
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:437    .text:0000014e .Loc.108
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:438    .text:0000014e .Loc.109
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:439    .text:0000014e .Loc.110
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:445    .text:00000156 .Loc.111
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:446    .text:00000156 .Loc.112
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:450    .text:0000015c .Loc.113
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:454    .text:00000162 .Loc.114
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:456    .text:00000164 .Loc.115
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:460    .text:0000016c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:462    .text:0000016e .Loc.116
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:465    .text:00000174 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:467    .text:00000176 .Loc.117
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:468    .text:00000176 .Loc.118
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:474    .text:00000184 .Loc.119
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:478    .text:0000018a .Loc.120
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:481    .text:0000018a .Loc.121
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:483    .text:0000018a .Loc.122
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:484    .text:0000018a .Loc.123
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:487    .text:0000018c .Loc.124
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:488    .text:0000018e L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:494    .text:00000192 .Loc.125
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:495    .text:00000192 .Loc.126
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:496    .text:00000192 .Loc.127
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:500    .text:00000196 .Loc.128
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:503    .text:00000198 .Loc.129
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1092   .progmem.data:0000006b polecenie_CMGS.2138
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:510    .text:000001a4 .Loc.130
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:513    .text:000001a8 .Loc.131
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:514    .text:000001a8 .Loc.132
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:520    .text:000001b6 .Loc.133
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:524    .text:000001bc .Loc.134
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:527    .text:000001be .Loc.135
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:528    .text:000001be .Loc.136
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:529    .text:000001be .Loc.137
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:534    .text:000001c4 .Loc.138
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1088   .progmem.data:00000065 polecenie_ERROR.2139
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:542    .text:000001d2 .Loc.139
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:545    .text:000001d6 .Loc.140
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:546    .text:000001d6 .Loc.141
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:552    .text:000001e4 .Loc.142
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:557    .text:000001ea .Loc.143
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:559    .text:000001ec .Loc.144
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:562    .text:000001ee .Loc.145
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:563    .text:000001ee .Loc.146
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:564    .text:000001ee .Loc.147
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:568    .text:000001f4 .Loc.148
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1084   .progmem.data:0000005d polecenie_MO_RING.2140
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:576    .text:00000202 .Loc.149
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:578    .text:00000206 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:580    .text:00000208 .Loc.150
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:581    .text:00000208 .Loc.151
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:587    .text:00000216 .Loc.152
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:591    .text:0000021c .Loc.153
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:594    .text:0000021e .Loc.154
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:595    .text:0000021e .Loc.155
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:596    .text:0000021e .Loc.156
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:600    .text:00000224 .Loc.157
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1080   .progmem.data:00000050 polecenie_MO_CONNECTED.2141
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:608    .text:00000232 .Loc.158
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:610    .text:00000236 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:612    .text:00000238 .Loc.159
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:613    .text:00000238 .Loc.160
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:619    .text:00000246 .Loc.161
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:624    .text:0000024c .Loc.162
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:626    .text:0000024e .Loc.163
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:629    .text:00000250 .Loc.164
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:630    .text:00000250 .Loc.165
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:631    .text:00000250 .Loc.166
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:634    .text:00000254 .Loc.167
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1072   .progmem.data:00000042 polecenie_DTMF.2143
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:642    .text:00000262 .Loc.168
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:645    .text:00000266 .Loc.169
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:646    .text:00000266 .Loc.170
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:652    .text:00000274 .Loc.171
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:656    .text:0000027a .Loc.172
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:659    .text:0000027c .Loc.173
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:660    .text:0000027c .Loc.174
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:661    .text:0000027c .Loc.175
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:664    .text:00000280 .Loc.176
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1068   .progmem.data:0000003b polecenie_CMTI.2144
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:672    .text:0000028e .Loc.177
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:675    .text:00000292 .Loc.178
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:676    .text:00000292 .Loc.179
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:682    .text:000002a0 .Loc.180
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:686    .text:000002a6 .Loc.181
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:689    .text:000002a8 .Loc.182
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:690    .text:000002a8 .Loc.183
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:691    .text:000002a8 .Loc.184
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:695    .text:000002ae .Loc.185
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1064   .progmem.data:00000030 polecenie_NO_CARRIER.2145
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:703    .text:000002bc .Loc.186
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:706    .text:000002c0 .Loc.187
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:707    .text:000002c0 .Loc.188
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:713    .text:000002ce .Loc.189
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:717    .text:000002d4 .Loc.190
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:720    .text:000002d6 .Loc.191
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:721    .text:000002d6 .Loc.192
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:722    .text:000002d6 .Loc.193
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:726    .text:000002dc .Loc.194
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1060   .progmem.data:00000024 polecenie_NO_DIALTONE.2146
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:734    .text:000002ea .Loc.195
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:737    .text:000002ee .Loc.196
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:738    .text:000002ee .Loc.197
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:744    .text:000002fc .Loc.198
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:748    .text:00000302 .Loc.199
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:751    .text:00000304 .Loc.200
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:752    .text:00000304 .Loc.201
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:753    .text:00000304 .Loc.202
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:757    .text:0000030a .Loc.203
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1056   .progmem.data:0000001f polecenie_BUSY.2147
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:765    .text:00000318 .Loc.204
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:768    .text:0000031c .Loc.205
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:769    .text:0000031c .Loc.206
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:775    .text:0000032a .Loc.207
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:779    .text:00000330 .Loc.208
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:782    .text:00000332 .Loc.209
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:783    .text:00000332 .Loc.210
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:784    .text:00000332 .Loc.211
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:787    .text:00000336 .Loc.212
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1052   .progmem.data:00000013 polecenie_CMEERROR.2148
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:795    .text:00000344 .Loc.213
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:797    .text:00000348 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:799    .text:0000034a .Loc.214
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:800    .text:0000034a .Loc.215
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:810    .text:0000035c .Loc.216
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1105   .bss:00000002 numer_bledu_cme
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:813    .text:00000364 .Loc.217
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:814    .text:00000364 .Loc.218
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:820    .text:00000372 .Loc.219
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:826    .text:0000037a .Loc.220
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:827    .text:0000037a .Loc.221
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:828    .text:0000037a .Loc.222
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:830    .text:0000037e L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:832    .text:00000380 .Loc.223
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1048   .progmem.data:00000007 polecenie_CMSERROR.2149
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:840    .text:0000038e .Loc.224
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:843    .text:00000392 .Loc.225
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:844    .text:00000392 .Loc.226
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:854    .text:000003a4 .Loc.227
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1100   .bss:00000000 numer_bledu_cms
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:857    .text:000003ac .Loc.228
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:858    .text:000003ac .Loc.229
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:864    .text:000003ba .Loc.230
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:870    .text:000003c2 .Loc.231
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:871    .text:000003c2 .Loc.232
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:872    .text:000003c2 .Loc.233
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1044   .progmem.data:00000000 polecenie_CUSD.2150
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:880    .text:000003d0 .Loc.234
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:882    .text:000003d4 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:884    .text:000003d6 .Loc.235
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:885    .text:000003d6 .Loc.236
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:891    .text:000003e4 .Loc.237
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:898    .text:000003ec .Loc.238
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:899    .text:000003ec .Loc.239
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:900    .text:000003ec .Loc.240
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:902    .text:000003f0 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:906    .text:000003f2 .Loc.241
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:907    .text:000003f2 .Loc.242
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:908    .text:000003f2 .Loc.243
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:910    .text:000003f6 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:912    .text:000003f8 .Loc.244
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1076   .progmem.data:00000049 polecenie_CLIP.2142
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:920    .text:00000406 .Loc.245
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:922    .text:0000040a L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:924    .text:0000040c .Loc.246
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:925    .text:0000040c .Loc.247
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:931    .text:0000041a .Loc.248
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:938    .text:00000422 .Loc.249
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:939    .text:00000422 .Loc.250
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:940    .text:00000422 .Loc.251
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:942    .text:00000426 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:947    .text:0000042a L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:952    .text:0000042a czy_jest_nowa_komenda_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:954    .text:0000042a .Loc.252
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:955    .text:0000042a L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:964    .text:0000042c .Loc.253
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:965    .text:0000042c .Loc.254
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:968    .text:00000430 .Loc.255
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:971    .text:00000434 .Loc.256
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:981    .text:00000444 .Loc.257
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:982    .text:00000444 .Loc.258
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:985    .text:00000446 .Loc.259
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:990    .text:00000448 .Loc.260
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:994    .text:0000044c .Loc.261
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:996    .text:0000044e .Loc.262
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:997    .text:0000044e .Loc.263
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1002   .text:00000450 .Loc.264
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1007   .text:0000045a .Loc.265
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1011   .text:00000460 .Loc.266
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1016   .text:00000462 .Loc.267
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1020   .text:00000464 .Loc.268
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1021   .text:00000464 .Loc.269
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1022   .text:00000464 .Loc.270
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1023   .text:00000464 .Loc.271
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1028   .text:00000466 .Loc.272
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1030   .text:00000466 .Loc.273
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1031   .text:00000466 .Loc.274
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1035   .text:0000046a .Loc.275
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1038   .text:0000046e L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1111   .data:00000000 poziom_sieci_gsm
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1117   .bss:00000004 bledny_PIN
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1128   .text:0000046e L0
+                     .debug_frame:00000000 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:59     .text:0000001c .L8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:70     .text:00000020 .L4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:53     .text:00000018 .L7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:46     .text:00000012 .L3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:347    .text:000000e8 .L11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:339    .text:000000e2 .L12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:312    .text:000000ba .L10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:353    .text:000000ee .L14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:480    .text:0000018a .L16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:406    .text:0000012c .L17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:492    .text:00000192 .L18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:897    .text:000003ec .L19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:937    .text:00000422 .L20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:262    .text:0000008c .L34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:526    .text:000001be .L21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:561    .text:000001ee .L22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:593    .text:0000021e .L23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:905    .text:000003f2 .L24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:658    .text:0000027c .L27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:688    .text:000002a8 .L26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:719    .text:000002d6 .L28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:750    .text:00000304 .L29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:781    .text:00000332 .L30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:825    .text:0000037a .L31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:556    .text:000001ea .L81
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:869    .text:000003c2 .L33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:623    .text:0000024c .L82
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:499    .text:00000196 .L36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:628    .text:00000250 .L25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:533    .text:000001c4 .L37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1033   .text:0000046a .L83
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:979    .text:00000444 .L85
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1027   .text:00000466 .L86
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:2706   .debug_abbrev:00000000 .Ldebug_abbrev0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:8      .text:00000000 .Ltext0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1120   .text:0000046e .Letext0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3977   .debug_line:00000000 .Ldebug_line0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:953    .text:0000042a .LFB8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1039   .text:0000046e .LFE8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3277   .debug_loc:00000000 .LLST22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:980    .text:00000444 .LBB19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1029   .text:00000466 .LBE19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3295   .debug_loc:00000024 .LLST23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3292   .debug_loc:00000022 .LVUS23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:993    .text:0000044c .LVL56
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:967    .text:00000430 .LVL54
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:148    .text:00000046 .LFB7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:948    .text:0000042a .LFE7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3302   .debug_loc:00000037 .LLST11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3953   .debug_ranges:00000000 .Ldebug_ranges0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3430   .debug_loc:00000140 .LLST12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3419   .debug_loc:00000136 .LVUS12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3467   .debug_loc:0000018c .LLST13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3456   .debug_loc:00000182 .LVUS13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3495   .debug_loc:000001cf .LLST14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3490   .debug_loc:000001cb .LVUS14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3509   .debug_loc:000001ef .LLST15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3506   .debug_loc:000001ed .LVUS15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3530   .debug_loc:0000020f .LLST16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3521   .debug_loc:00000207 .LVUS16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3574   .debug_loc:0000025b .LLST17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3569   .debug_loc:00000257 .LVUS17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3600   .debug_loc:00000287 .LLST18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3595   .debug_loc:00000283 .LVUS18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3626   .debug_loc:000002b3 .LLST19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3621   .debug_loc:000002af .LVUS19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3642   .debug_loc:000002d5 .LLST20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3637   .debug_loc:000002d1 .LVUS20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3658   .debug_loc:000002f7 .LLST21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3653   .debug_loc:000002f3 .LVUS21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:509    .text:000001a4 .LVL36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:541    .text:000001d2 .LVL37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:575    .text:00000202 .LVL38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:607    .text:00000232 .LVL39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:641    .text:00000262 .LVL40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:671    .text:0000028e .LVL41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:702    .text:000002bc .LVL42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:733    .text:000002ea .LVL43
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:764    .text:00000318 .LVL44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:794    .text:00000344 .LVL45
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:809    .text:0000035c .LVL46
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:839    .text:0000038e .LVL47
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:853    .text:000003a4 .LVL48
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:879    .text:000003d0 .LVL49
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:919    .text:00000406 .LVL52
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:110    .text:0000002e .LFB6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:143    .text:00000046 .LFE6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3672   .debug_loc:00000317 .LLST10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3669   .debug_loc:00000315 .LVUS10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:14     .text:00000000 .LFB5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:105    .text:0000002e .LFE5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3684   .debug_loc:0000032e .LLST0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3679   .debug_loc:0000032a .LVUS0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3708   .debug_loc:00000358 .LLST1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3703   .debug_loc:00000354 .LVUS1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:32     .text:0000000a .LBI8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3734   .debug_loc:00000384 .LLST2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3727   .debug_loc:0000037e .LVUS2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3765   .debug_loc:000003bc .LLST3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3760   .debug_loc:000003b8 .LVUS3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3781   .debug_loc:000003de .LLST4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3776   .debug_loc:000003da .LVUS4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3809   .debug_loc:0000040c .LLST5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3802   .debug_loc:00000406 .LVUS5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3848   .debug_loc:0000044c .LLST6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3839   .debug_loc:00000444 .LVUS6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3891   .debug_loc:00000497 .LLST7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3884   .debug_loc:00000491 .LVUS7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:76     .text:00000022 .LBB10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:88     .text:00000024 .LBE10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3912   .debug_loc:000004c5 .LLST8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3907   .debug_loc:000004c1 .LVUS8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3933   .debug_loc:000004ec .LLST9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:3930   .debug_loc:000004ea .LVUS9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:957    .text:0000042c .LCFI18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:984    .text:00000446 .LVL55
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1026   .text:00000466 .LVL57
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:152    .text:00000048 .LCFI0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:156    .text:0000004a .LCFI1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:160    .text:0000004c .LCFI2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:164    .text:0000004e .LCFI3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:168    .text:00000050 .LCFI4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:172    .text:00000052 .LCFI5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:176    .text:00000054 .LCFI6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:180    .text:00000056 .LCFI7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:184    .text:00000058 .LCFI8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:188    .text:0000005a .LCFI9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:192    .text:0000005c .LCFI10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:196    .text:0000005e .LCFI11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:200    .text:00000060 .LCFI12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:204    .text:00000062 .LCFI13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:208    .text:00000064 .LCFI14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:212    .text:00000066 .LCFI15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:216    .text:00000068 .LCFI16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:220    .text:0000006a .LCFI17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:230    .text:0000006a .LVL13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:261    .text:0000008c .LVL14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:287    .text:0000009e .LVL17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:346    .text:000000e8 .LVL21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:479    .text:0000018a .LVL32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:486    .text:0000018c .LVL33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:266    .text:0000008e .LVL15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:311    .text:000000ba .LVL19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:338    .text:000000e2 .LVL20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:491    .text:00000192 .LVL34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:896    .text:000003ec .LVL50
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:904    .text:000003f2 .LVL51
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:936    .text:00000422 .LVL53
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:276    .text:00000094 .LVL16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:302    .text:000000b0 .LVL18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:399    .text:00000124 .LVL26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:365    .text:000000fe .LVL23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:384    .text:00000114 .LVL25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:502    .text:00000198 .LVL35
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:415    .text:00000136 .LVL27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:422    .text:0000013e .LVL28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:431    .text:0000014a .LVL29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:436    .text:0000014e .LVL30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:444    .text:00000156 .LVL31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:120    .text:00000030 .LVL12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:13     .text:00000000 .LVL0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:45     .text:00000012 .LVL3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:30     .text:0000000a .LVL1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:58     .text:0000001c .LVL5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:69     .text:00000020 .LVL6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:42     .text:00000010 .LVL2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:52     .text:00000018 .LVL4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:75     .text:00000022 .LVL7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:93     .text:00000028 .LVL9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:96     .text:0000002a .LVL10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:85     .text:00000024 .LVL8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:1129   .debug_info:00000000 .Ldebug_info0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:31     .text:0000000a .LBB8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:62     .text:0000001c .LBE8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:71     .text:00000020 .LBB12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:103    .text:0000002e .LBE12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:228    .text:0000006a .LBB13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:232    .text:0000006a .LBE13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:235    .text:0000006c .LBB17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:315    .text:000000ba .LBE17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:340    .text:000000e2 .LBB18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:946    .text:0000042a .LBE18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:236    .text:0000006c .LBB14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:314    .text:000000ba .LBE14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:341    .text:000000e2 .LBB15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:482    .text:0000018a .LBE15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:493    .text:00000192 .LBB16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccblQEV5.s:945    .text:0000042a .LBE16
+
+UNDEFINED SYMBOLS
+odebrany_blok_SIM900
+poczatek_polecenia_SIM900
+zakonczenie_polecenia_SIM900
+czy_jest_nowe_polecenie_SIM900
+komenda_SIM900
+polozenie_otrzymanych_komend_SIM900
+strtoul
+__do_copy_data
+__do_clear_bss

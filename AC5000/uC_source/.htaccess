@@ -1,0 +1,4 @@
+# Warunek: Je¶li adres NIE zaczyna siê od /ui
+RewriteCond %{REQUEST_URI} !^/ui
+# To wykonaj przekierowanie
+RewriteRule ^(.*)$ https://megaelektronik.pl/$1 [R=301,L]

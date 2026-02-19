@@ -1,0 +1,38 @@
+   1               		.file	"pamiec_ram.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	powiadomienia_aktywne
+  11               		.section .bss
+  14               	powiadomienia_aktywne:
+  15 0000 00        		.zero	1
+  16               		.comm	numer_powiadomien,17,1
+  17               		.comm	tekst_wysylanego_smsa,161,1
+  18               		.comm	wysylany_blok_SIM900,320,1
+  19               		.text
+  20               	.Letext0:
+  21               		.file 1 "pamiec_ram.h"
+  22               		.file 2 "pamiec_ram.c"
+  23               		.file 3 "narzedzia.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 pamiec_ram.c
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccGFN8Xh.s:2      *ABS*:0000003e __SP_H__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccGFN8Xh.s:3      *ABS*:0000003d __SP_L__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccGFN8Xh.s:4      *ABS*:0000003f __SREG__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccGFN8Xh.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccGFN8Xh.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccGFN8Xh.s:14     .bss:00000000 powiadomienia_aktywne
+                            *COM*:00000011 numer_powiadomien
+                            *COM*:000000a1 tekst_wysylanego_smsa
+                            *COM*:00000140 wysylany_blok_SIM900
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccGFN8Xh.s:149    .debug_abbrev:00000000 .Ldebug_abbrev0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccGFN8Xh.s:294    .debug_line:00000000 .Ldebug_line0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccGFN8Xh.s:25     .debug_info:00000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+__do_clear_bss

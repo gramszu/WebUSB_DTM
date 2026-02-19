@@ -1,0 +1,1555 @@
+   1               		.file	"at24c512.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  11               	twi_wait_int:
+  12               	.LFB10:
+  13               		.file 1 "at24c512.c"
+   1:at24c512.c    **** /*
+   2:at24c512.c    ****  * AT24C512 I2C EEPROM driver dla ATmega328PB
+   3:at24c512.c    ****  * Piny: PC4 = SDA (TWD), PC5 = SCL (TWC)
+   4:at24c512.c    ****  * TWI na tych pinach jest domyślny w 32-pin package
+   5:at24c512.c    ****  */
+   6:at24c512.c    **** 
+   7:at24c512.c    **** #include "at24c512.h"
+   8:at24c512.c    **** #include <avr/io.h>
+   9:at24c512.c    **** #include <util/delay.h>
+  10:at24c512.c    **** 
+  11:at24c512.c    **** #define F_SCL 400000UL  /* 400 kHz Fast Mode – AT24C512 to obsługuje, szybszy odczyt/zapis */
+  12:at24c512.c    **** #define TWI_BAUD(FREQ, FSCL) (((FREQ) / (FSCL)) - 16) / 2
+  13:at24c512.c    **** 
+  14:at24c512.c    **** /* ATmega328PB ma TWI0 (TWCR0, TWSR0, TWDR0, TWBR0) */
+  15:at24c512.c    **** #define TWI_CR  TWCR0
+  16:at24c512.c    **** #define TWI_SR  TWSR0
+  17:at24c512.c    **** #define TWI_DR  TWDR0
+  18:at24c512.c    **** #define TWI_BR  TWBR0
+  19:at24c512.c    **** 
+  20:at24c512.c    **** /* Ochrona przed zawieszeniem na uszkodzonej magistrali I2C. */
+  21:at24c512.c    **** #define TWI_OP_TIMEOUT_LOOPS 60000U
+  22:at24c512.c    **** #define EEPROM_READY_TIMEOUT_LOOPS 20000U
+  23:at24c512.c    **** 
+  24:at24c512.c    **** static uint8_t twi_wait_int(void) {
+  14               		.loc 1 24 35 view -0
+  15               		.cfi_startproc
+  16               	/* prologue: function */
+  17               	/* frame size = 0 */
+  18               	/* stack size = 0 */
+  19               	.L__stack_usage = 0
+  25:at24c512.c    ****   uint16_t timeout = TWI_OP_TIMEOUT_LOOPS;
+  20               		.loc 1 25 3 view .LVU1
+  21               	.LVL0:
+  26:at24c512.c    ****   while (!(TWI_CR & (1 << TWINT)) && --timeout)
+  22               		.loc 1 26 3 view .LVU2
+  25:at24c512.c    ****   uint16_t timeout = TWI_OP_TIMEOUT_LOOPS;
+  23               		.loc 1 25 12 is_stmt 0 view .LVU3
+  24 0000 20E6      		ldi r18,lo8(96)
+  25 0002 3AEE      		ldi r19,lo8(-22)
+  26               	.LVL1:
+  27               	.L3:
+  27:at24c512.c    ****     ;
+  28               		.loc 1 27 5 is_stmt 1 discriminator 2 view .LVU4
+  26:at24c512.c    ****   while (!(TWI_CR & (1 << TWINT)) && --timeout)
+  29               		.loc 1 26 9 discriminator 2 view .LVU5
+  26:at24c512.c    ****   while (!(TWI_CR & (1 << TWINT)) && --timeout)
+  30               		.loc 1 26 12 is_stmt 0 discriminator 2 view .LVU6
+  31 0004 8091 BC00 		lds r24,188
+  26:at24c512.c    ****   while (!(TWI_CR & (1 << TWINT)) && --timeout)
+  32               		.loc 1 26 9 discriminator 2 view .LVU7
+  33 0008 87FD      		sbrc r24,7
+  34 000a 00C0      		rjmp .L2
+  26:at24c512.c    ****   while (!(TWI_CR & (1 << TWINT)) && --timeout)
+  35               		.loc 1 26 35 discriminator 1 view .LVU8
+  36 000c 2150      		subi r18,1
+  37 000e 3109      		sbc r19,__zero_reg__
+  38               	.LVL2:
+  26:at24c512.c    ****   while (!(TWI_CR & (1 << TWINT)) && --timeout)
+  39               		.loc 1 26 35 discriminator 1 view .LVU9
+  40 0010 01F4      		brne .L3
+  41               	.L2:
+  28:at24c512.c    ****   return (timeout != 0);
+  42               		.loc 1 28 3 is_stmt 1 view .LVU10
+  43               		.loc 1 28 19 is_stmt 0 view .LVU11
+  44 0012 81E0      		ldi r24,lo8(1)
+  45 0014 232B      		or r18,r19
+  46 0016 01F4      		brne .L4
+  47               		.loc 1 28 19 view .LVU12
+  48 0018 80E0      		ldi r24,0
+  49               	.L4:
+  50               	/* epilogue start */
+  29:at24c512.c    **** }
+  51               		.loc 1 29 1 view .LVU13
+  52 001a 0895      		ret
+  53               		.cfi_endproc
+  54               	.LFE10:
+  57               	twi_start:
+  58               	.LFB11:
+  30:at24c512.c    **** 
+  31:at24c512.c    **** static uint8_t twi_start(void) {
+  59               		.loc 1 31 32 is_stmt 1 view -0
+  60               		.cfi_startproc
+  61               	/* prologue: function */
+  62               	/* frame size = 0 */
+  63               	/* stack size = 0 */
+  64               	.L__stack_usage = 0
+  32:at24c512.c    ****   TWI_CR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);
+  65               		.loc 1 32 3 view .LVU15
+  66               		.loc 1 32 10 is_stmt 0 view .LVU16
+  67 001c 84EA      		ldi r24,lo8(-92)
+  68 001e 8093 BC00 		sts 188,r24
+  33:at24c512.c    ****   if (!twi_wait_int())
+  69               		.loc 1 33 3 is_stmt 1 view .LVU17
+  70               		.loc 1 33 8 is_stmt 0 view .LVU18
+  71 0022 0E94 0000 		call twi_wait_int
+  72               	.LVL3:
+  73               		.loc 1 33 6 view .LVU19
+  74 0026 8823      		tst r24
+  75 0028 01F0      		breq .L8
+  34:at24c512.c    ****     return 0xFF;
+  35:at24c512.c    ****   return TWI_SR & 0xF8;
+  76               		.loc 1 35 3 is_stmt 1 view .LVU20
+  77               		.loc 1 35 17 is_stmt 0 view .LVU21
+  78 002a 8091 B900 		lds r24,185
+  79 002e 887F      		andi r24,lo8(-8)
+  80 0030 0895      		ret
+  81               	.L8:
+  34:at24c512.c    ****     return 0xFF;
+  82               		.loc 1 34 12 view .LVU22
+  83 0032 8FEF      		ldi r24,lo8(-1)
+  84               	/* epilogue start */
+  36:at24c512.c    **** }
+  85               		.loc 1 36 1 view .LVU23
+  86 0034 0895      		ret
+  87               		.cfi_endproc
+  88               	.LFE11:
+  91               	twi_stop:
+  92               	.LFB12:
+  37:at24c512.c    **** 
+  38:at24c512.c    **** static void twi_stop(void) {
+  93               		.loc 1 38 28 is_stmt 1 view -0
+  94               		.cfi_startproc
+  95               	/* prologue: function */
+  96               	/* frame size = 0 */
+  97               	/* stack size = 0 */
+  98               	.L__stack_usage = 0
+  39:at24c512.c    ****   TWI_CR = (1 << TWINT) | (1 << TWSTO) | (1 << TWEN);
+  99               		.loc 1 39 3 view .LVU25
+ 100               		.loc 1 39 10 is_stmt 0 view .LVU26
+ 101 0036 84E9      		ldi r24,lo8(-108)
+ 102 0038 8093 BC00 		sts 188,r24
+  40:at24c512.c    ****   uint16_t timeout = TWI_OP_TIMEOUT_LOOPS;
+ 103               		.loc 1 40 3 is_stmt 1 view .LVU27
+ 104               	.LVL4:
+  41:at24c512.c    ****   while ((TWI_CR & (1 << TWSTO)) && --timeout)
+ 105               		.loc 1 41 3 view .LVU28
+ 106               		.loc 1 41 9 is_stmt 0 view .LVU29
+ 107 003c 80E6      		ldi r24,lo8(96)
+ 108 003e 9AEE      		ldi r25,lo8(-22)
+ 109               	.LVL5:
+ 110               	.L11:
+  42:at24c512.c    ****     ;
+ 111               		.loc 1 42 5 is_stmt 1 discriminator 2 view .LVU30
+  41:at24c512.c    ****   while ((TWI_CR & (1 << TWSTO)) && --timeout)
+ 112               		.loc 1 41 9 discriminator 2 view .LVU31
+  41:at24c512.c    ****   while ((TWI_CR & (1 << TWSTO)) && --timeout)
+ 113               		.loc 1 41 11 is_stmt 0 discriminator 2 view .LVU32
+ 114 0040 2091 BC00 		lds r18,188
+  41:at24c512.c    ****   while ((TWI_CR & (1 << TWSTO)) && --timeout)
+ 115               		.loc 1 41 9 discriminator 2 view .LVU33
+ 116 0044 24FF      		sbrs r18,4
+ 117 0046 00C0      		rjmp .L9
+ 118               	.LVL6:
+  41:at24c512.c    ****   while ((TWI_CR & (1 << TWSTO)) && --timeout)
+ 119               		.loc 1 41 9 discriminator 2 view .LVU34
+ 120 0048 0197      		sbiw r24,1
+ 121               	.LVL7:
+  41:at24c512.c    ****   while ((TWI_CR & (1 << TWSTO)) && --timeout)
+ 122               		.loc 1 41 34 discriminator 1 view .LVU35
+ 123 004a 01F4      		brne .L11
+ 124               	.L9:
+ 125               	/* epilogue start */
+  43:at24c512.c    **** }
+ 126               		.loc 1 43 1 view .LVU36
+ 127 004c 0895      		ret
+ 128               		.cfi_endproc
+ 129               	.LFE12:
+ 132               	twi_send_byte:
+ 133               	.LVL8:
+ 134               	.LFB13:
+  44:at24c512.c    **** 
+  45:at24c512.c    **** static uint8_t twi_send_byte(uint8_t data) {
+ 135               		.loc 1 45 44 is_stmt 1 view -0
+ 136               		.cfi_startproc
+ 137               	/* prologue: function */
+ 138               	/* frame size = 0 */
+ 139               	/* stack size = 0 */
+ 140               	.L__stack_usage = 0
+  46:at24c512.c    ****   TWI_DR = data;
+ 141               		.loc 1 46 3 view .LVU38
+ 142               		.loc 1 46 10 is_stmt 0 view .LVU39
+ 143 004e 8093 BB00 		sts 187,r24
+  47:at24c512.c    ****   TWI_CR = (1 << TWINT) | (1 << TWEN);
+ 144               		.loc 1 47 3 is_stmt 1 view .LVU40
+ 145               		.loc 1 47 10 is_stmt 0 view .LVU41
+ 146 0052 84E8      		ldi r24,lo8(-124)
+ 147               	.LVL9:
+ 148               		.loc 1 47 10 view .LVU42
+ 149 0054 8093 BC00 		sts 188,r24
+ 150               	.LVL10:
+  48:at24c512.c    ****   if (!twi_wait_int())
+ 151               		.loc 1 48 3 is_stmt 1 view .LVU43
+ 152               		.loc 1 48 8 is_stmt 0 view .LVU44
+ 153 0058 0E94 0000 		call twi_wait_int
+ 154               	.LVL11:
+ 155               		.loc 1 48 6 view .LVU45
+ 156 005c 8823      		tst r24
+ 157 005e 01F0      		breq .L18
+  49:at24c512.c    ****     return 0xFF;
+  50:at24c512.c    ****   return TWI_SR & 0xF8;
+ 158               		.loc 1 50 3 is_stmt 1 view .LVU46
+ 159               		.loc 1 50 17 is_stmt 0 view .LVU47
+ 160 0060 8091 B900 		lds r24,185
+ 161 0064 887F      		andi r24,lo8(-8)
+ 162 0066 0895      		ret
+ 163               	.L18:
+  49:at24c512.c    ****     return 0xFF;
+ 164               		.loc 1 49 12 view .LVU48
+ 165 0068 8FEF      		ldi r24,lo8(-1)
+ 166               	/* epilogue start */
+  51:at24c512.c    **** }
+ 167               		.loc 1 51 1 view .LVU49
+ 168 006a 0895      		ret
+ 169               		.cfi_endproc
+ 170               	.LFE13:
+ 172               	.global	at24c512_init
+ 174               	at24c512_init:
+ 175               	.LFB16:
+  52:at24c512.c    **** 
+  53:at24c512.c    **** static uint8_t twi_recv_byte_ack(void) {
+  54:at24c512.c    ****   TWI_CR = (1 << TWINT) | (1 << TWEA) | (1 << TWEN);
+  55:at24c512.c    ****   if (!twi_wait_int())
+  56:at24c512.c    ****     return 0xFF;
+  57:at24c512.c    ****   return TWI_DR;
+  58:at24c512.c    **** }
+  59:at24c512.c    **** 
+  60:at24c512.c    **** static uint8_t twi_recv_byte_nack(void) {
+  61:at24c512.c    ****   TWI_CR = (1 << TWINT) | (1 << TWEN);
+  62:at24c512.c    ****   if (!twi_wait_int())
+  63:at24c512.c    ****     return 0xFF;
+  64:at24c512.c    ****   return TWI_DR;
+  65:at24c512.c    **** }
+  66:at24c512.c    **** 
+  67:at24c512.c    **** void at24c512_init(void) {
+ 176               		.loc 1 67 26 is_stmt 1 view -0
+ 177               		.cfi_startproc
+ 178               	/* prologue: function */
+ 179               	/* frame size = 0 */
+ 180               	/* stack size = 0 */
+ 181               	.L__stack_usage = 0
+  68:at24c512.c    ****   /* PC4 (SDA), PC5 (SCL) - pull-up włączone przez PORT */
+  69:at24c512.c    ****   PORTC |= (1 << PC4) | (1 << PC5);
+ 182               		.loc 1 69 3 view .LVU51
+ 183               		.loc 1 69 9 is_stmt 0 view .LVU52
+ 184 006c 88B1      		in r24,0x8
+ 185 006e 8063      		ori r24,lo8(48)
+ 186 0070 88B9      		out 0x8,r24
+  70:at24c512.c    ****   DDRC &= ~((1 << PC4) | (1 << PC5));
+ 187               		.loc 1 70 3 is_stmt 1 view .LVU53
+ 188               		.loc 1 70 8 is_stmt 0 view .LVU54
+ 189 0072 87B1      		in r24,0x7
+ 190 0074 8F7C      		andi r24,lo8(-49)
+ 191 0076 87B9      		out 0x7,r24
+  71:at24c512.c    **** 
+  72:at24c512.c    ****   TWI_BR = (uint8_t)TWI_BAUD(F_CPU, F_SCL);
+ 192               		.loc 1 72 3 is_stmt 1 view .LVU55
+ 193               		.loc 1 72 10 is_stmt 0 view .LVU56
+ 194 0078 81E0      		ldi r24,lo8(1)
+ 195 007a 8093 B800 		sts 184,r24
+  73:at24c512.c    ****   TWI_SR = 0; /* prescaler 1 */
+ 196               		.loc 1 73 3 is_stmt 1 view .LVU57
+ 197               		.loc 1 73 10 is_stmt 0 view .LVU58
+ 198 007e 1092 B900 		sts 185,__zero_reg__
+ 199               	/* epilogue start */
+  74:at24c512.c    **** }
+ 200               		.loc 1 74 1 view .LVU59
+ 201 0082 0895      		ret
+ 202               		.cfi_endproc
+ 203               	.LFE16:
+ 205               	.global	at24c512_read_byte
+ 207               	at24c512_read_byte:
+ 208               	.LVL12:
+ 209               	.LFB17:
+  75:at24c512.c    **** 
+  76:at24c512.c    **** uint8_t at24c512_read_byte(uint16_t addr) {
+ 210               		.loc 1 76 43 is_stmt 1 view -0
+ 211               		.cfi_startproc
+ 212               		.loc 1 76 43 is_stmt 0 view .LVU61
+ 213 0084 CF93      		push r28
+ 214               	.LCFI0:
+ 215               		.cfi_def_cfa_offset 3
+ 216               		.cfi_offset 28, -2
+ 217 0086 DF93      		push r29
+ 218               	.LCFI1:
+ 219               		.cfi_def_cfa_offset 4
+ 220               		.cfi_offset 29, -3
+ 221               	/* prologue: function */
+ 222               	/* frame size = 0 */
+ 223               	/* stack size = 2 */
+ 224               	.L__stack_usage = 2
+ 225 0088 EC01      		movw r28,r24
+  77:at24c512.c    ****   uint8_t data;
+ 226               		.loc 1 77 3 is_stmt 1 view .LVU62
+  78:at24c512.c    ****   if (twi_start() != 0x08)
+ 227               		.loc 1 78 3 view .LVU63
+ 228               		.loc 1 78 7 is_stmt 0 view .LVU64
+ 229 008a 0E94 0000 		call twi_start
+ 230               	.LVL13:
+ 231               		.loc 1 78 6 view .LVU65
+ 232 008e 8830      		cpi r24,lo8(8)
+ 233 0090 01F4      		brne .L24
+  79:at24c512.c    ****     return 0xFF;
+  80:at24c512.c    ****   if (twi_send_byte((AT24C512_I2C_ADDR << 1) | 0) != 0x18)
+ 234               		.loc 1 80 3 is_stmt 1 view .LVU66
+ 235               		.loc 1 80 7 is_stmt 0 view .LVU67
+ 236 0092 80EA      		ldi r24,lo8(-96)
+ 237 0094 0E94 0000 		call twi_send_byte
+ 238               	.LVL14:
+ 239               		.loc 1 80 6 view .LVU68
+ 240 0098 8831      		cpi r24,lo8(24)
+ 241 009a 01F4      		brne .L22
+  81:at24c512.c    ****     goto fail;
+  82:at24c512.c    ****   twi_send_byte((uint8_t)(addr >> 8));
+ 242               		.loc 1 82 3 is_stmt 1 view .LVU69
+ 243 009c 8D2F      		mov r24,r29
+ 244 009e 0E94 0000 		call twi_send_byte
+ 245               	.LVL15:
+  83:at24c512.c    ****   twi_send_byte((uint8_t)(addr & 0xFF));
+ 246               		.loc 1 83 3 view .LVU70
+ 247 00a2 8C2F      		mov r24,r28
+ 248 00a4 0E94 0000 		call twi_send_byte
+ 249               	.LVL16:
+  84:at24c512.c    ****   if (twi_start() != 0x10)
+ 250               		.loc 1 84 3 view .LVU71
+ 251               		.loc 1 84 7 is_stmt 0 view .LVU72
+ 252 00a8 0E94 0000 		call twi_start
+ 253               	.LVL17:
+ 254               		.loc 1 84 6 view .LVU73
+ 255 00ac 8031      		cpi r24,lo8(16)
+ 256 00ae 01F4      		brne .L22
+  85:at24c512.c    ****     goto fail;
+  86:at24c512.c    ****   if (twi_send_byte((AT24C512_I2C_ADDR << 1) | 1) != 0x40)
+ 257               		.loc 1 86 3 is_stmt 1 view .LVU74
+ 258               		.loc 1 86 7 is_stmt 0 view .LVU75
+ 259 00b0 81EA      		ldi r24,lo8(-95)
+ 260 00b2 0E94 0000 		call twi_send_byte
+ 261               	.LVL18:
+ 262               		.loc 1 86 6 view .LVU76
+ 263 00b6 8034      		cpi r24,lo8(64)
+ 264 00b8 01F4      		brne .L22
+  87:at24c512.c    ****     goto fail;
+  88:at24c512.c    ****   data = twi_recv_byte_nack();
+ 265               		.loc 1 88 3 is_stmt 1 view .LVU77
+ 266               	.LBB4:
+ 267               	.LBI4:
+  60:at24c512.c    ****   TWI_CR = (1 << TWINT) | (1 << TWEN);
+ 268               		.loc 1 60 16 view .LVU78
+ 269               	.LBB5:
+  61:at24c512.c    ****   if (!twi_wait_int())
+ 270               		.loc 1 61 3 view .LVU79
+  61:at24c512.c    ****   if (!twi_wait_int())
+ 271               		.loc 1 61 10 is_stmt 0 view .LVU80
+ 272 00ba 84E8      		ldi r24,lo8(-124)
+ 273 00bc 8093 BC00 		sts 188,r24
+  62:at24c512.c    ****     return 0xFF;
+ 274               		.loc 1 62 3 is_stmt 1 view .LVU81
+  62:at24c512.c    ****     return 0xFF;
+ 275               		.loc 1 62 8 is_stmt 0 view .LVU82
+ 276 00c0 0E94 0000 		call twi_wait_int
+ 277               	.LVL19:
+  63:at24c512.c    ****   return TWI_DR;
+ 278               		.loc 1 63 12 view .LVU83
+ 279 00c4 CFEF      		ldi r28,lo8(-1)
+ 280               	.LVL20:
+  62:at24c512.c    ****     return 0xFF;
+ 281               		.loc 1 62 6 view .LVU84
+ 282 00c6 8111      		cpse r24,__zero_reg__
+  64:at24c512.c    **** }
+ 283               		.loc 1 64 3 is_stmt 1 view .LVU85
+  64:at24c512.c    **** }
+ 284               		.loc 1 64 10 is_stmt 0 view .LVU86
+ 285 00c8 C091 BB00 		lds r28,187
+ 286               	.L23:
+ 287               	.LVL21:
+  64:at24c512.c    **** }
+ 288               		.loc 1 64 10 view .LVU87
+ 289               	.LBE5:
+ 290               	.LBE4:
+  89:at24c512.c    ****   twi_stop();
+ 291               		.loc 1 89 3 is_stmt 1 view .LVU88
+ 292 00cc 0E94 0000 		call twi_stop
+ 293               	.LVL22:
+  90:at24c512.c    ****   return data;
+ 294               		.loc 1 90 3 view .LVU89
+ 295               	.L20:
+  91:at24c512.c    **** fail:
+  92:at24c512.c    ****   twi_stop();
+  93:at24c512.c    ****   return 0xFF;
+  94:at24c512.c    **** }
+ 296               		.loc 1 94 1 is_stmt 0 view .LVU90
+ 297 00d0 8C2F      		mov r24,r28
+ 298               	/* epilogue start */
+ 299 00d2 DF91      		pop r29
+ 300 00d4 CF91      		pop r28
+ 301 00d6 0895      		ret
+ 302               	.LVL23:
+ 303               	.L22:
+ 304               	.LDL1:
+  92:at24c512.c    ****   return 0xFF;
+ 305               		.loc 1 92 3 is_stmt 1 view .LVU91
+ 306 00d8 0E94 0000 		call twi_stop
+ 307               	.LVL24:
+  93:at24c512.c    **** }
+ 308               		.loc 1 93 3 view .LVU92
+ 309               	.L24:
+  79:at24c512.c    ****   if (twi_send_byte((AT24C512_I2C_ADDR << 1) | 0) != 0x18)
+ 310               		.loc 1 79 12 is_stmt 0 view .LVU93
+ 311 00dc CFEF      		ldi r28,lo8(-1)
+ 312               	.LVL25:
+  79:at24c512.c    ****   if (twi_send_byte((AT24C512_I2C_ADDR << 1) | 0) != 0x18)
+ 313               		.loc 1 79 12 view .LVU94
+ 314 00de 00C0      		rjmp .L20
+ 315               		.cfi_endproc
+ 316               	.LFE17:
+ 318               	.global	at24c512_read_block
+ 320               	at24c512_read_block:
+ 321               	.LVL26:
+ 322               	.LFB18:
+  95:at24c512.c    **** 
+  96:at24c512.c    **** void at24c512_read_block(void *buf, uint16_t addr, uint16_t len) {
+ 323               		.loc 1 96 66 is_stmt 1 view -0
+ 324               		.cfi_startproc
+ 325               		.loc 1 96 66 is_stmt 0 view .LVU96
+ 326 00e0 BF92      		push r11
+ 327               	.LCFI2:
+ 328               		.cfi_def_cfa_offset 3
+ 329               		.cfi_offset 11, -2
+ 330 00e2 CF92      		push r12
+ 331               	.LCFI3:
+ 332               		.cfi_def_cfa_offset 4
+ 333               		.cfi_offset 12, -3
+ 334 00e4 DF92      		push r13
+ 335               	.LCFI4:
+ 336               		.cfi_def_cfa_offset 5
+ 337               		.cfi_offset 13, -4
+ 338 00e6 EF92      		push r14
+ 339               	.LCFI5:
+ 340               		.cfi_def_cfa_offset 6
+ 341               		.cfi_offset 14, -5
+ 342 00e8 FF92      		push r15
+ 343               	.LCFI6:
+ 344               		.cfi_def_cfa_offset 7
+ 345               		.cfi_offset 15, -6
+ 346 00ea 0F93      		push r16
+ 347               	.LCFI7:
+ 348               		.cfi_def_cfa_offset 8
+ 349               		.cfi_offset 16, -7
+ 350 00ec 1F93      		push r17
+ 351               	.LCFI8:
+ 352               		.cfi_def_cfa_offset 9
+ 353               		.cfi_offset 17, -8
+ 354 00ee CF93      		push r28
+ 355               	.LCFI9:
+ 356               		.cfi_def_cfa_offset 10
+ 357               		.cfi_offset 28, -9
+ 358 00f0 DF93      		push r29
+ 359               	.LCFI10:
+ 360               		.cfi_def_cfa_offset 11
+ 361               		.cfi_offset 29, -10
+ 362               	/* prologue: function */
+ 363               	/* frame size = 0 */
+ 364               	/* stack size = 9 */
+ 365               	.L__stack_usage = 9
+ 366 00f2 8C01      		movw r16,r24
+ 367 00f4 F62E      		mov r15,r22
+ 368 00f6 E72E      		mov r14,r23
+ 369 00f8 EA01      		movw r28,r20
+  97:at24c512.c    ****   uint8_t *p = (uint8_t *)buf;
+ 370               		.loc 1 97 3 is_stmt 1 view .LVU97
+ 371               	.LVL27:
+  98:at24c512.c    ****   if (len == 0)
+ 372               		.loc 1 98 3 view .LVU98
+ 373               		.loc 1 98 6 is_stmt 0 view .LVU99
+ 374 00fa 2097      		sbiw r28,0
+ 375 00fc 01F4      		brne .+2
+ 376 00fe 00C0      		rjmp .L26
+  99:at24c512.c    ****     return;
+ 100:at24c512.c    ****   if (twi_start() != 0x08)
+ 377               		.loc 1 100 3 is_stmt 1 view .LVU100
+ 378               		.loc 1 100 7 is_stmt 0 view .LVU101
+ 379 0100 0E94 0000 		call twi_start
+ 380               	.LVL28:
+ 381               		.loc 1 100 6 view .LVU102
+ 382 0104 8830      		cpi r24,lo8(8)
+ 383 0106 01F0      		breq .+2
+ 384 0108 00C0      		rjmp .L29
+ 101:at24c512.c    ****     goto fail;
+ 102:at24c512.c    ****   if (twi_send_byte((AT24C512_I2C_ADDR << 1) | 0) != 0x18)
+ 385               		.loc 1 102 3 is_stmt 1 view .LVU103
+ 386               		.loc 1 102 7 is_stmt 0 view .LVU104
+ 387 010a 80EA      		ldi r24,lo8(-96)
+ 388 010c 0E94 0000 		call twi_send_byte
+ 389               	.LVL29:
+ 390               		.loc 1 102 6 view .LVU105
+ 391 0110 8831      		cpi r24,lo8(24)
+ 392 0112 01F0      		breq .+2
+ 393 0114 00C0      		rjmp .L29
+ 103:at24c512.c    ****     goto fail;
+ 104:at24c512.c    ****   twi_send_byte((uint8_t)(addr >> 8));
+ 394               		.loc 1 104 3 is_stmt 1 view .LVU106
+ 395 0116 8E2D      		mov r24,r14
+ 396 0118 0E94 0000 		call twi_send_byte
+ 397               	.LVL30:
+ 105:at24c512.c    ****   twi_send_byte((uint8_t)(addr & 0xFF));
+ 398               		.loc 1 105 3 view .LVU107
+ 399 011c 8F2D      		mov r24,r15
+ 400 011e 0E94 0000 		call twi_send_byte
+ 401               	.LVL31:
+ 106:at24c512.c    ****   if (twi_start() != 0x10)
+ 402               		.loc 1 106 3 view .LVU108
+ 403               		.loc 1 106 7 is_stmt 0 view .LVU109
+ 404 0122 0E94 0000 		call twi_start
+ 405               	.LVL32:
+ 406               		.loc 1 106 6 view .LVU110
+ 407 0126 8031      		cpi r24,lo8(16)
+ 408 0128 01F4      		brne .L29
+ 107:at24c512.c    ****     goto fail;
+ 108:at24c512.c    ****   if (twi_send_byte((AT24C512_I2C_ADDR << 1) | 1) != 0x40)
+ 409               		.loc 1 108 3 is_stmt 1 view .LVU111
+ 410               		.loc 1 108 7 is_stmt 0 view .LVU112
+ 411 012a 81EA      		ldi r24,lo8(-95)
+ 412 012c 0E94 0000 		call twi_send_byte
+ 413               	.LVL33:
+ 414               		.loc 1 108 6 view .LVU113
+ 415 0130 8034      		cpi r24,lo8(64)
+ 416 0132 01F4      		brne .L29
+ 417 0134 6801      		movw r12,r16
+ 418 0136 7E01      		movw r14,r28
+ 419               	.LBB10:
+ 420               	.LBB11:
+  54:at24c512.c    ****   if (!twi_wait_int())
+ 421               		.loc 1 54 10 view .LVU114
+ 422 0138 84EC      		ldi r24,lo8(-60)
+ 423 013a B82E      		mov r11,r24
+ 424               	.LVL34:
+ 425               	.L30:
+  54:at24c512.c    ****   if (!twi_wait_int())
+ 426               		.loc 1 54 10 view .LVU115
+ 427               	.LBE11:
+ 428               	.LBE10:
+ 109:at24c512.c    ****     goto fail;
+ 110:at24c512.c    ****   while (len-- > 1) {
+ 429               		.loc 1 110 9 is_stmt 1 view .LVU116
+ 430               		.loc 1 110 13 is_stmt 0 view .LVU117
+ 431 013c F1E0      		ldi r31,1
+ 432 013e EF1A      		sub r14,r31
+ 433 0140 F108      		sbc r15,__zero_reg__
+ 434               	.LVL35:
+ 435               		.loc 1 110 9 view .LVU118
+ 436 0142 01F4      		brne .L32
+ 437 0144 2197      		sbiw r28,1
+ 438 0146 C00F      		add r28,r16
+ 439 0148 D11F      		adc r29,r17
+ 111:at24c512.c    ****     *p++ = twi_recv_byte_ack();
+ 112:at24c512.c    ****   }
+ 113:at24c512.c    ****   *p = twi_recv_byte_nack();
+ 440               		.loc 1 113 3 is_stmt 1 view .LVU119
+ 441               	.LBB14:
+ 442               	.LBI14:
+  60:at24c512.c    ****   TWI_CR = (1 << TWINT) | (1 << TWEN);
+ 443               		.loc 1 60 16 view .LVU120
+ 444               	.LBB15:
+  61:at24c512.c    ****   if (!twi_wait_int())
+ 445               		.loc 1 61 3 view .LVU121
+  61:at24c512.c    ****   if (!twi_wait_int())
+ 446               		.loc 1 61 10 is_stmt 0 view .LVU122
+ 447 014a 84E8      		ldi r24,lo8(-124)
+ 448 014c 8093 BC00 		sts 188,r24
+  62:at24c512.c    ****     return 0xFF;
+ 449               		.loc 1 62 3 is_stmt 1 view .LVU123
+  62:at24c512.c    ****     return 0xFF;
+ 450               		.loc 1 62 8 is_stmt 0 view .LVU124
+ 451 0150 0E94 0000 		call twi_wait_int
+ 452               	.LVL36:
+  62:at24c512.c    ****     return 0xFF;
+ 453               		.loc 1 62 6 view .LVU125
+ 454 0154 8823      		tst r24
+ 455 0156 01F0      		breq .L38
+  64:at24c512.c    **** }
+ 456               		.loc 1 64 3 is_stmt 1 view .LVU126
+  64:at24c512.c    **** }
+ 457               		.loc 1 64 10 is_stmt 0 view .LVU127
+ 458 0158 8091 BB00 		lds r24,187
+ 459               	.L33:
+ 460               	.LBE15:
+ 461               	.LBE14:
+ 462               		.loc 1 113 6 view .LVU128
+ 463 015c 8883      		st Y,r24
+ 114:at24c512.c    ****   twi_stop();
+ 464               		.loc 1 114 3 is_stmt 1 view .LVU129
+ 465               	/* epilogue start */
+ 115:at24c512.c    ****   return;
+ 116:at24c512.c    **** fail:
+ 117:at24c512.c    ****   twi_stop();
+ 118:at24c512.c    ****   while (len--)
+ 119:at24c512.c    ****     *p++ = 0xFF;
+ 120:at24c512.c    **** }
+ 466               		.loc 1 120 1 is_stmt 0 view .LVU130
+ 467 015e DF91      		pop r29
+ 468 0160 CF91      		pop r28
+ 469 0162 1F91      		pop r17
+ 470 0164 0F91      		pop r16
+ 471               	.LVL37:
+ 472               		.loc 1 120 1 view .LVU131
+ 473 0166 FF90      		pop r15
+ 474 0168 EF90      		pop r14
+ 475               	.LVL38:
+ 476               		.loc 1 120 1 view .LVU132
+ 477 016a DF90      		pop r13
+ 478 016c CF90      		pop r12
+ 479               	.LVL39:
+ 480               		.loc 1 120 1 view .LVU133
+ 481 016e BF90      		pop r11
+ 114:at24c512.c    ****   twi_stop();
+ 482               		.loc 1 114 3 view .LVU134
+ 483 0170 0C94 0000 		jmp twi_stop
+ 484               	.LVL40:
+ 485               	.L32:
+ 111:at24c512.c    ****   }
+ 486               		.loc 1 111 5 is_stmt 1 view .LVU135
+ 487               	.LBB17:
+ 488               	.LBI10:
+  53:at24c512.c    ****   TWI_CR = (1 << TWINT) | (1 << TWEA) | (1 << TWEN);
+ 489               		.loc 1 53 16 view .LVU136
+ 490               	.LBB12:
+  54:at24c512.c    ****   if (!twi_wait_int())
+ 491               		.loc 1 54 3 view .LVU137
+  54:at24c512.c    ****   if (!twi_wait_int())
+ 492               		.loc 1 54 10 is_stmt 0 view .LVU138
+ 493 0174 B092 BC00 		sts 188,r11
+  55:at24c512.c    ****     return 0xFF;
+ 494               		.loc 1 55 3 is_stmt 1 view .LVU139
+  55:at24c512.c    ****     return 0xFF;
+ 495               		.loc 1 55 8 is_stmt 0 view .LVU140
+ 496 0178 0E94 0000 		call twi_wait_int
+ 497               	.LVL41:
+  55:at24c512.c    ****     return 0xFF;
+ 498               		.loc 1 55 6 view .LVU141
+ 499 017c 8823      		tst r24
+ 500 017e 01F0      		breq .L37
+  57:at24c512.c    **** }
+ 501               		.loc 1 57 3 is_stmt 1 view .LVU142
+  57:at24c512.c    **** }
+ 502               		.loc 1 57 10 is_stmt 0 view .LVU143
+ 503 0180 8091 BB00 		lds r24,187
+ 504               	.L31:
+ 505               	.LBE12:
+ 506               	.LBE17:
+ 111:at24c512.c    ****   }
+ 507               		.loc 1 111 10 view .LVU144
+ 508 0184 F601      		movw r30,r12
+ 509 0186 8193      		st Z+,r24
+ 510 0188 6F01      		movw r12,r30
+ 511               	.LVL42:
+ 111:at24c512.c    ****   }
+ 512               		.loc 1 111 10 view .LVU145
+ 513 018a 00C0      		rjmp .L30
+ 514               	.LVL43:
+ 515               	.L37:
+ 516               	.LBB18:
+ 517               	.LBB13:
+  56:at24c512.c    ****   return TWI_DR;
+ 518               		.loc 1 56 12 view .LVU146
+ 519 018c 8FEF      		ldi r24,lo8(-1)
+ 520 018e 00C0      		rjmp .L31
+ 521               	.LVL44:
+ 522               	.L38:
+  56:at24c512.c    ****   return TWI_DR;
+ 523               		.loc 1 56 12 view .LVU147
+ 524               	.LBE13:
+ 525               	.LBE18:
+ 526               	.LBB19:
+ 527               	.LBB16:
+  63:at24c512.c    ****   return TWI_DR;
+ 528               		.loc 1 63 12 view .LVU148
+ 529 0190 8FEF      		ldi r24,lo8(-1)
+ 530 0192 00C0      		rjmp .L33
+ 531               	.LVL45:
+ 532               	.L29:
+ 533               	.LDL2:
+  63:at24c512.c    ****   return TWI_DR;
+ 534               		.loc 1 63 12 view .LVU149
+ 535               	.LBE16:
+ 536               	.LBE19:
+ 117:at24c512.c    ****   while (len--)
+ 537               		.loc 1 117 3 is_stmt 1 view .LVU150
+ 538 0194 0E94 0000 		call twi_stop
+ 539               	.LVL46:
+ 118:at24c512.c    ****     *p++ = 0xFF;
+ 540               		.loc 1 118 3 view .LVU151
+ 541 0198 C00F      		add r28,r16
+ 542 019a D11F      		adc r29,r17
+ 543               	.LVL47:
+ 119:at24c512.c    **** }
+ 544               		.loc 1 119 10 is_stmt 0 view .LVU152
+ 545 019c 8FEF      		ldi r24,lo8(-1)
+ 546               	.LVL48:
+ 547               	.L34:
+ 118:at24c512.c    ****     *p++ = 0xFF;
+ 548               		.loc 1 118 9 is_stmt 1 view .LVU153
+ 118:at24c512.c    ****     *p++ = 0xFF;
+ 549               		.loc 1 118 9 is_stmt 0 view .LVU154
+ 550 019e 0C17      		cp r16,r28
+ 551 01a0 1D07      		cpc r17,r29
+ 552 01a2 01F4      		brne .L35
+ 553               	.LVL49:
+ 554               	.L26:
+ 555               	/* epilogue start */
+ 556               		.loc 1 120 1 view .LVU155
+ 557 01a4 DF91      		pop r29
+ 558 01a6 CF91      		pop r28
+ 559 01a8 1F91      		pop r17
+ 560 01aa 0F91      		pop r16
+ 561               	.LVL50:
+ 562               		.loc 1 120 1 view .LVU156
+ 563 01ac FF90      		pop r15
+ 564 01ae EF90      		pop r14
+ 565 01b0 DF90      		pop r13
+ 566 01b2 CF90      		pop r12
+ 567 01b4 BF90      		pop r11
+ 568 01b6 0895      		ret
+ 569               	.LVL51:
+ 570               	.L35:
+ 119:at24c512.c    **** }
+ 571               		.loc 1 119 5 is_stmt 1 view .LVU157
+ 119:at24c512.c    **** }
+ 572               		.loc 1 119 7 is_stmt 0 view .LVU158
+ 573 01b8 F801      		movw r30,r16
+ 119:at24c512.c    **** }
+ 574               		.loc 1 119 10 view .LVU159
+ 575 01ba 8193      		st Z+,r24
+ 119:at24c512.c    **** }
+ 576               		.loc 1 119 7 view .LVU160
+ 577 01bc 8F01      		movw r16,r30
+ 578               	.LVL52:
+ 119:at24c512.c    **** }
+ 579               		.loc 1 119 7 view .LVU161
+ 580 01be 00C0      		rjmp .L34
+ 581               		.cfi_endproc
+ 582               	.LFE18:
+ 584               	.global	at24c512_write_byte
+ 586               	at24c512_write_byte:
+ 587               	.LVL53:
+ 588               	.LFB19:
+ 121:at24c512.c    **** 
+ 122:at24c512.c    **** void at24c512_write_byte(uint16_t addr, uint8_t data) {
+ 589               		.loc 1 122 55 is_stmt 1 view -0
+ 590               		.cfi_startproc
+ 591               		.loc 1 122 55 is_stmt 0 view .LVU163
+ 592 01c0 1F93      		push r17
+ 593               	.LCFI11:
+ 594               		.cfi_def_cfa_offset 3
+ 595               		.cfi_offset 17, -2
+ 596 01c2 CF93      		push r28
+ 597               	.LCFI12:
+ 598               		.cfi_def_cfa_offset 4
+ 599               		.cfi_offset 28, -3
+ 600 01c4 DF93      		push r29
+ 601               	.LCFI13:
+ 602               		.cfi_def_cfa_offset 5
+ 603               		.cfi_offset 29, -4
+ 604               	/* prologue: function */
+ 605               	/* frame size = 0 */
+ 606               	/* stack size = 3 */
+ 607               	.L__stack_usage = 3
+ 608 01c6 D82F      		mov r29,r24
+ 609 01c8 192F      		mov r17,r25
+ 610 01ca C62F      		mov r28,r22
+ 123:at24c512.c    ****   if (twi_start() != 0x08)
+ 611               		.loc 1 123 3 is_stmt 1 view .LVU164
+ 612               		.loc 1 123 7 is_stmt 0 view .LVU165
+ 613 01cc 0E94 0000 		call twi_start
+ 614               	.LVL54:
+ 615               		.loc 1 123 6 view .LVU166
+ 616 01d0 8830      		cpi r24,lo8(8)
+ 617 01d2 01F4      		brne .L40
+ 124:at24c512.c    ****     goto fail;
+ 125:at24c512.c    ****   if (twi_send_byte((AT24C512_I2C_ADDR << 1) | 0) != 0x18)
+ 618               		.loc 1 125 3 is_stmt 1 view .LVU167
+ 619               		.loc 1 125 7 is_stmt 0 view .LVU168
+ 620 01d4 80EA      		ldi r24,lo8(-96)
+ 621 01d6 0E94 0000 		call twi_send_byte
+ 622               	.LVL55:
+ 623               		.loc 1 125 6 view .LVU169
+ 624 01da 8831      		cpi r24,lo8(24)
+ 625 01dc 01F4      		brne .L40
+ 626               	.LVL56:
+ 627               	.LBB22:
+ 628               	.LBI22:
+ 122:at24c512.c    ****   if (twi_start() != 0x08)
+ 629               		.loc 1 122 6 is_stmt 1 view .LVU170
+ 630               	.LBB23:
+ 126:at24c512.c    ****     goto fail;
+ 127:at24c512.c    ****   twi_send_byte((uint8_t)(addr >> 8));
+ 631               		.loc 1 127 3 view .LVU171
+ 632 01de 812F      		mov r24,r17
+ 633 01e0 0E94 0000 		call twi_send_byte
+ 634               	.LVL57:
+ 128:at24c512.c    ****   twi_send_byte((uint8_t)(addr & 0xFF));
+ 635               		.loc 1 128 3 view .LVU172
+ 636 01e4 8D2F      		mov r24,r29
+ 637 01e6 0E94 0000 		call twi_send_byte
+ 638               	.LVL58:
+ 129:at24c512.c    ****   twi_send_byte(data);
+ 639               		.loc 1 129 3 view .LVU173
+ 640 01ea 8C2F      		mov r24,r28
+ 641 01ec 0E94 0000 		call twi_send_byte
+ 642               	.LVL59:
+ 130:at24c512.c    ****   twi_stop();
+ 643               		.loc 1 130 3 view .LVU174
+ 644               	.L40:
+ 645               	.LDL3:
+ 646               		.loc 1 130 3 is_stmt 0 view .LVU175
+ 647               	.LBE23:
+ 648               	.LBE22:
+ 131:at24c512.c    ****   return;
+ 132:at24c512.c    **** fail:
+ 133:at24c512.c    ****   twi_stop();
+ 649               		.loc 1 133 3 is_stmt 1 view .LVU176
+ 650               	/* epilogue start */
+ 134:at24c512.c    **** }
+ 651               		.loc 1 134 1 is_stmt 0 view .LVU177
+ 652 01f0 DF91      		pop r29
+ 653 01f2 CF91      		pop r28
+ 654               	.LVL60:
+ 655               		.loc 1 134 1 view .LVU178
+ 656 01f4 1F91      		pop r17
+ 133:at24c512.c    **** }
+ 657               		.loc 1 133 3 view .LVU179
+ 658 01f6 0C94 0000 		jmp twi_stop
+ 659               	.LVL61:
+ 660               		.cfi_endproc
+ 661               	.LFE19:
+ 663               	.global	at24c512_is_ready
+ 665               	at24c512_is_ready:
+ 666               	.LFB21:
+ 135:at24c512.c    **** 
+ 136:at24c512.c    **** void at24c512_write_block(const void *buf, uint16_t addr, uint16_t len) {
+ 137:at24c512.c    ****   const uint8_t *p = (const uint8_t *)buf;
+ 138:at24c512.c    ****   while (len-- > 0) {
+ 139:at24c512.c    ****     at24c512_write_byte(addr++, *p++);
+ 140:at24c512.c    ****     uint16_t timeout = EEPROM_READY_TIMEOUT_LOOPS;
+ 141:at24c512.c    ****     while (!at24c512_is_ready() && --timeout)
+ 142:at24c512.c    ****       ;
+ 143:at24c512.c    ****     if (timeout == 0)
+ 144:at24c512.c    ****       break;
+ 145:at24c512.c    ****   }
+ 146:at24c512.c    **** }
+ 147:at24c512.c    **** 
+ 148:at24c512.c    **** uint8_t at24c512_is_ready(void) {
+ 667               		.loc 1 148 33 is_stmt 1 view -0
+ 668               		.cfi_startproc
+ 669               	/* prologue: function */
+ 670               	/* frame size = 0 */
+ 671               	/* stack size = 0 */
+ 672               	.L__stack_usage = 0
+ 149:at24c512.c    ****   if (twi_start() != 0x08)
+ 673               		.loc 1 149 3 view .LVU181
+ 674               		.loc 1 149 7 is_stmt 0 view .LVU182
+ 675 01fa 0E94 0000 		call twi_start
+ 676               	.LVL62:
+ 677               		.loc 1 149 6 view .LVU183
+ 678 01fe 8830      		cpi r24,lo8(8)
+ 679 0200 01F4      		brne .L44
+ 680               	.LBB26:
+ 681               	.LBI26:
+ 148:at24c512.c    ****   if (twi_start() != 0x08)
+ 682               		.loc 1 148 9 is_stmt 1 view .LVU184
+ 683               	.LBB27:
+ 150:at24c512.c    ****     return 0;
+ 151:at24c512.c    ****   if (twi_send_byte((AT24C512_I2C_ADDR << 1) | 0) == 0x18) {
+ 684               		.loc 1 151 3 view .LVU185
+ 685               		.loc 1 151 7 is_stmt 0 view .LVU186
+ 686 0202 80EA      		ldi r24,lo8(-96)
+ 687 0204 0E94 0000 		call twi_send_byte
+ 688               	.LVL63:
+ 689               		.loc 1 151 6 view .LVU187
+ 690 0208 8831      		cpi r24,lo8(24)
+ 691 020a 01F4      		brne .L43
+ 152:at24c512.c    ****     twi_stop();
+ 692               		.loc 1 152 5 is_stmt 1 view .LVU188
+ 693 020c 0E94 0000 		call twi_stop
+ 694               	.LVL64:
+ 153:at24c512.c    ****     return 1;
+ 695               		.loc 1 153 5 view .LVU189
+ 696               		.loc 1 153 12 is_stmt 0 view .LVU190
+ 697 0210 81E0      		ldi r24,lo8(1)
+ 698 0212 0895      		ret
+ 699               	.L43:
+ 154:at24c512.c    ****   }
+ 155:at24c512.c    ****   twi_stop();
+ 700               		.loc 1 155 3 is_stmt 1 view .LVU191
+ 701 0214 0E94 0000 		call twi_stop
+ 702               	.LVL65:
+ 156:at24c512.c    ****   return 0;
+ 703               		.loc 1 156 3 view .LVU192
+ 704               	.L44:
+ 705               	.LBE27:
+ 706               	.LBE26:
+ 150:at24c512.c    ****   if (twi_send_byte((AT24C512_I2C_ADDR << 1) | 0) == 0x18) {
+ 707               		.loc 1 150 12 is_stmt 0 view .LVU193
+ 708 0218 80E0      		ldi r24,0
+ 709               	/* epilogue start */
+ 157:at24c512.c    **** }
+ 710               		.loc 1 157 1 view .LVU194
+ 711 021a 0895      		ret
+ 712               		.cfi_endproc
+ 713               	.LFE21:
+ 715               	.global	at24c512_write_block
+ 717               	at24c512_write_block:
+ 718               	.LVL66:
+ 719               	.LFB20:
+ 136:at24c512.c    ****   const uint8_t *p = (const uint8_t *)buf;
+ 720               		.loc 1 136 73 is_stmt 1 view -0
+ 721               		.cfi_startproc
+ 136:at24c512.c    ****   const uint8_t *p = (const uint8_t *)buf;
+ 722               		.loc 1 136 73 is_stmt 0 view .LVU196
+ 723 021c CF92      		push r12
+ 724               	.LCFI14:
+ 725               		.cfi_def_cfa_offset 3
+ 726               		.cfi_offset 12, -2
+ 727 021e DF92      		push r13
+ 728               	.LCFI15:
+ 729               		.cfi_def_cfa_offset 4
+ 730               		.cfi_offset 13, -3
+ 731 0220 EF92      		push r14
+ 732               	.LCFI16:
+ 733               		.cfi_def_cfa_offset 5
+ 734               		.cfi_offset 14, -4
+ 735 0222 FF92      		push r15
+ 736               	.LCFI17:
+ 737               		.cfi_def_cfa_offset 6
+ 738               		.cfi_offset 15, -5
+ 739 0224 0F93      		push r16
+ 740               	.LCFI18:
+ 741               		.cfi_def_cfa_offset 7
+ 742               		.cfi_offset 16, -6
+ 743 0226 1F93      		push r17
+ 744               	.LCFI19:
+ 745               		.cfi_def_cfa_offset 8
+ 746               		.cfi_offset 17, -7
+ 747 0228 CF93      		push r28
+ 748               	.LCFI20:
+ 749               		.cfi_def_cfa_offset 9
+ 750               		.cfi_offset 28, -8
+ 751 022a DF93      		push r29
+ 752               	.LCFI21:
+ 753               		.cfi_def_cfa_offset 10
+ 754               		.cfi_offset 29, -9
+ 755               	/* prologue: function */
+ 756               	/* frame size = 0 */
+ 757               	/* stack size = 8 */
+ 758               	.L__stack_usage = 8
+ 759 022c 9B01      		movw r18,r22
+ 137:at24c512.c    ****   while (len-- > 0) {
+ 760               		.loc 1 137 3 is_stmt 1 view .LVU197
+ 761               	.LVL67:
+ 138:at24c512.c    ****     at24c512_write_byte(addr++, *p++);
+ 762               		.loc 1 138 3 view .LVU198
+ 763 022e 8C01      		movw r16,r24
+ 764 0230 040F      		add r16,r20
+ 765 0232 151F      		adc r17,r21
+ 766               	.LVL68:
+ 767               	.L46:
+ 138:at24c512.c    ****     at24c512_write_byte(addr++, *p++);
+ 768               		.loc 1 138 9 view .LVU199
+ 138:at24c512.c    ****     at24c512_write_byte(addr++, *p++);
+ 769               		.loc 1 138 9 is_stmt 0 view .LVU200
+ 770 0234 8017      		cp r24,r16
+ 771 0236 9107      		cpc r25,r17
+ 772 0238 01F0      		breq .L45
+ 773               	.LBB28:
+ 139:at24c512.c    ****     uint16_t timeout = EEPROM_READY_TIMEOUT_LOOPS;
+ 774               		.loc 1 139 5 is_stmt 1 view .LVU201
+ 139:at24c512.c    ****     uint16_t timeout = EEPROM_READY_TIMEOUT_LOOPS;
+ 775               		.loc 1 139 35 is_stmt 0 view .LVU202
+ 776 023a EC01      		movw r28,r24
+ 139:at24c512.c    ****     uint16_t timeout = EEPROM_READY_TIMEOUT_LOOPS;
+ 777               		.loc 1 139 5 view .LVU203
+ 778 023c 7901      		movw r14,r18
+ 779 023e 8FEF      		ldi r24,-1
+ 780 0240 E81A      		sub r14,r24
+ 781 0242 F80A      		sbc r15,r24
+ 782               	.LVL69:
+ 139:at24c512.c    ****     uint16_t timeout = EEPROM_READY_TIMEOUT_LOOPS;
+ 783               		.loc 1 139 5 view .LVU204
+ 784 0244 6991      		ld r22,Y+
+ 785               	.LVL70:
+ 139:at24c512.c    ****     uint16_t timeout = EEPROM_READY_TIMEOUT_LOOPS;
+ 786               		.loc 1 139 5 view .LVU205
+ 787 0246 C901      		movw r24,r18
+ 788 0248 0E94 0000 		call at24c512_write_byte
+ 789               	.LVL71:
+ 140:at24c512.c    ****     while (!at24c512_is_ready() && --timeout)
+ 790               		.loc 1 140 5 is_stmt 1 view .LVU206
+ 141:at24c512.c    ****       ;
+ 791               		.loc 1 141 5 view .LVU207
+ 141:at24c512.c    ****       ;
+ 792               		.loc 1 141 11 is_stmt 0 view .LVU208
+ 793 024c 80E2      		ldi r24,lo8(32)
+ 794 024e C82E      		mov r12,r24
+ 795 0250 8EE4      		ldi r24,lo8(78)
+ 796 0252 D82E      		mov r13,r24
+ 797               	.LVL72:
+ 798               	.L47:
+ 142:at24c512.c    ****     if (timeout == 0)
+ 799               		.loc 1 142 7 is_stmt 1 discriminator 2 view .LVU209
+ 141:at24c512.c    ****       ;
+ 800               		.loc 1 141 11 discriminator 2 view .LVU210
+ 141:at24c512.c    ****       ;
+ 801               		.loc 1 141 13 is_stmt 0 discriminator 2 view .LVU211
+ 802 0254 0E94 0000 		call at24c512_is_ready
+ 803               	.LVL73:
+ 141:at24c512.c    ****       ;
+ 804               		.loc 1 141 11 discriminator 2 view .LVU212
+ 805 0258 8111      		cpse r24,__zero_reg__
+ 806 025a 00C0      		rjmp .L50
+ 807               	.LVL74:
+ 141:at24c512.c    ****       ;
+ 808               		.loc 1 141 11 discriminator 2 view .LVU213
+ 809 025c 81E0      		ldi r24,1
+ 810 025e C81A      		sub r12,r24
+ 811 0260 D108      		sbc r13,__zero_reg__
+ 812               	.LVL75:
+ 141:at24c512.c    ****       ;
+ 813               		.loc 1 141 33 discriminator 1 view .LVU214
+ 814 0262 01F4      		brne .L47
+ 815               	.LVL76:
+ 816               	.L45:
+ 817               	/* epilogue start */
+ 141:at24c512.c    ****       ;
+ 818               		.loc 1 141 33 discriminator 1 view .LVU215
+ 819               	.LBE28:
+ 146:at24c512.c    **** 
+ 820               		.loc 1 146 1 view .LVU216
+ 821 0264 DF91      		pop r29
+ 822 0266 CF91      		pop r28
+ 823 0268 1F91      		pop r17
+ 824 026a 0F91      		pop r16
+ 825 026c FF90      		pop r15
+ 826 026e EF90      		pop r14
+ 827 0270 DF90      		pop r13
+ 828 0272 CF90      		pop r12
+ 829 0274 0895      		ret
+ 830               	.LVL77:
+ 831               	.L50:
+ 832               	.LBB29:
+ 139:at24c512.c    ****     uint16_t timeout = EEPROM_READY_TIMEOUT_LOOPS;
+ 833               		.loc 1 139 35 view .LVU217
+ 834 0276 CE01      		movw r24,r28
+ 139:at24c512.c    ****     uint16_t timeout = EEPROM_READY_TIMEOUT_LOOPS;
+ 835               		.loc 1 139 5 view .LVU218
+ 836 0278 9701      		movw r18,r14
+ 837 027a 00C0      		rjmp .L46
+ 838               	.LBE29:
+ 839               		.cfi_endproc
+ 840               	.LFE20:
+ 842               	.Letext0:
+ 843               		.file 2 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 at24c512.c
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2      *ABS*:0000003e __SP_H__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:3      *ABS*:0000003d __SP_L__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:4      *ABS*:0000003f __SREG__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:11     .text:00000000 twi_wait_int
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:14     .text:00000000 .Loc.0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:15     .text:00000000 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:20     .text:00000000 .Loc.1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:22     .text:00000000 .Loc.2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:23     .text:00000000 .Loc.3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:28     .text:00000004 .Loc.4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:29     .text:00000004 .Loc.5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:30     .text:00000004 .Loc.6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:32     .text:00000008 .Loc.7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:35     .text:0000000c .Loc.8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:39     .text:00000010 .Loc.9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:42     .text:00000012 .Loc.10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:43     .text:00000012 .Loc.11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:47     .text:00000018 .Loc.12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:51     .text:0000001a .Loc.13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:53     .text:0000001c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:57     .text:0000001c twi_start
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:59     .text:0000001c .Loc.14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:60     .text:0000001c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:65     .text:0000001c .Loc.15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:66     .text:0000001c .Loc.16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:69     .text:00000022 .Loc.17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:70     .text:00000022 .Loc.18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:73     .text:00000026 .Loc.19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:76     .text:0000002a .Loc.20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:77     .text:0000002a .Loc.21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:82     .text:00000032 .Loc.22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:85     .text:00000034 .Loc.23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:87     .text:00000036 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:91     .text:00000036 twi_stop
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:93     .text:00000036 .Loc.24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:94     .text:00000036 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:99     .text:00000036 .Loc.25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:100    .text:00000036 .Loc.26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:103    .text:0000003c .Loc.27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:105    .text:0000003c .Loc.28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:106    .text:0000003c .Loc.29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:111    .text:00000040 .Loc.30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:112    .text:00000040 .Loc.31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:113    .text:00000040 .Loc.32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:115    .text:00000044 .Loc.33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:119    .text:00000048 .Loc.34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:122    .text:0000004a .Loc.35
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:126    .text:0000004c .Loc.36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:128    .text:0000004e L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:132    .text:0000004e twi_send_byte
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:135    .text:0000004e .Loc.37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:136    .text:0000004e L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:141    .text:0000004e .Loc.38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:142    .text:0000004e .Loc.39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:144    .text:00000052 .Loc.40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:145    .text:00000052 .Loc.41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:148    .text:00000054 .Loc.42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:151    .text:00000058 .Loc.43
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:152    .text:00000058 .Loc.44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:155    .text:0000005c .Loc.45
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:158    .text:00000060 .Loc.46
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:159    .text:00000060 .Loc.47
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:164    .text:00000068 .Loc.48
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:167    .text:0000006a .Loc.49
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:169    .text:0000006c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:174    .text:0000006c at24c512_init
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:176    .text:0000006c .Loc.50
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:177    .text:0000006c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:182    .text:0000006c .Loc.51
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:183    .text:0000006c .Loc.52
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:187    .text:00000072 .Loc.53
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:188    .text:00000072 .Loc.54
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:192    .text:00000078 .Loc.55
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:193    .text:00000078 .Loc.56
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:196    .text:0000007e .Loc.57
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:197    .text:0000007e .Loc.58
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:200    .text:00000082 .Loc.59
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:202    .text:00000084 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:207    .text:00000084 at24c512_read_byte
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:210    .text:00000084 .Loc.60
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:211    .text:00000084 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:212    .text:00000084 .Loc.61
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:226    .text:0000008a .Loc.62
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:227    .text:0000008a .Loc.63
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:228    .text:0000008a .Loc.64
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:231    .text:0000008e .Loc.65
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:234    .text:00000092 .Loc.66
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:235    .text:00000092 .Loc.67
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:239    .text:00000098 .Loc.68
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:242    .text:0000009c .Loc.69
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:246    .text:000000a2 .Loc.70
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:250    .text:000000a8 .Loc.71
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:251    .text:000000a8 .Loc.72
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:254    .text:000000ac .Loc.73
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:257    .text:000000b0 .Loc.74
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:258    .text:000000b0 .Loc.75
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:262    .text:000000b6 .Loc.76
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:265    .text:000000ba .Loc.77
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:268    .text:000000ba .Loc.78
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:270    .text:000000ba .Loc.79
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:271    .text:000000ba .Loc.80
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:274    .text:000000c0 .Loc.81
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:275    .text:000000c0 .Loc.82
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:278    .text:000000c4 .Loc.83
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:281    .text:000000c6 .Loc.84
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:283    .text:000000c8 .Loc.85
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:284    .text:000000c8 .Loc.86
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:288    .text:000000cc .Loc.87
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:291    .text:000000cc .Loc.88
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:294    .text:000000d0 .Loc.89
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:296    .text:000000d0 .Loc.90
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:305    .text:000000d8 .Loc.91
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:308    .text:000000dc .Loc.92
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:310    .text:000000dc .Loc.93
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:313    .text:000000de .Loc.94
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:315    .text:000000e0 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:320    .text:000000e0 at24c512_read_block
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:323    .text:000000e0 .Loc.95
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:324    .text:000000e0 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:325    .text:000000e0 .Loc.96
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:370    .text:000000fa .Loc.97
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:372    .text:000000fa .Loc.98
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:373    .text:000000fa .Loc.99
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:375    .text:000000fe L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:377    .text:00000100 .Loc.100
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:378    .text:00000100 .Loc.101
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:381    .text:00000104 .Loc.102
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:383    .text:00000108 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:385    .text:0000010a .Loc.103
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:386    .text:0000010a .Loc.104
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:390    .text:00000110 .Loc.105
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:392    .text:00000114 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:394    .text:00000116 .Loc.106
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:398    .text:0000011c .Loc.107
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:402    .text:00000122 .Loc.108
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:403    .text:00000122 .Loc.109
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:406    .text:00000126 .Loc.110
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:409    .text:0000012a .Loc.111
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:410    .text:0000012a .Loc.112
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:414    .text:00000130 .Loc.113
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:421    .text:00000138 .Loc.114
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:426    .text:0000013c .Loc.115
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:429    .text:0000013c .Loc.116
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:430    .text:0000013c .Loc.117
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:435    .text:00000142 .Loc.118
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:440    .text:0000014a .Loc.119
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:443    .text:0000014a .Loc.120
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:445    .text:0000014a .Loc.121
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:446    .text:0000014a .Loc.122
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:449    .text:00000150 .Loc.123
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:450    .text:00000150 .Loc.124
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:453    .text:00000154 .Loc.125
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:456    .text:00000158 .Loc.126
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:457    .text:00000158 .Loc.127
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:462    .text:0000015c .Loc.128
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:464    .text:0000015e .Loc.129
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:466    .text:0000015e .Loc.130
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:472    .text:00000166 .Loc.131
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:476    .text:0000016a .Loc.132
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:480    .text:0000016e .Loc.133
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:482    .text:00000170 .Loc.134
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:486    .text:00000174 .Loc.135
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:489    .text:00000174 .Loc.136
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:491    .text:00000174 .Loc.137
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:492    .text:00000174 .Loc.138
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:494    .text:00000178 .Loc.139
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:495    .text:00000178 .Loc.140
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:498    .text:0000017c .Loc.141
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:501    .text:00000180 .Loc.142
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:502    .text:00000180 .Loc.143
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:507    .text:00000184 .Loc.144
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:512    .text:0000018a .Loc.145
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:518    .text:0000018c .Loc.146
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:523    .text:00000190 .Loc.147
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:528    .text:00000190 .Loc.148
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:534    .text:00000194 .Loc.149
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:537    .text:00000194 .Loc.150
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:540    .text:00000198 .Loc.151
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:544    .text:0000019c .Loc.152
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:548    .text:0000019e .Loc.153
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:549    .text:0000019e .Loc.154
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:556    .text:000001a4 .Loc.155
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:562    .text:000001ac .Loc.156
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:571    .text:000001b8 .Loc.157
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:572    .text:000001b8 .Loc.158
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:574    .text:000001ba .Loc.159
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:576    .text:000001bc .Loc.160
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:579    .text:000001be .Loc.161
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:581    .text:000001c0 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:586    .text:000001c0 at24c512_write_byte
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:589    .text:000001c0 .Loc.162
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:590    .text:000001c0 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:591    .text:000001c0 .Loc.163
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:611    .text:000001cc .Loc.164
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:612    .text:000001cc .Loc.165
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:615    .text:000001d0 .Loc.166
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:618    .text:000001d4 .Loc.167
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:619    .text:000001d4 .Loc.168
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:623    .text:000001da .Loc.169
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:629    .text:000001de .Loc.170
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:631    .text:000001de .Loc.171
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:635    .text:000001e4 .Loc.172
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:639    .text:000001ea .Loc.173
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:643    .text:000001f0 .Loc.174
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:646    .text:000001f0 .Loc.175
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:649    .text:000001f0 .Loc.176
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:651    .text:000001f0 .Loc.177
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:655    .text:000001f4 .Loc.178
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:657    .text:000001f6 .Loc.179
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:660    .text:000001fa L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:665    .text:000001fa at24c512_is_ready
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:667    .text:000001fa .Loc.180
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:668    .text:000001fa L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:673    .text:000001fa .Loc.181
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:674    .text:000001fa .Loc.182
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:677    .text:000001fe .Loc.183
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:682    .text:00000202 .Loc.184
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:684    .text:00000202 .Loc.185
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:685    .text:00000202 .Loc.186
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:689    .text:00000208 .Loc.187
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:692    .text:0000020c .Loc.188
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:695    .text:00000210 .Loc.189
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:696    .text:00000210 .Loc.190
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:700    .text:00000214 .Loc.191
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:703    .text:00000218 .Loc.192
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:707    .text:00000218 .Loc.193
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:710    .text:0000021a .Loc.194
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:712    .text:0000021c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:717    .text:0000021c at24c512_write_block
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:720    .text:0000021c .Loc.195
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:721    .text:0000021c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:722    .text:0000021c .Loc.196
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:760    .text:0000022e .Loc.197
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:762    .text:0000022e .Loc.198
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:768    .text:00000234 .Loc.199
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:769    .text:00000234 .Loc.200
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:774    .text:0000023a .Loc.201
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:775    .text:0000023a .Loc.202
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:777    .text:0000023c .Loc.203
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:783    .text:00000244 .Loc.204
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:786    .text:00000246 .Loc.205
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:790    .text:0000024c .Loc.206
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:791    .text:0000024c .Loc.207
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:792    .text:0000024c .Loc.208
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:799    .text:00000254 .Loc.209
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:800    .text:00000254 .Loc.210
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:801    .text:00000254 .Loc.211
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:804    .text:00000258 .Loc.212
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:808    .text:0000025c .Loc.213
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:813    .text:00000262 .Loc.214
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:818    .text:00000264 .Loc.215
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:820    .text:00000264 .Loc.216
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:833    .text:00000276 .Loc.217
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:835    .text:00000278 .Loc.218
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:839    .text:0000027c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:844    .text:0000027c L0
+                     .debug_frame:00000000 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:41     .text:00000012 .L2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:27     .text:00000004 .L3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:49     .text:0000001a .L4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:81     .text:00000032 .L8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:124    .text:0000004c .L9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:110    .text:00000040 .L11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:163    .text:00000068 .L18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:309    .text:000000dc .L24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:303    .text:000000d8 .L22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:295    .text:000000d0 .L20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:554    .text:000001a4 .L26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:532    .text:00000194 .L29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:485    .text:00000174 .L32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:522    .text:00000190 .L38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:515    .text:0000018c .L37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:425    .text:0000013c .L30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:504    .text:00000184 .L31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:459    .text:0000015c .L33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:570    .text:000001b8 .L35
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:547    .text:0000019e .L34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:644    .text:000001f0 .L40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:704    .text:00000218 .L44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:699    .text:00000214 .L43
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:816    .text:00000264 .L45
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:831    .text:00000276 .L50
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:798    .text:00000254 .L47
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:767    .text:00000234 .L46
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:1525   .debug_abbrev:00000000 .Ldebug_abbrev0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:8      .text:00000000 .Ltext0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:842    .text:0000027c .Letext0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2992   .debug_line:00000000 .Ldebug_line0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:719    .text:0000021c .LFB20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:840    .text:0000027c .LFE20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2072   .debug_loc:00000000 .LLST16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2134   .debug_loc:00000081 .LLST17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2129   .debug_loc:0000007d .LVUS17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2162   .debug_loc:000000af .LLST18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2153   .debug_loc:000000a7 .LVUS18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2208   .debug_loc:000000fd .LLST19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2201   .debug_loc:000000f7 .LVUS19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2245   .debug_loc:0000013b .LLST20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2236   .debug_loc:00000133 .LVUS20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2970   .debug_ranges:00000000 .Ldebug_ranges0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2289   .debug_loc:00000187 .LLST21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2278   .debug_loc:0000017d .LVUS21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:789    .text:0000024c .LVL71
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:803    .text:00000258 .LVL73
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:645    .text:000001f0 .LDL3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:322    .text:000000e0 .LFB18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:582    .text:000001c0 .LFE18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2331   .debug_loc:000001da .LLST6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2405   .debug_loc:0000026e .LLST7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2394   .debug_loc:00000264 .LVUS7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2454   .debug_loc:000002c6 .LLST8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2449   .debug_loc:000002c2 .LVUS8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2490   .debug_loc:000002fc .LLST9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2473   .debug_loc:000002ec .LVUS9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2586   .debug_loc:00000398 .LLST10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2563   .debug_loc:00000382 .LVUS10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:533    .text:00000194 .LDL2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:488    .text:00000174 .LBI10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:497    .text:0000017c .LVL41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:442    .text:0000014a .LBI14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:452    .text:00000154 .LVL36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:380    .text:00000104 .LVL28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:389    .text:00000110 .LVL29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:397    .text:0000011c .LVL30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:401    .text:00000122 .LVL31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:405    .text:00000126 .LVL32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:413    .text:00000130 .LVL33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:484    .text:00000174 .LVL40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:539    .text:00000198 .LVL46
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:209    .text:00000084 .LFB17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:316    .text:000000e0 .LFE17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2679   .debug_loc:00000447 .LLST3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2711   .debug_loc:00000480 .LLST4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2700   .debug_loc:00000476 .LVUS4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2758   .debug_loc:000004d6 .LLST5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2755   .debug_loc:000004d4 .LVUS5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:304    .text:000000d8 .LDL1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:267    .text:000000ba .LBI4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:266    .text:000000ba .LBB4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:290    .text:000000cc .LBE4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:277    .text:000000c4 .LVL19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:230    .text:0000008e .LVL13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:238    .text:00000098 .LVL14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:245    .text:000000a2 .LVL15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:249    .text:000000a8 .LVL16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:253    .text:000000ac .LVL17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:261    .text:000000b6 .LVL18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:293    .text:000000d0 .LVL22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:307    .text:000000dc .LVL24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:175    .text:0000006c .LFB16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:203    .text:00000084 .LFE16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:134    .text:0000004e .LFB13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:170    .text:0000006c .LFE13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2772   .debug_loc:000004ef .LLST2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2765   .debug_loc:000004e9 .LVUS2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:154    .text:0000005c .LVL11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:92     .text:00000036 .LFB12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:129    .text:0000004e .LFE12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2800   .debug_loc:00000524 .LLST1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2791   .debug_loc:0000051c .LVUS1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:58     .text:0000001c .LFB11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:88     .text:00000036 .LFE11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:72     .text:00000026 .LVL3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:12     .text:00000000 .LFB10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:54     .text:0000001c .LFE10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2838   .debug_loc:0000056b .LLST0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2833   .debug_loc:00000567 .LVUS0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:588    .text:000001c0 .LFB19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:661    .text:000001fa .LFE19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2856   .debug_loc:00000591 .LLST11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2888   .debug_loc:000005d1 .LLST12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2883   .debug_loc:000005cd .LVUS12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2914   .debug_loc:000005fd .LLST13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2907   .debug_loc:000005f7 .LVUS13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:628    .text:000001de .LBI22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:627    .text:000001de .LBB22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:648    .text:000001f0 .LBE22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2935   .debug_loc:0000062b .LLST14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2932   .debug_loc:00000629 .LVUS14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2945   .debug_loc:00000640 .LLST15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:2942   .debug_loc:0000063e .LVUS15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:630    .text:000001de .LBB23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:647    .text:000001f0 .LBE23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:634    .text:000001e4 .LVL57
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:638    .text:000001ea .LVL58
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:642    .text:000001f0 .LVL59
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:614    .text:000001d0 .LVL54
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:622    .text:000001da .LVL55
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:659    .text:000001fa .LVL61
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:666    .text:000001fa .LFB21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:713    .text:0000021c .LFE21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:681    .text:00000202 .LBI26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:680    .text:00000202 .LBB26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:706    .text:00000218 .LBE26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:688    .text:00000208 .LVL63
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:694    .text:00000210 .LVL64
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:702    .text:00000218 .LVL65
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:676    .text:000001fe .LVL62
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:724    .text:0000021e .LCFI14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:728    .text:00000220 .LCFI15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:732    .text:00000222 .LCFI16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:736    .text:00000224 .LCFI17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:740    .text:00000226 .LCFI18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:744    .text:00000228 .LCFI19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:748    .text:0000022a .LCFI20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:752    .text:0000022c .LCFI21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:718    .text:0000021c .LVL66
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:766    .text:00000234 .LVL68
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:782    .text:00000244 .LVL69
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:815    .text:00000264 .LVL76
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:830    .text:00000276 .LVL77
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:761    .text:0000022e .LVL67
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:785    .text:00000246 .LVL70
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:797    .text:00000254 .LVL72
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:807    .text:0000025c .LVL74
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:812    .text:00000262 .LVL75
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:327    .text:000000e2 .LCFI2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:331    .text:000000e4 .LCFI3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:335    .text:000000e6 .LCFI4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:339    .text:000000e8 .LCFI5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:343    .text:000000ea .LCFI6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:347    .text:000000ec .LCFI7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:351    .text:000000ee .LCFI8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:355    .text:000000f0 .LCFI9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:359    .text:000000f2 .LCFI10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:321    .text:000000e0 .LVL26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:471    .text:00000166 .LVL37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:546    .text:0000019e .LVL48
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:424    .text:0000013c .LVL34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:475    .text:0000016a .LVL38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:531    .text:00000194 .LVL45
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:543    .text:0000019c .LVL47
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:553    .text:000001a4 .LVL49
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:569    .text:000001b8 .LVL51
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:371    .text:000000fa .LVL27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:479    .text:0000016e .LVL39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:511    .text:0000018a .LVL42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:514    .text:0000018c .LVL43
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:521    .text:00000190 .LVL44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:561    .text:000001ac .LVL50
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:578    .text:000001be .LVL52
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:214    .text:00000086 .LCFI0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:218    .text:00000088 .LCFI1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:208    .text:00000084 .LVL12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:280    .text:000000c6 .LVL20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:302    .text:000000d8 .LVL23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:312    .text:000000de .LVL25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:287    .text:000000cc .LVL21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:133    .text:0000004e .LVL8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:147    .text:00000054 .LVL9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:150    .text:00000058 .LVL10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:104    .text:0000003c .LVL4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:109    .text:00000040 .LVL5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:118    .text:00000048 .LVL6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:121    .text:0000004a .LVL7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:21     .text:00000000 .LVL0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:26     .text:00000004 .LVL1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:593    .text:000001c2 .LCFI11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:597    .text:000001c4 .LCFI12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:601    .text:000001c6 .LCFI13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:587    .text:000001c0 .LVL53
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:654    .text:000001f4 .LVL60
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:626    .text:000001de .LVL56
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:845    .debug_info:00000000 .Ldebug_info0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:419    .text:00000138 .LBB10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:428    .text:0000013c .LBE10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:487    .text:00000174 .LBB17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:506    .text:00000184 .LBE17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:516    .text:0000018c .LBB18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:525    .text:00000190 .LBE18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:441    .text:0000014a .LBB14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:461    .text:0000015c .LBE14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:526    .text:00000190 .LBB19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:536    .text:00000194 .LBE19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:773    .text:0000023a .LBB28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:819    .text:00000264 .LBE28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:832    .text:00000276 .LBB29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccl8Vjv4.s:838    .text:0000027c .LBE29
+
+NO UNDEFINED SYMBOLS

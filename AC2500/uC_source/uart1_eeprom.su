@@ -1,0 +1,6 @@
+uart1_eeprom.c:7:6:uart1_init	2	static
+uart1_eeprom.c:23:6:uart1_putc	2	static
+uart1_eeprom.c:29:15:uart1_getc	2	static
+uart1_eeprom.c:35:15:uart1_data_available	2	static
+uart1_eeprom.c:39:6:uart1_puts	4	static
+uart1_eeprom.c:64:6:uart1_process_commands	4	static

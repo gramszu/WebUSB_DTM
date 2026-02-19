@@ -1,0 +1,5 @@
+zapiseeprom.c:49:6:zapisz_bajt_w_EEPROM	5	static
+zapiseeprom.c:101:6:zapisz_znaki_w_eeprom	5	static
+zapiseeprom.c:118:6:zapisz_znaki_w_eeprom_bez_kopiowania	2	static
+zapiseeprom.c:135:6:zapisz_znak_w_eeprom	5	static
+zapiseeprom.c:226:10:eeprom_read_3char	10	static

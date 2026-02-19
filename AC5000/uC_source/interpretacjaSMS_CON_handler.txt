@@ -1,0 +1,33 @@
+  case INSTRUKCJA_CON: {
+    // CON - włącz/wyłącz powiadomienia (parsowanie tylko, SMS w main.c)
+    extern uchar numer_powiadomien[];
+    extern uchar powiadomienia_aktywne;
+    
+    przeskocz_biale_znaki(sms);
+    
+    // CON OFF - wyłącz
+    if (strncasecmp_P(sms, PSTR("OFF"), 3) == 0) {
+      powiadomienia_aktywne = FALSE;
+      numer_powiadomien[0] = '\0';
+      return INTERPRETACJA_SMS_CON_OFF;
+    }
+    
+    // CON (bez parametru) - status
+    if (*sms == '\0') {
+      return INTERPRETACJA_SMS_CON_STATUS;
+    }
+    
+    // CON <numer> - włącz z numerem
+    uchar temp_numer[MAX_LICZBA_ZNAKOW_TELEFON + 1];
+    if (!pobierz_numer_telefonu(&sms, temp_numer, MAX_LICZBA_ZNAKOW_TELEFON + 1))
+      return INTERPRETACJA_SMS_BLEDNE_DANE;
+    
+    // Zapisz numer i włącz
+    strcpy((char *)numer_powiadomien, (char *)temp_numer);
+    powiadomienia_aktywne = TRUE;
+    
+    return INTERPRETACJA_SMS_CON_ON;
+  }
+  }
+  return INTERPRETACJA_SMS_ZLY_FORMAT;
+}

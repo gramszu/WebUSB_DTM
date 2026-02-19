@@ -1,0 +1,109 @@
+#ifndef ADRESYEEPROM_H
+#define ADRESYEEPROM_H
+
+#include "narzedzia.h"
+
+// ============================================================================
+// SEKCJA 1: NAGŁÓWEK I PODSTAWOWA KONFIGURACJA (0x0000 - 0x0007)
+// ============================================================================
+
+#define ADRES_EEPROM_CHECKSUM 0 // 0x0000
+
+#define ADRES_EEPROM_KOD_DOSTEPU 1 // 0x0001
+#define LICZBA_BAJTOW_KODU_DOSTEPU 4
+
+#define EEPROM_USTAWIENIE_STANOW_WYJSC 5 // 0x0005
+
+#define EEPROM_USTAWIENIE_WYJSCIA 6 // 0x0006 (2 bajty)
+
+// ============================================================================
+// SEKCJA 2: NUMERY TELEFONÓW (0x0008 - 0x03EF)
+// ============================================================================
+
+#define MAX_LICZBA_ZNAKOW_TELEFON 16
+#define LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM 5 // BCD format
+
+#define EEPROM_NUMER_TELEFONU_BRAMA_0 8 // 0x0008
+#define EEPROM_NUMER_TELEFONU_BRAMA(NR)                                        \
+  (EEPROM_NUMER_TELEFONU_BRAMA_0 +                                             \
+   ((NR) * LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM))
+
+// ⭐ 199 NUMERÓW - Zmniejszono z 200, aby zwolnić 5 bajtów!
+#define MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA 199
+#define MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA_USER 199
+
+// Ostatni numer: 8 + (198 * 5) = 8 + 990 = 998. Koniec: 1002 (0x03EA).
+// Wolne miejsce: 1003-1007 (5 bajtów)
+
+// Konfiguracja CLIP (5 B)
+#define ADRES_EEPROM_CLIP_DURATION 1003 // 0x3EB (4 bajty - uint32)
+// Zakres: 1003-1006
+#define ADRES_EEPROM_CLIP_TOGGLE 1007 // 0x3EF (1 bajt - uchar)
+
+// ============================================================================
+// SEKCJA 3: KONFIGURACJA SYSTEMU (0x03F0 - 0x03FF)
+// ============================================================================
+
+// TRYBY PRACY (2 B)
+#define ADRES_EEPROM_TRYB_PRACY 1008     // 0x3F0
+#define ADRES_EEPROM_TRYB_CLIP_DTMF 1009 // 0x3F1 (0=DTMF, 1=CLIP)
+
+// FUNKCJA SKRYBA (5 B)
+#define ADRES_EEPROM_SKRYBA 1010             // 0x3F2
+#define ADRES_EEPROM_SKRYBA_TRYB_BACKUP 1011 // 0x3F3
+#define ADRES_EEPROM_SKRYBA_LIMIT_L 1012     // 0x3F4
+#define ADRES_EEPROM_SKRYBA_LIMIT_H 1013     // 0x3F5
+#define ADRES_EEPROM_BLOKADA_SYSTEMU 1014    // 0x3F6
+
+// FUNKCJA TIME (4 B)
+#define ADRES_EEPROM_CZAS_START_H 1015 // 0x3F7
+#define ADRES_EEPROM_CZAS_START_M 1016 // 0x3F8
+#define ADRES_EEPROM_CZAS_STOP_H 1017  // 0x3F9
+#define ADRES_EEPROM_CZAS_STOP_M 1018  // 0x3FA
+
+// AUTO-SYNC CZASU (5 B) - BCD format jak inne numery!
+#define ADRES_EEPROM_MOJE_NUMER_START 1019 // 0x3FB
+// Mój numer: 1019-1023 (0x03FB-0x03FF) - 5 bajtów BCD
+// UWAGA: Numer musi mieć DOKŁADNIE 9 cyfr (format polski: 123456789)
+
+// ============================================================================
+// FUNKCJE DEBUG - USUNIĘTE!
+// ============================================================================
+// Wszystkie definicje DEBUG zostały usunięte aby zaoszczędzić 14 bajtów
+// i zmieścić 200 numerów telefonów w 1024 B EEPROM ATmega328PB.
+
+// ============================================================================
+// MAKRA POMOCNICZE
+// ============================================================================
+
+#define NUMER_W_ZAKRESIE(nr)                                                   \
+  ((nr) >= 0 && (nr) < MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA)
+
+#define ADRES_KONCA_NUMEROW                                                    \
+  (EEPROM_NUMER_TELEFONU_BRAMA_0 +                                             \
+   (MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA *                                       \
+    LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM) -                                  \
+   1)
+
+// ============================================================================
+// WERYFIKACJA POPRAWNOŚCI (compile-time checks)
+// ============================================================================
+
+// Sprawdź czy numery nie nachodzą na konfigurację
+#if (ADRES_KONCA_NUMEROW >= ADRES_EEPROM_TRYB_PRACY)
+#error "BŁĄD: Numery telefonów nachodzą na konfigurację!"
+#endif
+
+// Sprawdź czy wszystko mieści się w 1024 bajtach
+#if ((ADRES_EEPROM_MOJE_NUMER_START +                                          \
+      LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM) > 1024)
+#error "BŁĄD: Adresy wykraczają poza pamięć EEPROM (1024 B)!"
+#endif
+
+// Sprawdź czy mamy dokładnie 1024 bajty (100% wykorzystanie)
+#if ((ADRES_EEPROM_MOJE_NUMER_START +                                          \
+      LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM) != 1024)
+#warning "UWAGA: Nie wykorzystujesz całej pamięci EEPROM!"
+#endif
+
+#endif // ADRESYEEPROM_H

@@ -1,0 +1,4 @@
+poleceniagsm.c:14:7:porownaj_znaki	2	static
+poleceniagsm.c:28:6:resetuj_polecenie_konczace	2	static
+poleceniagsm.c:45:7:polecenia_konczace_gsm	20	static
+poleceniagsm.c:184:7:czy_jest_nowa_komenda_SIM900	3	static

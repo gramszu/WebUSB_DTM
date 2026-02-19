@@ -1,0 +1,7 @@
+sim900.c:44:6:wyslij_znaki_SIM900	2	static
+sim900.c:52:6:wyslij_polecenie_ROM_SIM900	4	static
+sim900.c:63:6:wyslij_polecenie_RAM_SIM900	2	static
+sim900.c:71:1:__vector_20	11	static
+sim900.c:228:6:inicjalizacja_SIM900	2	static
+sim900.c:237:7:zakonczenie_procedury_inicjalizacyjnej	2	static
+sim900.c:247:7:procedura_inicjalizacyjna_SIM900_100MS	2	static

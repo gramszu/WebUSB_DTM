@@ -1,0 +1,5 @@
+komendy.c:14:6:dodaj_komende	2	static
+komendy.c:23:6:filtruj_i_dodaj_komende	2	static
+komendy.c:34:6:filtruj_komendy_z_przedzialu	2	static
+komendy.c:50:6:usun_komende	2	static
+komendy.c:56:7:czy_sa_komendy_z_przedzialu	2	static

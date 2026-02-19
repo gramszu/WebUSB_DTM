@@ -1,0 +1,10 @@
+interpretacjaSMS.c:144:7:interpretuj_instrukcje_sms.part.0	12	static
+interpretacjaSMS.c:34:7:sprawdz_kod	8	static
+interpretacjaSMS.c:46:7:sprawdz_reset_ustawien	2	static
+interpretacjaSMS.c:144:7:interpretuj_instrukcje_sms	2	static
+interpretacjaSMS.c:160:7:pobierz_long	8	static
+interpretacjaSMS.c:166:7:pomin_znak	9	static
+interpretacjaSMS.c:175:7:czy_jest_znak	9	static
+interpretacjaSMS.c:189:6:pobierz_wyraz	10	static
+interpretacjaSMS.c:199:7:pobierz_numer_telefonu	34	static
+interpretacjaSMS.c:244:7:interpretuj_wiadomosc_sms	26	dynamic,bounded
