@@ -113,7 +113,7 @@ uint opoznienie_wysylania_clipow_100MS = 0;
 
 void generuj_raport_sieci(uchar **buf_sms) {
   static const char tekst_gsm[] PROGMEM =
-      "AC200 DTM-F1\nS/N: 2.0-4725\nSygnal GSM ";
+      "AC250 DTM-F1\nS/N: 2.0-4725\nSygnal GSM ";
   uchar *ptr = *buf_sms;
 
   memcpy_R(ptr, tekst_gsm);
@@ -366,14 +366,14 @@ static void zapisz_debug_do_eeprom(uchar komenda, uchar akcja) {
   buf[5] = komenda;
   buf[6] = akcja;
 
-  // Zapisz 7 bajtow od adresu EEPROM_DEBUG_START (1008)
-  // 1008: LICZNIK_REPORT_USER
-  // 1009: TIMER_L
-  // 1010: TIMER_H
-  // 1011: FLAGA_WYSYLANIE
-  // 1012: LICZBA_SMS
-  // 1013: OSTATNIA_KOMENDA
-  // 1014: OSTATNIA_AKCJA
+  // Zapisz 7 bajtow od adresu EEPROM_DEBUG_START.
+  // +0: LICZNIK_REPORT_USER
+  // +1: TIMER_L
+  // +2: TIMER_H
+  // +3: FLAGA_WYSYLANIE
+  // +4: LICZBA_SMS
+  // +5: OSTATNIA_KOMENDA
+  // +6: OSTATNIA_AKCJA
   zapisz_znaki_w_eeprom(buf, EEPROM_DEBUG_START, 7);
 }
 

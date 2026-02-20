@@ -50,6 +50,22 @@ extern volatile uint8_t poziom_sieci_gsm;
 #define EEPROM_UART_SIZE 1024
 #endif
 
+#if EEPROM_UART_SIZE == 65536
+#define EEPROM_UART_SIZE_STR "65536"
+#define EEPROM_ADDR_BYTES_STR "2"
+#else
+#define EEPROM_UART_SIZE_STR "1024"
+#define EEPROM_ADDR_BYTES_STR "2"
+#endif
+
+static void uart1_send_device_identity(void) {
+  uart1_puts("ID=" CONFIG_DEVICE_ID ";VER=" CONFIG_PROTOCOL_VERSION_STR ";EEPROM=");
+  uart1_puts(EEPROM_UART_SIZE_STR);
+  uart1_puts(";ADDR_BYTES=");
+  uart1_puts(EEPROM_ADDR_BYTES_STR);
+  uart1_puts("\n");
+}
+
 #ifdef USE_EXTERNAL_EEPROM
 /* Stan maszyny dla R: czekamy na addr_hi, addr_lo */
 static uint8_t uart_r_state = 0;
@@ -139,13 +155,13 @@ void uart1_process_commands(void) {
   }
 
 #ifdef USE_EXTERNAL_EEPROM
-  case 'R': {
+  case CMD_READ_EEPROM: {
     /* Rozpocznij odczyt - czekamy na 2 bajty adresu */
     uart_r_state = 1;
     break;
   }
 
-  case 'W': {
+  case CMD_WRITE_EEPROM: {
     /* Rozpocznij zapis - czekamy na addr_hi, addr_lo, data.
      * Konfigurator wysyła W dla każdego bajtu, więc W = pierwszy bajt
      * następnych 3 to addr_h, addr_l, data. */
@@ -153,7 +169,7 @@ void uart1_process_commands(void) {
     break;
   }
 #else
-  case 'R': {
+  case CMD_READ_EEPROM: {
     /* Stary protokół: strumieniowy odczyt 1024 B */
     for (uint16_t i = 0; i < EEPROM_UART_SIZE; i++) {
       unsigned char data = eeprom_read_byte((const uint8_t *)i);
@@ -162,7 +178,7 @@ void uart1_process_commands(void) {
     break;
   }
 
-  case 'W': {
+  case CMD_WRITE_EEPROM: {
     /* Stary protokół: strumieniowy zapis 1024 B */
     for (uint16_t i = 0; i < EEPROM_UART_SIZE; i++) {
       while (!uart1_data_available())
@@ -177,6 +193,12 @@ void uart1_process_commands(void) {
 
   case 'T': {
     uart1_puts("TEST_OK\n");
+    break;
+  }
+
+  case CMD_POLL_DEVICE:
+  case CMD_GET_ID: {
+    uart1_send_device_identity();
     break;
   }
 

@@ -155,7 +155,7 @@ uchar autosync_czas_aktywny =
 // Merged GSM and Time function - replaces independent Time and Network reports
 // to save space Format: "GSM: 12:34:56 99%\n"
 void generuj_raport_sieci(uchar **buf_sms) {
-  static const char tekst_header[] PROGMEM = "AC-2000-DTMF-F\n";
+  static const char tekst_header[] PROGMEM = "AC-250-DTMF-F\n";
   uchar *ptr = *buf_sms;
 
   // 1. Header
@@ -1432,14 +1432,13 @@ uchar wykonanie_komend_powiadomien(void) {
         break;
       }
 
-      // Mapowanie iteratora bezpośrednio na adres EEPROM (Linear 1-2000
-      // mapping)
+      // Mapowanie iteratora bezpośrednio na adres EEPROM (liniowe 1..MAX).
       uint eeprom_idx =
           numer_skopiowanego_telefonu_do_raportu_uzytkownikow_brama;
       if ((eeprom_idx & 31u) == 0)
         wdt_reset();
       if (czy_aktywny_numer_telefonu_brama(eeprom_idx)) {
-        // Numeracja liniowa 1-2000 (zgodna z GUI):
+        // Numeracja liniowa 1..MAX (zgodna z GUI):
         uint display_idx = eeprom_idx + 1;
 
         char entry_buf[20];

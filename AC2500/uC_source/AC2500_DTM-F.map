@@ -1457,60 +1457,60 @@ END GROUP
  .debug_frame   0x00000d54      0x128 at24c512.o
  .debug_frame   0x00000e7c       0xb0 eeprom_ext.o
 
-.debug_str      0x00000000     0x45b1
+.debug_str      0x00000000     0x45b7
  *(.debug_str)
  .debug_str     0x00000000      0x318 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/../../../../../../avr/lib/avr5/crtatmega328pb.o
- .debug_str     0x00000318     0x4299 main.o
-                               0x395a (size before relaxing)
- .debug_str     0x000045b1        0x0 wewy.o
-                                0x490 (size before relaxing)
- .debug_str     0x000045b1        0x0 sim900.o
-                                0x7dc (size before relaxing)
- .debug_str     0x000045b1        0x0 poleceniagsm.o
-                                0x836 (size before relaxing)
- .debug_str     0x000045b1        0x0 pamiec_ram.o
-                                0x186 (size before relaxing)
- .debug_str     0x000045b1        0x0 interpretacjaSMS.o
-                               0x1f4e (size before relaxing)
- .debug_str     0x000045b1        0x0 komendy.o
-                               0x1865 (size before relaxing)
- .debug_str     0x000045b1        0x0 konfiguracja.o
-                                0x3aa (size before relaxing)
- .debug_str     0x000045b1        0x0 zapiseeprom.o
-                                0x351 (size before relaxing)
- .debug_str     0x000045b1        0x0 pdu.o
-                                0x3e5 (size before relaxing)
- .debug_str     0x000045b1        0x0 uart1_eeprom.o
-                                0x28a (size before relaxing)
- .debug_str     0x000045b1        0x0 at24c512.o
-                                0x216 (size before relaxing)
- .debug_str     0x000045b1        0x0 eeprom_ext.o
-                                0x251 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_udivmodqi4.o)
+ .debug_str     0x00000318     0x429f main.o
+                               0x3960 (size before relaxing)
+ .debug_str     0x000045b7        0x0 wewy.o
+                                0x496 (size before relaxing)
+ .debug_str     0x000045b7        0x0 sim900.o
+                                0x7e2 (size before relaxing)
+ .debug_str     0x000045b7        0x0 poleceniagsm.o
+                                0x83c (size before relaxing)
+ .debug_str     0x000045b7        0x0 pamiec_ram.o
+                                0x18c (size before relaxing)
+ .debug_str     0x000045b7        0x0 interpretacjaSMS.o
+                               0x1f54 (size before relaxing)
+ .debug_str     0x000045b7        0x0 komendy.o
+                               0x186b (size before relaxing)
+ .debug_str     0x000045b7        0x0 konfiguracja.o
+                                0x3b0 (size before relaxing)
+ .debug_str     0x000045b7        0x0 zapiseeprom.o
+                                0x357 (size before relaxing)
+ .debug_str     0x000045b7        0x0 pdu.o
+                                0x3eb (size before relaxing)
+ .debug_str     0x000045b7        0x0 uart1_eeprom.o
+                                0x290 (size before relaxing)
+ .debug_str     0x000045b7        0x0 at24c512.o
+                                0x21c (size before relaxing)
+ .debug_str     0x000045b7        0x0 eeprom_ext.o
+                                0x257 (size before relaxing)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_udivmodqi4.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_udivmodhi4.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_udivmodhi4.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_divmodhi4.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_divmodhi4.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_udivmodsi4.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_udivmodsi4.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_exit.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_exit.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_tablejump2.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_tablejump2.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_copy_data.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_copy_data.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_clear_bss.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_clear_bss.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_muluhisi3.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_muluhisi3.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_umulhisi3.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_umulhisi3.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_mulsi3.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_mulsi3.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_prologue.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_prologue.o)
                                  0x85 (size before relaxing)
- .debug_str     0x000045b1        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_epilogue.o)
+ .debug_str     0x000045b7        0x0 /opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/avr5/libgcc.a(_epilogue.o)
                                  0x85 (size before relaxing)
 
 .debug_loc      0x00000000     0x7296

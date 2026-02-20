@@ -21,7 +21,7 @@
   7 // 0x0007 (1 bajt) - trwałe wyłączenie blokady serwisowej
 
 // ============================================================================
-// SEKCJA 2: NUMERY TELEFONÓW (0x0008 - ok. 1 KB przy 200 numerach)
+// SEKCJA 2: NUMERY TELEFONÓW
 // ============================================================================
 
 #define MAX_LICZBA_ZNAKOW_TELEFON 16
@@ -32,34 +32,42 @@
   (EEPROM_NUMER_TELEFONU_BRAMA_0 +                                             \
    ((NR) * LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM))
 
-// 200 numerów: 200 * 5 = 1000 bajtów (ok. 1.0 KB). Działa też na EEPROM wewn.
-// (AT24C512).
-#define MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA 200
-#define MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA_USER 200
+// 250 numerów: 250 * 5 = 1250 bajtów.
+#define MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA 250
+#define MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA_USER 250
 
-// Koniec bloku numerów: 8 + (200 * 5) - 1 = 1007. Konfiguracja od 1008.
-#define ADRES_EEPROM_CLIP_DURATION 1008 // 4 bajty: 1008-1011
-#define ADRES_EEPROM_CLIP_TOGGLE 1012   // 1 bajt
+#define ADRES_KONCA_NUMEROW                                                    \
+  (EEPROM_NUMER_TELEFONU_BRAMA_0 +                                             \
+   (MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA *                                       \
+    LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM) -                                  \
+   1)
+
+// Konfiguracja zaczyna się zaraz po bloku numerów.
+#define ADRES_EEPROM_CLIP_DURATION (ADRES_KONCA_NUMEROW + 1) // 4 bajty
+#define ADRES_EEPROM_CLIP_TOGGLE (ADRES_EEPROM_CLIP_DURATION + 4) // 1 bajt
 
 // ============================================================================
 // SEKCJA 3: KONFIGURACJA SYSTEMU
 // ============================================================================
 
-#define ADRES_EEPROM_TRYB_PRACY 1013      // 1 bajt
-#define ADRES_EEPROM_TRYB_CLIP_DTMF 1014  // 1 bajt (0=DTMF, 1=CLIP)
-#define ADRES_EEPROM_BLOKADA_SYSTEMU 1015 // 1 B (RESERVED)
-#define ADRES_EEPROM_LICZNIK_CYKLI 1016   // 4 bajty Little Endian: 1016-1019
-#define ADRES_EEPROM_CON_NUMER 1020       // 5 bajtów: 1020-1024
+#define ADRES_EEPROM_TRYB_PRACY (ADRES_EEPROM_CLIP_TOGGLE + 1) // 1 bajt
+#define ADRES_EEPROM_TRYB_CLIP_DTMF                                           \
+  (ADRES_EEPROM_TRYB_PRACY + 1) // 1 bajt (0=DTMF, 1=CLIP)
+#define ADRES_EEPROM_BLOKADA_SYSTEMU                                           \
+  (ADRES_EEPROM_TRYB_CLIP_DTMF + 1) // 1 B (RESERVED)
+#define ADRES_EEPROM_LICZNIK_CYKLI                                            \
+  (ADRES_EEPROM_BLOKADA_SYSTEMU + 1) // 4 bajty Little Endian
+#define ADRES_EEPROM_CON_NUMER (ADRES_EEPROM_LICZNIK_CYKLI + 4) // 5 bajtów
 
 // ============================================================================
 // SEKCJA 4: USTAWIENIA (rezerwa na przyszłe opcje, powiadomienia, itp.)
 // ============================================================================
-#define ADRES_EEPROM_USTAWIENIA_START 1025
-#define ADRES_EEPROM_INIT_FLAG 1025   // 1 bajt (Magic Byte 0xA5)
+#define ADRES_EEPROM_USTAWIENIA_START (ADRES_EEPROM_CON_NUMER + 5)
+#define ADRES_EEPROM_INIT_FLAG ADRES_EEPROM_USTAWIENIA_START // 1 bajt (0xA5)
 #define ROZMIAR_EEPROM_USTAWIENIA 1024 // 1 KB
 #define ADRES_EEPROM_USTAWIENIA_KONIEC                                         \
   (ADRES_EEPROM_USTAWIENIA_START + ROZMIAR_EEPROM_USTAWIENIA - 1)
-// Razem: numery 1.0 KB + konfig 20 B + ustawienia 1 KB ≈ 2.0 KB
+// Razem: numery 1.25 KB + konfig 20 B + ustawienia 1 KB.
 
 // ============================================================================
 // MAKRA POMOCNICZE
@@ -67,12 +75,6 @@
 
 #define NUMER_W_ZAKRESIE(nr)                                                   \
   ((nr) >= 0 && (nr) < MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA)
-
-#define ADRES_KONCA_NUMEROW                                                    \
-  (EEPROM_NUMER_TELEFONU_BRAMA_0 +                                             \
-   (MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA *                                       \
-    LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM) -                                  \
-   1)
 
 // ============================================================================
 // WERYFIKACJA POPRAWNOŚCI (compile-time checks)

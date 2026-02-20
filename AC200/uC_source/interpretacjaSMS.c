@@ -87,7 +87,7 @@ static const uchar instrukcja_sms
         "\x05"
         "DEBUG", // DEBUG (diagnostyka SKRYBA)
         "\x03"
-        "SUB", // SUB numer (dodaj do pozycji 195-200)
+        "SUB", // SUB numer (dodaj do listy użytkowników)
         "\x05"
         "MYNUM", // MYNUM 123456789 (ustaw własny numer)
         "\x04"
