@@ -155,7 +155,7 @@ uchar autosync_czas_aktywny =
 // Merged GSM and Time function - replaces independent Time and Network reports
 // to save space Format: "GSM: 12:34:56 99%\n"
 void generuj_raport_sieci(uchar **buf_sms) {
-  static const char tekst_header[] PROGMEM = "AC-2000-DTMF-F\n";
+  static const char tekst_header[] PROGMEM = "AC-2500-DTMF-F\n";
   uchar *ptr = *buf_sms;
 
   // 1. Header
@@ -222,8 +222,8 @@ void generuj_raport_uzytkownikow(uchar **buf_sms) {
 
   memcpy_R(ptr, tekst_gsm);
   ptr += sizeof tekst_gsm - 1;
-  uchar aktywne_numery = 0;
-  uchar wolne_numery = 0;
+  uint aktywne_numery = 0;
+  uint wolne_numery = 0;
   for (uint nr_uzyt_clip = 0; nr_uzyt_clip < MAX_LICZBA_NUMEROW_TELEFONOW_BRAMA;
        ++nr_uzyt_clip) {
     if (czy_aktywny_numer_telefonu_brama(nr_uzyt_clip))
