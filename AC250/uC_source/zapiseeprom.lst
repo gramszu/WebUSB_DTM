@@ -1,0 +1,1088 @@
+   1               		.file	"zapiseeprom.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	zapisz_bajt_w_EEPROM
+  12               	zapisz_bajt_w_EEPROM:
+  13               	.LFB4:
+  14               		.file 1 "zapiseeprom.c"
+   1:zapiseeprom.c **** 
+   2:zapiseeprom.c **** #include "zapiseeprom.h"
+   3:zapiseeprom.c **** #include <avr/io.h>
+   4:zapiseeprom.c **** #include <avr/interrupt.h>
+   5:zapiseeprom.c **** #include <string.h>
+   6:zapiseeprom.c **** #include <ctype.h>
+   7:zapiseeprom.c **** 
+   8:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+   9:zapiseeprom.c **** #include "at24c512.h"
+  10:zapiseeprom.c **** #endif
+  11:zapiseeprom.c **** 
+  12:zapiseeprom.c **** uchar bufor_eeprom[MAX_BUFOR_EEPROM];
+  13:zapiseeprom.c **** uchar liczba_znakow_do_zapisu = 0;
+  14:zapiseeprom.c **** uchar nr_zapisanego_znaku = 0;
+  15:zapiseeprom.c **** uint pozycja_w_eeprom;
+  16:zapiseeprom.c **** 
+  17:zapiseeprom.c **** uchar bufor_pomoc_liczba_znakow_do_zapisu;
+  18:zapiseeprom.c **** uint bufor_pomoc_adres_eeprom;
+  19:zapiseeprom.c **** 
+  20:zapiseeprom.c **** uchar czy_zajety_bufor_eeprom;
+  21:zapiseeprom.c **** 
+  22:zapiseeprom.c **** #ifndef USE_EXTERNAL_EEPROM
+  23:zapiseeprom.c **** #define EEPROM_WRITE_ATMEGA8(uiAddress, ucData)	\
+  24:zapiseeprom.c **** {																								\
+  25:zapiseeprom.c **** 	const uint p = uiAddress;											\
+  26:zapiseeprom.c **** 	EEARH = HIGH(p);															\
+  27:zapiseeprom.c **** 	EEARL = LOW(p);																\
+  28:zapiseeprom.c **** 	EECR |= BIT(EERE);														\
+  29:zapiseeprom.c **** 	if ( EEDR != (ucData) )													\
+  30:zapiseeprom.c **** 	{																							\
+  31:zapiseeprom.c **** 		EEDR = (ucData);														\
+  32:zapiseeprom.c **** 		cli();																			\
+  33:zapiseeprom.c **** 		EECR |= BIT(EEMPE);													\
+  34:zapiseeprom.c **** 		EECR |= BIT(EEPE);													\
+  35:zapiseeprom.c **** 		sei();																			\
+  36:zapiseeprom.c **** 	}																							\
+  37:zapiseeprom.c **** }
+  38:zapiseeprom.c **** #define EEPROM_READ_ATMEGA8(uiAddress, data)				\
+  39:zapiseeprom.c **** {																										\
+  40:zapiseeprom.c **** 	const uint p = uiAddress;													\
+  41:zapiseeprom.c **** 	EEARH = HIGH(p);																	\
+  42:zapiseeprom.c **** 	EEARL = LOW(p);																		\
+  43:zapiseeprom.c **** 	EECR |= BIT(EERE);																\
+  44:zapiseeprom.c **** 	(data) = EEDR;																		\
+  45:zapiseeprom.c **** }
+  46:zapiseeprom.c **** #endif
+  47:zapiseeprom.c **** 
+  48:zapiseeprom.c **** 	// uwaga, w??cza przerwania sei()
+  49:zapiseeprom.c **** void zapisz_bajt_w_EEPROM(void)
+  50:zapiseeprom.c **** {
+  15               		.loc 1 50 1 view -0
+  16               		.cfi_startproc
+  17 0000 0F93      		push r16
+  18               	.LCFI0:
+  19               		.cfi_def_cfa_offset 3
+  20               		.cfi_offset 16, -2
+  21 0002 1F93      		push r17
+  22               	.LCFI1:
+  23               		.cfi_def_cfa_offset 4
+  24               		.cfi_offset 17, -3
+  25 0004 CF93      		push r28
+  26               	.LCFI2:
+  27               		.cfi_def_cfa_offset 5
+  28               		.cfi_offset 28, -4
+  29               	/* prologue: function */
+  30               	/* frame size = 0 */
+  31               	/* stack size = 3 */
+  32               	.L__stack_usage = 3
+  51:zapiseeprom.c **** 	if ( !eeprom_is_ready() 
+  33               		.loc 1 51 2 view .LVU1
+  34               		.loc 1 51 8 is_stmt 0 view .LVU2
+  35 0006 0E94 0000 		call eeprom_is_ready
+  36               	.LVL0:
+  37               		.loc 1 51 5 view .LVU3
+  38 000a 8823      		tst r24
+  39 000c 01F0      		breq .L1
+  52:zapiseeprom.c **** 		|| (bufor_pomoc_liczba_znakow_do_zapisu == 0 && liczba_znakow_do_zapisu == 0 && !czy_zajety_bufor
+  40               		.loc 1 52 80 view .LVU4
+  41 000e 8091 0000 		lds r24,bufor_pomoc_liczba_znakow_do_zapisu
+  42 0012 9091 0000 		lds r25,liczba_znakow_do_zapisu
+  43 0016 892B      		or r24,r25
+  44 0018 9091 0000 		lds r25,czy_zajety_bufor_eeprom
+  45 001c 892B      		or r24,r25
+  46 001e 01F0      		breq .L1
+  53:zapiseeprom.c **** 		return;
+  54:zapiseeprom.c **** 	uchar pom = nr_zapisanego_znaku;
+  47               		.loc 1 54 2 is_stmt 1 view .LVU5
+  48               		.loc 1 54 8 is_stmt 0 view .LVU6
+  49 0020 C091 0000 		lds r28,nr_zapisanego_znaku
+  50               	.LVL1:
+  55:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+  56:zapiseeprom.c **** 	if ( at24c512_read_byte((uint16_t)(pozycja_w_eeprom + pom)) == bufor_eeprom[pom] )
+  51               		.loc 1 56 2 is_stmt 1 view .LVU7
+  52               		.loc 1 56 7 is_stmt 0 view .LVU8
+  53 0024 0C2F      		mov r16,r28
+  54 0026 10E0      		ldi r17,0
+  55               		.loc 1 56 54 view .LVU9
+  56 0028 8091 0000 		lds r24,pozycja_w_eeprom
+  57 002c 9091 0000 		lds r25,pozycja_w_eeprom+1
+  58               		.loc 1 56 7 view .LVU10
+  59 0030 800F      		add r24,r16
+  60 0032 911F      		adc r25,r17
+  61 0034 0E94 0000 		call at24c512_read_byte
+  62               	.LVL2:
+  63               		.loc 1 56 77 view .LVU11
+  64 0038 F801      		movw r30,r16
+  65 003a E050      		subi r30,lo8(-(bufor_eeprom))
+  66 003c F040      		sbci r31,hi8(-(bufor_eeprom))
+  67               		.loc 1 56 5 view .LVU12
+  68 003e 9081      		ld r25,Z
+  69 0040 8913      		cpse r24,r25
+  70 0042 00C0      		rjmp .L3
+  57:zapiseeprom.c **** #else
+  58:zapiseeprom.c **** 	EECR |= BIT(EERE);
+  59:zapiseeprom.c **** 	if ( EEDR == bufor_eeprom[pom] )
+  60:zapiseeprom.c **** #endif
+  61:zapiseeprom.c **** 		++pom;
+  71               		.loc 1 61 3 is_stmt 1 view .LVU13
+  72 0044 CF5F      		subi r28,lo8(-(1))
+  73               	.LVL3:
+  74               	.L3:
+  62:zapiseeprom.c **** 
+  63:zapiseeprom.c **** 	if ( pom < liczba_znakow_do_zapisu )
+  75               		.loc 1 63 2 view .LVU14
+  76               		.loc 1 63 5 is_stmt 0 view .LVU15
+  77 0046 8091 0000 		lds r24,liczba_znakow_do_zapisu
+  78 004a C817      		cp r28,r24
+  79 004c 00F4      		brsh .L4
+  80               	.LBB4:
+  64:zapiseeprom.c **** 	{
+  65:zapiseeprom.c **** 		const uint poz = pozycja_w_eeprom + pom;
+  81               		.loc 1 65 3 is_stmt 1 view .LVU16
+  82               	.LVL4:
+  66:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+  67:zapiseeprom.c **** 		at24c512_write_byte((uint16_t)poz, bufor_eeprom[pom]);
+  83               		.loc 1 67 3 view .LVU17
+  84 004e 8C2F      		mov r24,r28
+  85 0050 90E0      		ldi r25,0
+  86 0052 FC01      		movw r30,r24
+  87 0054 E050      		subi r30,lo8(-(bufor_eeprom))
+  88 0056 F040      		sbci r31,hi8(-(bufor_eeprom))
+  65:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+  89               		.loc 1 65 14 is_stmt 0 view .LVU18
+  90 0058 2091 0000 		lds r18,pozycja_w_eeprom
+  91 005c 3091 0000 		lds r19,pozycja_w_eeprom+1
+  92               		.loc 1 67 3 view .LVU19
+  93 0060 6081      		ld r22,Z
+  94 0062 820F      		add r24,r18
+  95 0064 931F      		adc r25,r19
+  96 0066 0E94 0000 		call at24c512_write_byte
+  97               	.LVL5:
+  98               	.L5:
+  99               		.loc 1 67 3 view .LVU20
+ 100               	.LBE4:
+  68:zapiseeprom.c **** #else
+  69:zapiseeprom.c **** 		EEPROM_WRITE_ATMEGA8(poz, bufor_eeprom[pom]);
+  70:zapiseeprom.c **** #endif
+  71:zapiseeprom.c **** 	}
+  72:zapiseeprom.c **** 	else
+  73:zapiseeprom.c **** 	{
+  74:zapiseeprom.c **** 		const uchar k = bufor_pomoc_liczba_znakow_do_zapisu;
+  75:zapiseeprom.c **** 		bufor_pomoc_liczba_znakow_do_zapisu = 0;
+  76:zapiseeprom.c **** 		liczba_znakow_do_zapisu = k;
+  77:zapiseeprom.c **** 		if ( k != 0 )
+  78:zapiseeprom.c **** 		{
+  79:zapiseeprom.c **** 			for (uchar i = 0; i < k; ++i)
+  80:zapiseeprom.c **** 				bufor_eeprom[i] = bufor_eeprom[POLOZENIE_BUFOR_EEPROM_POMOC_BUFOR_START+i];
+  81:zapiseeprom.c **** 			pozycja_w_eeprom = bufor_pomoc_adres_eeprom;
+  82:zapiseeprom.c **** 			pom = 0;
+  83:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+  84:zapiseeprom.c **** 			at24c512_write_byte((uint16_t)pozycja_w_eeprom, bufor_eeprom[0]);
+  85:zapiseeprom.c **** #else
+  86:zapiseeprom.c **** 			EEPROM_WRITE_ATMEGA8(pozycja_w_eeprom, bufor_eeprom[0]);
+  87:zapiseeprom.c **** #endif
+  88:zapiseeprom.c **** 		}
+  89:zapiseeprom.c **** #ifndef USE_EXTERNAL_EEPROM
+  90:zapiseeprom.c **** 		else
+  91:zapiseeprom.c **** 		{
+  92:zapiseeprom.c **** 			EEARH = 0x0f;
+  93:zapiseeprom.c **** 			EEARL = 0xff;
+  94:zapiseeprom.c **** 		}
+  95:zapiseeprom.c **** #endif
+  96:zapiseeprom.c **** 	}
+  97:zapiseeprom.c **** 	nr_zapisanego_znaku = pom;
+ 101               		.loc 1 97 2 is_stmt 1 view .LVU21
+ 102               		.loc 1 97 22 is_stmt 0 view .LVU22
+ 103 006a C093 0000 		sts nr_zapisanego_znaku,r28
+ 104               	.LVL6:
+ 105               	.L1:
+ 106               	/* epilogue start */
+  98:zapiseeprom.c **** }
+ 107               		.loc 1 98 1 view .LVU23
+ 108 006e CF91      		pop r28
+ 109 0070 1F91      		pop r17
+ 110 0072 0F91      		pop r16
+ 111 0074 0895      		ret
+ 112               	.LVL7:
+ 113               	.L4:
+ 114               	.LBB5:
+  74:zapiseeprom.c **** 		bufor_pomoc_liczba_znakow_do_zapisu = 0;
+ 115               		.loc 1 74 3 is_stmt 1 view .LVU24
+  74:zapiseeprom.c **** 		bufor_pomoc_liczba_znakow_do_zapisu = 0;
+ 116               		.loc 1 74 15 is_stmt 0 view .LVU25
+ 117 0076 8091 0000 		lds r24,bufor_pomoc_liczba_znakow_do_zapisu
+ 118               	.LVL8:
+  75:zapiseeprom.c **** 		liczba_znakow_do_zapisu = k;
+ 119               		.loc 1 75 3 is_stmt 1 view .LVU26
+  75:zapiseeprom.c **** 		liczba_znakow_do_zapisu = k;
+ 120               		.loc 1 75 39 is_stmt 0 view .LVU27
+ 121 007a 1092 0000 		sts bufor_pomoc_liczba_znakow_do_zapisu,__zero_reg__
+  76:zapiseeprom.c **** 		if ( k != 0 )
+ 122               		.loc 1 76 3 is_stmt 1 view .LVU28
+  76:zapiseeprom.c **** 		if ( k != 0 )
+ 123               		.loc 1 76 27 is_stmt 0 view .LVU29
+ 124 007e 8093 0000 		sts liczba_znakow_do_zapisu,r24
+  77:zapiseeprom.c **** 		{
+ 125               		.loc 1 77 3 is_stmt 1 view .LVU30
+ 126 0082 20E0      		ldi r18,lo8(bufor_eeprom)
+ 127 0084 30E0      		ldi r19,hi8(bufor_eeprom)
+  77:zapiseeprom.c **** 		{
+ 128               		.loc 1 77 6 is_stmt 0 view .LVU31
+ 129 0086 F901      		movw r30,r18
+ 130 0088 8823      		tst r24
+ 131 008a 01F0      		breq .L5
+ 132               	.L6:
+ 133               	.LVL9:
+ 134               	.LBB6:
+  79:zapiseeprom.c **** 				bufor_eeprom[i] = bufor_eeprom[POLOZENIE_BUFOR_EEPROM_POMOC_BUFOR_START+i];
+ 135               		.loc 1 79 22 is_stmt 1 discriminator 1 view .LVU32
+  79:zapiseeprom.c **** 				bufor_eeprom[i] = bufor_eeprom[POLOZENIE_BUFOR_EEPROM_POMOC_BUFOR_START+i];
+ 136               		.loc 1 79 4 is_stmt 0 discriminator 1 view .LVU33
+ 137 008c 9E2F      		mov r25,r30
+ 138 008e 921B      		sub r25,r18
+ 139 0090 9817      		cp r25,r24
+ 140 0092 00F0      		brlo .L7
+ 141               	.LBE6:
+  81:zapiseeprom.c **** 			pom = 0;
+ 142               		.loc 1 81 4 is_stmt 1 view .LVU34
+  81:zapiseeprom.c **** 			pom = 0;
+ 143               		.loc 1 81 21 is_stmt 0 view .LVU35
+ 144 0094 8091 0000 		lds r24,bufor_pomoc_adres_eeprom
+ 145 0098 9091 0000 		lds r25,bufor_pomoc_adres_eeprom+1
+ 146               	.LVL10:
+  81:zapiseeprom.c **** 			pom = 0;
+ 147               		.loc 1 81 21 view .LVU36
+ 148 009c 9093 0000 		sts pozycja_w_eeprom+1,r25
+ 149 00a0 8093 0000 		sts pozycja_w_eeprom,r24
+  82:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+ 150               		.loc 1 82 4 is_stmt 1 view .LVU37
+ 151               	.LVL11:
+  84:zapiseeprom.c **** #else
+ 152               		.loc 1 84 4 view .LVU38
+ 153 00a4 6091 0000 		lds r22,bufor_eeprom
+ 154 00a8 0E94 0000 		call at24c512_write_byte
+ 155               	.LVL12:
+  82:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+ 156               		.loc 1 82 8 is_stmt 0 view .LVU39
+ 157 00ac C0E0      		ldi r28,0
+ 158 00ae 00C0      		rjmp .L5
+ 159               	.LVL13:
+ 160               	.L7:
+ 161               	.LBB7:
+  80:zapiseeprom.c **** 			pozycja_w_eeprom = bufor_pomoc_adres_eeprom;
+ 162               		.loc 1 80 5 is_stmt 1 discriminator 3 view .LVU40
+  80:zapiseeprom.c **** 			pozycja_w_eeprom = bufor_pomoc_adres_eeprom;
+ 163               		.loc 1 80 21 is_stmt 0 discriminator 3 view .LVU41
+ 164 00b0 90A5      		ldd r25,Z+40
+ 165 00b2 9193      		st Z+,r25
+ 166               	.LVL14:
+  79:zapiseeprom.c **** 				bufor_eeprom[i] = bufor_eeprom[POLOZENIE_BUFOR_EEPROM_POMOC_BUFOR_START+i];
+ 167               		.loc 1 79 29 is_stmt 1 discriminator 3 view .LVU42
+  79:zapiseeprom.c **** 				bufor_eeprom[i] = bufor_eeprom[POLOZENIE_BUFOR_EEPROM_POMOC_BUFOR_START+i];
+ 168               		.loc 1 79 29 is_stmt 0 discriminator 3 view .LVU43
+ 169 00b4 00C0      		rjmp .L6
+ 170               	.LBE7:
+ 171               	.LBE5:
+ 172               		.cfi_endproc
+ 173               	.LFE4:
+ 175               	.global	zapisz_znaki_w_eeprom
+ 177               	zapisz_znaki_w_eeprom:
+ 178               	.LVL15:
+ 179               	.LFB5:
+  99:zapiseeprom.c **** 
+ 100:zapiseeprom.c **** 	// uwaga, w-?cza przerwania sei()
+ 101:zapiseeprom.c **** void zapisz_znaki_w_eeprom(const void* buf, const uint pozycja_w_eeprom_, 
+ 102:zapiseeprom.c **** 	const uchar liczba_znakow)
+ 103:zapiseeprom.c **** {
+ 180               		.loc 1 103 1 is_stmt 1 view -0
+ 181               		.cfi_startproc
+ 182               		.loc 1 103 1 is_stmt 0 view .LVU45
+ 183 00b6 0F93      		push r16
+ 184               	.LCFI3:
+ 185               		.cfi_def_cfa_offset 3
+ 186               		.cfi_offset 16, -2
+ 187 00b8 1F93      		push r17
+ 188               	.LCFI4:
+ 189               		.cfi_def_cfa_offset 4
+ 190               		.cfi_offset 17, -3
+ 191 00ba CF93      		push r28
+ 192               	.LCFI5:
+ 193               		.cfi_def_cfa_offset 5
+ 194               		.cfi_offset 28, -4
+ 195               	/* prologue: function */
+ 196               	/* frame size = 0 */
+ 197               	/* stack size = 3 */
+ 198               	.L__stack_usage = 3
+ 199 00bc 8B01      		movw r16,r22
+ 200 00be C42F      		mov r28,r20
+ 104:zapiseeprom.c **** 	// wcze?niej sprawdzono, czy mo?na zapisywa?
+ 105:zapiseeprom.c **** 	if ( liczba_znakow == 0 )
+ 201               		.loc 1 105 2 is_stmt 1 view .LVU46
+ 202               		.loc 1 105 5 is_stmt 0 view .LVU47
+ 203 00c0 4423      		tst r20
+ 204 00c2 01F0      		breq .L17
+ 106:zapiseeprom.c **** 		return;
+ 107:zapiseeprom.c **** 	memcpy(bufor_eeprom, buf, liczba_znakow);
+ 205               		.loc 1 107 2 is_stmt 1 view .LVU48
+ 206 00c4 50E0      		ldi r21,0
+ 207 00c6 BC01      		movw r22,r24
+ 208               	.LVL16:
+ 209               		.loc 1 107 2 is_stmt 0 view .LVU49
+ 210 00c8 80E0      		ldi r24,lo8(bufor_eeprom)
+ 211 00ca 90E0      		ldi r25,hi8(bufor_eeprom)
+ 212               	.LVL17:
+ 213               		.loc 1 107 2 view .LVU50
+ 214 00cc 0E94 0000 		call memcpy
+ 215               	.LVL18:
+ 108:zapiseeprom.c **** 	pozycja_w_eeprom = pozycja_w_eeprom_;
+ 216               		.loc 1 108 2 is_stmt 1 view .LVU51
+ 217               		.loc 1 108 19 is_stmt 0 view .LVU52
+ 218 00d0 1093 0000 		sts pozycja_w_eeprom+1,r17
+ 219 00d4 0093 0000 		sts pozycja_w_eeprom,r16
+ 109:zapiseeprom.c **** 	nr_zapisanego_znaku = 0;
+ 220               		.loc 1 109 2 is_stmt 1 view .LVU53
+ 221               		.loc 1 109 22 is_stmt 0 view .LVU54
+ 222 00d8 1092 0000 		sts nr_zapisanego_znaku,__zero_reg__
+ 110:zapiseeprom.c **** 	liczba_znakow_do_zapisu = liczba_znakow;
+ 223               		.loc 1 110 2 is_stmt 1 view .LVU55
+ 224               		.loc 1 110 26 is_stmt 0 view .LVU56
+ 225 00dc C093 0000 		sts liczba_znakow_do_zapisu,r28
+ 111:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+ 112:zapiseeprom.c **** 	at24c512_write_byte((uint16_t)pozycja_w_eeprom_, bufor_eeprom[0]);
+ 226               		.loc 1 112 2 is_stmt 1 view .LVU57
+ 227 00e0 6091 0000 		lds r22,bufor_eeprom
+ 228 00e4 C801      		movw r24,r16
+ 229               	/* epilogue start */
+ 113:zapiseeprom.c **** #else
+ 114:zapiseeprom.c **** 	EEPROM_WRITE_ATMEGA8(pozycja_w_eeprom_, bufor_eeprom[0]);
+ 115:zapiseeprom.c **** #endif
+ 116:zapiseeprom.c **** }
+ 230               		.loc 1 116 1 is_stmt 0 view .LVU58
+ 231 00e6 CF91      		pop r28
+ 232               	.LVL19:
+ 233               		.loc 1 116 1 view .LVU59
+ 234 00e8 1F91      		pop r17
+ 235 00ea 0F91      		pop r16
+ 236               	.LVL20:
+ 112:zapiseeprom.c **** #else
+ 237               		.loc 1 112 2 view .LVU60
+ 238 00ec 0C94 0000 		jmp at24c512_write_byte
+ 239               	.LVL21:
+ 240               	.L17:
+ 241               	/* epilogue start */
+ 242               		.loc 1 116 1 view .LVU61
+ 243 00f0 CF91      		pop r28
+ 244 00f2 1F91      		pop r17
+ 245 00f4 0F91      		pop r16
+ 246               	.LVL22:
+ 247               		.loc 1 116 1 view .LVU62
+ 248 00f6 0895      		ret
+ 249               		.cfi_endproc
+ 250               	.LFE5:
+ 252               	.global	zapisz_znaki_w_eeprom_bez_kopiowania
+ 254               	zapisz_znaki_w_eeprom_bez_kopiowania:
+ 255               	.LVL23:
+ 256               	.LFB6:
+ 117:zapiseeprom.c **** 
+ 118:zapiseeprom.c **** void zapisz_znaki_w_eeprom_bez_kopiowania(const uint pozycja_w_eeprom_, 
+ 119:zapiseeprom.c **** 	const uchar liczba_znakow)
+ 120:zapiseeprom.c **** {
+ 257               		.loc 1 120 1 is_stmt 1 view -0
+ 258               		.cfi_startproc
+ 259               	/* prologue: function */
+ 260               	/* frame size = 0 */
+ 261               	/* stack size = 0 */
+ 262               	.L__stack_usage = 0
+ 121:zapiseeprom.c **** 	// wcze?niej sprawdzono, czy mo?na zapisywa?
+ 122:zapiseeprom.c **** 	if ( liczba_znakow == 0 )
+ 263               		.loc 1 122 2 view .LVU64
+ 264               		.loc 1 122 5 is_stmt 0 view .LVU65
+ 265 00f8 6623      		tst r22
+ 266 00fa 01F0      		breq .L19
+ 267               	.LVL24:
+ 268               	.LBB10:
+ 269               	.LBI10:
+ 118:zapiseeprom.c **** 	const uchar liczba_znakow)
+ 270               		.loc 1 118 6 is_stmt 1 view .LVU66
+ 271               	.LBB11:
+ 123:zapiseeprom.c **** 		return;
+ 124:zapiseeprom.c **** 	pozycja_w_eeprom = pozycja_w_eeprom_;
+ 272               		.loc 1 124 2 view .LVU67
+ 273               		.loc 1 124 19 is_stmt 0 view .LVU68
+ 274 00fc 9093 0000 		sts pozycja_w_eeprom+1,r25
+ 275 0100 8093 0000 		sts pozycja_w_eeprom,r24
+ 125:zapiseeprom.c **** 	nr_zapisanego_znaku = 0;
+ 276               		.loc 1 125 2 is_stmt 1 view .LVU69
+ 277               		.loc 1 125 22 is_stmt 0 view .LVU70
+ 278 0104 1092 0000 		sts nr_zapisanego_znaku,__zero_reg__
+ 126:zapiseeprom.c **** 	liczba_znakow_do_zapisu = liczba_znakow;
+ 279               		.loc 1 126 2 is_stmt 1 view .LVU71
+ 280               		.loc 1 126 26 is_stmt 0 view .LVU72
+ 281 0108 6093 0000 		sts liczba_znakow_do_zapisu,r22
+ 127:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+ 128:zapiseeprom.c **** 	at24c512_write_byte((uint16_t)pozycja_w_eeprom_, bufor_eeprom[0]);
+ 282               		.loc 1 128 2 is_stmt 1 view .LVU73
+ 283 010c 6091 0000 		lds r22,bufor_eeprom
+ 284               	.LVL25:
+ 285               		.loc 1 128 2 is_stmt 0 view .LVU74
+ 286 0110 0C94 0000 		jmp at24c512_write_byte
+ 287               	.LVL26:
+ 288               	.L19:
+ 289               	/* epilogue start */
+ 290               		.loc 1 128 2 view .LVU75
+ 291               	.LBE11:
+ 292               	.LBE10:
+ 129:zapiseeprom.c **** #else
+ 130:zapiseeprom.c **** 	EEPROM_WRITE_ATMEGA8(pozycja_w_eeprom_, bufor_eeprom[0]);
+ 131:zapiseeprom.c **** #endif
+ 132:zapiseeprom.c **** }
+ 293               		.loc 1 132 1 view .LVU76
+ 294 0114 0895      		ret
+ 295               		.cfi_endproc
+ 296               	.LFE6:
+ 298               	.global	zapisz_znak_w_eeprom
+ 300               	zapisz_znak_w_eeprom:
+ 301               	.LVL27:
+ 302               	.LFB7:
+ 133:zapiseeprom.c **** 
+ 134:zapiseeprom.c **** 	// uwaga, w-?cza przerwania sei()
+ 135:zapiseeprom.c **** void zapisz_znak_w_eeprom(const uchar znak, const uint pozycja_w_eeprom_)
+ 136:zapiseeprom.c **** {
+ 303               		.loc 1 136 1 is_stmt 1 view -0
+ 304               		.cfi_startproc
+ 305               		.loc 1 136 1 is_stmt 0 view .LVU78
+ 306 0116 1F93      		push r17
+ 307               	.LCFI6:
+ 308               		.cfi_def_cfa_offset 3
+ 309               		.cfi_offset 17, -2
+ 310 0118 CF93      		push r28
+ 311               	.LCFI7:
+ 312               		.cfi_def_cfa_offset 4
+ 313               		.cfi_offset 28, -3
+ 314 011a DF93      		push r29
+ 315               	.LCFI8:
+ 316               		.cfi_def_cfa_offset 5
+ 317               		.cfi_offset 29, -4
+ 318               	/* prologue: function */
+ 319               	/* frame size = 0 */
+ 320               	/* stack size = 3 */
+ 321               	.L__stack_usage = 3
+ 322 011c 182F      		mov r17,r24
+ 323 011e EB01      		movw r28,r22
+ 137:zapiseeprom.c **** 	// wcze?niej sprawdzono, czy mo?na zapisywa?
+ 138:zapiseeprom.c **** 	if ( eeprom_read_byte((void*) pozycja_w_eeprom_) == znak )
+ 324               		.loc 1 138 2 is_stmt 1 view .LVU79
+ 325               		.loc 1 138 7 is_stmt 0 view .LVU80
+ 326 0120 CB01      		movw r24,r22
+ 327               	.LVL28:
+ 328               		.loc 1 138 7 view .LVU81
+ 329 0122 0E94 0000 		call eeprom_read_byte
+ 330               	.LVL29:
+ 331               		.loc 1 138 5 view .LVU82
+ 332 0126 8117      		cp r24,r17
+ 333 0128 01F0      		breq .L21
+ 139:zapiseeprom.c **** 		return;
+ 140:zapiseeprom.c **** 	bufor_eeprom[0] = znak;
+ 334               		.loc 1 140 2 is_stmt 1 view .LVU83
+ 335               		.loc 1 140 18 is_stmt 0 view .LVU84
+ 336 012a 1093 0000 		sts bufor_eeprom,r17
+ 141:zapiseeprom.c **** 	zapisz_znaki_w_eeprom_bez_kopiowania(pozycja_w_eeprom_, 1);
+ 337               		.loc 1 141 2 is_stmt 1 view .LVU85
+ 338               	.LVL30:
+ 339               	.LBB16:
+ 340               	.LBI16:
+ 118:zapiseeprom.c **** 	const uchar liczba_znakow)
+ 341               		.loc 1 118 6 view .LVU86
+ 342               	.LBE16:
+ 122:zapiseeprom.c **** 		return;
+ 343               		.loc 1 122 2 view .LVU87
+ 344               	.LBB21:
+ 345               	.LBB17:
+ 346               	.LBI17:
+ 118:zapiseeprom.c **** 	const uchar liczba_znakow)
+ 347               		.loc 1 118 6 view .LVU88
+ 348               	.LBB18:
+ 124:zapiseeprom.c **** 	nr_zapisanego_znaku = 0;
+ 349               		.loc 1 124 2 view .LVU89
+ 124:zapiseeprom.c **** 	nr_zapisanego_znaku = 0;
+ 350               		.loc 1 124 19 is_stmt 0 view .LVU90
+ 351 012e D093 0000 		sts pozycja_w_eeprom+1,r29
+ 352 0132 C093 0000 		sts pozycja_w_eeprom,r28
+ 125:zapiseeprom.c **** 	liczba_znakow_do_zapisu = liczba_znakow;
+ 353               		.loc 1 125 2 is_stmt 1 view .LVU91
+ 125:zapiseeprom.c **** 	liczba_znakow_do_zapisu = liczba_znakow;
+ 354               		.loc 1 125 22 is_stmt 0 view .LVU92
+ 355 0136 1092 0000 		sts nr_zapisanego_znaku,__zero_reg__
+ 126:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+ 356               		.loc 1 126 2 is_stmt 1 view .LVU93
+ 126:zapiseeprom.c **** #ifdef USE_EXTERNAL_EEPROM
+ 357               		.loc 1 126 26 is_stmt 0 view .LVU94
+ 358 013a 81E0      		ldi r24,lo8(1)
+ 359 013c 8093 0000 		sts liczba_znakow_do_zapisu,r24
+ 128:zapiseeprom.c **** #else
+ 360               		.loc 1 128 2 is_stmt 1 view .LVU95
+ 361 0140 612F      		mov r22,r17
+ 362 0142 CE01      		movw r24,r28
+ 363               	/* epilogue start */
+ 364               	.LBE18:
+ 365               	.LBE17:
+ 366               	.LBE21:
+ 142:zapiseeprom.c **** }
+ 367               		.loc 1 142 1 is_stmt 0 view .LVU96
+ 368 0144 DF91      		pop r29
+ 369 0146 CF91      		pop r28
+ 370               	.LVL31:
+ 371               		.loc 1 142 1 view .LVU97
+ 372 0148 1F91      		pop r17
+ 373               	.LVL32:
+ 374               	.LBB22:
+ 375               	.LBB20:
+ 376               	.LBB19:
+ 128:zapiseeprom.c **** #else
+ 377               		.loc 1 128 2 view .LVU98
+ 378 014a 0C94 0000 		jmp at24c512_write_byte
+ 379               	.LVL33:
+ 380               	.L21:
+ 381               	/* epilogue start */
+ 128:zapiseeprom.c **** #else
+ 382               		.loc 1 128 2 view .LVU99
+ 383               	.LBE19:
+ 384               	.LBE20:
+ 385               	.LBE22:
+ 386               		.loc 1 142 1 view .LVU100
+ 387 014e DF91      		pop r29
+ 388 0150 CF91      		pop r28
+ 389               	.LVL34:
+ 390               		.loc 1 142 1 view .LVU101
+ 391 0152 1F91      		pop r17
+ 392               	.LVL35:
+ 393               		.loc 1 142 1 view .LVU102
+ 394 0154 0895      		ret
+ 395               		.cfi_endproc
+ 396               	.LFE7:
+ 398               	.global	eeprom_read_3char
+ 400               	eeprom_read_3char:
+ 401               	.LVL36:
+ 402               	.LFB8:
+ 143:zapiseeprom.c **** 
+ 144:zapiseeprom.c **** //int memcmp_E(const void* buf, const void* eeprom_ptr, size_t size)
+ 145:zapiseeprom.c **** //{
+ 146:zapiseeprom.c **** //	if ( size == 0 )
+ 147:zapiseeprom.c **** //		return 0;
+ 148:zapiseeprom.c **** //	while ( *(uchar*) buf == eeprom_read_byte(eeprom_ptr) && --size )
+ 149:zapiseeprom.c **** //	{
+ 150:zapiseeprom.c **** //		++buf;
+ 151:zapiseeprom.c **** //		++eeprom_ptr;
+ 152:zapiseeprom.c **** //	}
+ 153:zapiseeprom.c **** //	return *(uchar*)buf - eeprom_read_byte(eeprom_ptr);
+ 154:zapiseeprom.c **** //}
+ 155:zapiseeprom.c **** 
+ 156:zapiseeprom.c **** //void* memchr_E(void* eeprom_ptr, const char ch, size_t size)
+ 157:zapiseeprom.c **** //{
+ 158:zapiseeprom.c **** //	if ( size == 0 )
+ 159:zapiseeprom.c **** //		return 0;
+ 160:zapiseeprom.c **** //	while ( ch != eeprom_read_byte(eeprom_ptr) && --size )
+ 161:zapiseeprom.c **** //	{
+ 162:zapiseeprom.c **** //		++eeprom_ptr;
+ 163:zapiseeprom.c **** //	}
+ 164:zapiseeprom.c **** //	return ch != eeprom_read_byte(eeprom_ptr) ? NULL : eeprom_ptr;
+ 165:zapiseeprom.c **** //}
+ 166:zapiseeprom.c **** //
+ 167:zapiseeprom.c **** //int strncpy_E(const void* buf, const void* eeprom_ptr, size_t size)
+ 168:zapiseeprom.c **** //{
+ 169:zapiseeprom.c **** //	const void* buf_beg = buf;
+ 170:zapiseeprom.c **** //	while ( size-- && (*(uchar*) buf = eeprom_read_byte(eeprom_ptr)) != 0 )
+ 171:zapiseeprom.c **** //	{
+ 172:zapiseeprom.c **** //		++buf;
+ 173:zapiseeprom.c **** //		++eeprom_ptr;
+ 174:zapiseeprom.c **** //	}
+ 175:zapiseeprom.c **** //	return buf - buf_beg;
+ 176:zapiseeprom.c **** //}
+ 177:zapiseeprom.c **** 
+ 178:zapiseeprom.c **** //int strncmp_E(const void* buf, const void* eeprom_ptr, size_t size)
+ 179:zapiseeprom.c **** //{
+ 180:zapiseeprom.c **** //	if ( size == 0 )
+ 181:zapiseeprom.c **** //		return 0;
+ 182:zapiseeprom.c **** //	while ( (*(uchar*) buf == eeprom_read_byte(eeprom_ptr)) && --size )
+ 183:zapiseeprom.c **** //	{
+ 184:zapiseeprom.c **** //		if ( *(uchar*) buf == 0 )
+ 185:zapiseeprom.c **** //			break;
+ 186:zapiseeprom.c **** //		++buf;
+ 187:zapiseeprom.c **** //		++eeprom_ptr;
+ 188:zapiseeprom.c **** //	}
+ 189:zapiseeprom.c **** //	return *(uchar*)buf - eeprom_read_byte(eeprom_ptr);
+ 190:zapiseeprom.c **** //}
+ 191:zapiseeprom.c **** 
+ 192:zapiseeprom.c **** //int strncmp_any_char_E(const void* buf, const void* eeprom_ptr, size_t size)
+ 193:zapiseeprom.c **** //{
+ 194:zapiseeprom.c **** //	if ( size == 0 )
+ 195:zapiseeprom.c **** //		return 0;
+ 196:zapiseeprom.c **** //	while ( (toupper(*(uchar*) buf) == toupper(eeprom_read_byte(eeprom_ptr))) && --size )
+ 197:zapiseeprom.c **** //	{
+ 198:zapiseeprom.c **** //		if ( *(uchar*) buf == 0 )
+ 199:zapiseeprom.c **** //			break;
+ 200:zapiseeprom.c **** //		++buf;
+ 201:zapiseeprom.c **** //		++eeprom_ptr;
+ 202:zapiseeprom.c **** //	}
+ 203:zapiseeprom.c **** //	return *(uchar*)buf - eeprom_read_byte(eeprom_ptr);
+ 204:zapiseeprom.c **** //}
+ 205:zapiseeprom.c **** 
+ 206:zapiseeprom.c **** //int strnlen_E(const void* eeprom_ptr, size_t size)
+ 207:zapiseeprom.c **** //{
+ 208:zapiseeprom.c **** //	int i = 0;
+ 209:zapiseeprom.c **** //	while ( eeprom_read_byte(eeprom_ptr++) != 0 && size-- )
+ 210:zapiseeprom.c **** //		++i;
+ 211:zapiseeprom.c **** //	return i;
+ 212:zapiseeprom.c **** //}
+ 213:zapiseeprom.c **** 
+ 214:zapiseeprom.c **** //uint32_t eeprom_read_long(const uint32_t *addr)
+ 215:zapiseeprom.c **** //{
+ 216:zapiseeprom.c **** //	ulong l;
+ 217:zapiseeprom.c **** //	const uchar* ptr = (uchar*) addr;
+ 218:zapiseeprom.c **** //	uchar* ptr2 = (uchar*) &l;
+ 219:zapiseeprom.c **** //	*ptr2++ = eeprom_read_byte(ptr++);
+ 220:zapiseeprom.c **** //	*ptr2++ = eeprom_read_byte(ptr++);
+ 221:zapiseeprom.c **** //	*ptr2++ = eeprom_read_byte(ptr++);
+ 222:zapiseeprom.c **** //	*ptr2++ = eeprom_read_byte(ptr++);
+ 223:zapiseeprom.c **** //	return l;
+ 224:zapiseeprom.c **** //}
+ 225:zapiseeprom.c **** 
+ 226:zapiseeprom.c **** uint32_t eeprom_read_3char(const uint32_t *addr)
+ 227:zapiseeprom.c **** {
+ 403               		.loc 1 227 1 is_stmt 1 view -0
+ 404               		.cfi_startproc
+ 405               		.loc 1 227 1 is_stmt 0 view .LVU104
+ 406 0156 0F93      		push r16
+ 407               	.LCFI9:
+ 408               		.cfi_def_cfa_offset 3
+ 409               		.cfi_offset 16, -2
+ 410 0158 1F93      		push r17
+ 411               	.LCFI10:
+ 412               		.cfi_def_cfa_offset 4
+ 413               		.cfi_offset 17, -3
+ 414 015a CF93      		push r28
+ 415               	.LCFI11:
+ 416               		.cfi_def_cfa_offset 5
+ 417               		.cfi_offset 28, -4
+ 418 015c DF93      		push r29
+ 419               	.LCFI12:
+ 420               		.cfi_def_cfa_offset 6
+ 421               		.cfi_offset 29, -5
+ 422 015e 00D0      		rcall .
+ 423 0160 00D0      		rcall .
+ 424               	.LCFI13:
+ 425               		.cfi_def_cfa_offset 10
+ 426 0162 CDB7      		in r28,__SP_L__
+ 427 0164 DEB7      		in r29,__SP_H__
+ 428               	.LCFI14:
+ 429               		.cfi_def_cfa_register 28
+ 430               	/* prologue: function */
+ 431               	/* frame size = 4 */
+ 432               	/* stack size = 8 */
+ 433               	.L__stack_usage = 8
+ 434 0166 8C01      		movw r16,r24
+ 228:zapiseeprom.c **** 	ulong l = 0;
+ 435               		.loc 1 228 2 is_stmt 1 view .LVU105
+ 436               		.loc 1 228 8 is_stmt 0 view .LVU106
+ 437 0168 1982      		std Y+1,__zero_reg__
+ 438 016a 1A82      		std Y+2,__zero_reg__
+ 439 016c 1B82      		std Y+3,__zero_reg__
+ 440 016e 1C82      		std Y+4,__zero_reg__
+ 229:zapiseeprom.c **** 	const uchar* ptr = (uchar*) addr;
+ 441               		.loc 1 229 2 is_stmt 1 view .LVU107
+ 442               	.LVL37:
+ 230:zapiseeprom.c **** 	uchar* ptr2 = (uchar*) &l;
+ 443               		.loc 1 230 2 view .LVU108
+ 231:zapiseeprom.c **** 	*ptr2++ = eeprom_read_byte(ptr++);
+ 444               		.loc 1 231 2 view .LVU109
+ 445               		.loc 1 231 12 is_stmt 0 view .LVU110
+ 446 0170 0E94 0000 		call eeprom_read_byte
+ 447               	.LVL38:
+ 448               		.loc 1 231 10 view .LVU111
+ 449 0174 8983      		std Y+1,r24
+ 232:zapiseeprom.c **** 	*ptr2++ = eeprom_read_byte(ptr++);
+ 450               		.loc 1 232 2 is_stmt 1 view .LVU112
+ 451               	.LVL39:
+ 452               		.loc 1 232 12 is_stmt 0 view .LVU113
+ 453 0176 C801      		movw r24,r16
+ 454 0178 0196      		adiw r24,1
+ 455 017a 0E94 0000 		call eeprom_read_byte
+ 456               	.LVL40:
+ 457               		.loc 1 232 10 view .LVU114
+ 458 017e 8A83      		std Y+2,r24
+ 233:zapiseeprom.c **** 	*ptr2++ = eeprom_read_byte(ptr++);
+ 459               		.loc 1 233 2 is_stmt 1 view .LVU115
+ 460               	.LVL41:
+ 461               		.loc 1 233 12 is_stmt 0 view .LVU116
+ 462 0180 C801      		movw r24,r16
+ 463 0182 0296      		adiw r24,2
+ 464 0184 0E94 0000 		call eeprom_read_byte
+ 465               	.LVL42:
+ 466               		.loc 1 233 10 view .LVU117
+ 467 0188 8B83      		std Y+3,r24
+ 234:zapiseeprom.c **** 	return l;
+ 468               		.loc 1 234 2 is_stmt 1 view .LVU118
+ 469               		.loc 1 234 9 is_stmt 0 view .LVU119
+ 470 018a 6981      		ldd r22,Y+1
+ 471 018c 7A81      		ldd r23,Y+2
+ 472 018e 8B81      		ldd r24,Y+3
+ 473 0190 9C81      		ldd r25,Y+4
+ 474               	/* epilogue start */
+ 235:zapiseeprom.c **** }
+ 475               		.loc 1 235 1 view .LVU120
+ 476 0192 0F90      		pop __tmp_reg__
+ 477 0194 0F90      		pop __tmp_reg__
+ 478 0196 0F90      		pop __tmp_reg__
+ 479 0198 0F90      		pop __tmp_reg__
+ 480 019a DF91      		pop r29
+ 481 019c CF91      		pop r28
+ 482               	.LVL43:
+ 483               		.loc 1 235 1 view .LVU121
+ 484 019e 1F91      		pop r17
+ 485               	.LVL44:
+ 486               		.loc 1 235 1 view .LVU122
+ 487 01a0 0F91      		pop r16
+ 488               	.LVL45:
+ 489               		.loc 1 235 1 view .LVU123
+ 490 01a2 0895      		ret
+ 491               		.cfi_endproc
+ 492               	.LFE8:
+ 494               		.comm	czy_zajety_bufor_eeprom,1,1
+ 495               		.comm	bufor_pomoc_adres_eeprom,2,1
+ 496               		.comm	bufor_pomoc_liczba_znakow_do_zapisu,1,1
+ 497               		.comm	pozycja_w_eeprom,2,1
+ 498               	.global	nr_zapisanego_znaku
+ 499               		.section .bss
+ 502               	nr_zapisanego_znaku:
+ 503 0000 00        		.zero	1
+ 504               	.global	liczba_znakow_do_zapisu
+ 507               	liczba_znakow_do_zapisu:
+ 508 0001 00        		.zero	1
+ 509               		.comm	bufor_eeprom,50,1
+ 510               		.text
+ 511               	.Letext0:
+ 512               		.file 2 "narzedzia.h"
+ 513               		.file 3 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/include/stddef.h"
+ 514               		.file 4 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/avr/include/stdlib.h"
+ 515               		.file 5 "zapiseeprom.h"
+ 516               		.file 6 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/avr/include/stdint.h"
+ 517               		.file 7 "eeprom_ext.h"
+ 518               		.file 8 "at24c512.h"
+ 519               		.file 9 "<built-in>"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zapiseeprom.c
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2      *ABS*:0000003e __SP_H__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:3      *ABS*:0000003d __SP_L__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:4      *ABS*:0000003f __SREG__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:12     .text:00000000 zapisz_bajt_w_EEPROM
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:15     .text:00000000 .Loc.0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:16     .text:00000000 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:33     .text:00000006 .Loc.1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:34     .text:00000006 .Loc.2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:37     .text:0000000a .Loc.3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:40     .text:0000000e .Loc.4
+                            *COM*:00000001 bufor_pomoc_liczba_znakow_do_zapisu
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:507    .bss:00000001 liczba_znakow_do_zapisu
+                            *COM*:00000001 czy_zajety_bufor_eeprom
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:47     .text:00000020 .Loc.5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:48     .text:00000020 .Loc.6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:502    .bss:00000000 nr_zapisanego_znaku
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:51     .text:00000024 .Loc.7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:52     .text:00000024 .Loc.8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:55     .text:00000028 .Loc.9
+                            *COM*:00000002 pozycja_w_eeprom
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:58     .text:00000030 .Loc.10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:63     .text:00000038 .Loc.11
+                            *COM*:00000032 bufor_eeprom
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:67     .text:0000003e .Loc.12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:71     .text:00000044 .Loc.13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:75     .text:00000046 .Loc.14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:76     .text:00000046 .Loc.15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:81     .text:0000004e .Loc.16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:83     .text:0000004e .Loc.17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:89     .text:00000058 .Loc.18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:92     .text:00000060 .Loc.19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:99     .text:0000006a .Loc.20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:101    .text:0000006a .Loc.21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:102    .text:0000006a .Loc.22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:107    .text:0000006e .Loc.23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:115    .text:00000076 .Loc.24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:116    .text:00000076 .Loc.25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:119    .text:0000007a .Loc.26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:120    .text:0000007a .Loc.27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:122    .text:0000007e .Loc.28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:123    .text:0000007e .Loc.29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:125    .text:00000082 .Loc.30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:128    .text:00000086 .Loc.31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:135    .text:0000008c .Loc.32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:136    .text:0000008c .Loc.33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:142    .text:00000094 .Loc.34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:143    .text:00000094 .Loc.35
+                            *COM*:00000002 bufor_pomoc_adres_eeprom
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:147    .text:0000009c .Loc.36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:150    .text:000000a4 .Loc.37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:152    .text:000000a4 .Loc.38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:156    .text:000000ac .Loc.39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:162    .text:000000b0 .Loc.40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:163    .text:000000b0 .Loc.41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:167    .text:000000b4 .Loc.42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:168    .text:000000b4 .Loc.43
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:172    .text:000000b6 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:177    .text:000000b6 zapisz_znaki_w_eeprom
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:180    .text:000000b6 .Loc.44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:181    .text:000000b6 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:182    .text:000000b6 .Loc.45
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:201    .text:000000c0 .Loc.46
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:202    .text:000000c0 .Loc.47
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:205    .text:000000c4 .Loc.48
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:209    .text:000000c8 .Loc.49
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:213    .text:000000cc .Loc.50
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:216    .text:000000d0 .Loc.51
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:217    .text:000000d0 .Loc.52
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:220    .text:000000d8 .Loc.53
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:221    .text:000000d8 .Loc.54
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:223    .text:000000dc .Loc.55
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:224    .text:000000dc .Loc.56
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:226    .text:000000e0 .Loc.57
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:230    .text:000000e6 .Loc.58
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:233    .text:000000e8 .Loc.59
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:237    .text:000000ec .Loc.60
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:242    .text:000000f0 .Loc.61
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:247    .text:000000f6 .Loc.62
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:249    .text:000000f8 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:254    .text:000000f8 zapisz_znaki_w_eeprom_bez_kopiowania
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:257    .text:000000f8 .Loc.63
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:258    .text:000000f8 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:263    .text:000000f8 .Loc.64
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:264    .text:000000f8 .Loc.65
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:270    .text:000000fc .Loc.66
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:272    .text:000000fc .Loc.67
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:273    .text:000000fc .Loc.68
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:276    .text:00000104 .Loc.69
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:277    .text:00000104 .Loc.70
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:279    .text:00000108 .Loc.71
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:280    .text:00000108 .Loc.72
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:282    .text:0000010c .Loc.73
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:285    .text:00000110 .Loc.74
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:290    .text:00000114 .Loc.75
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:293    .text:00000114 .Loc.76
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:295    .text:00000116 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:300    .text:00000116 zapisz_znak_w_eeprom
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:303    .text:00000116 .Loc.77
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:304    .text:00000116 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:305    .text:00000116 .Loc.78
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:324    .text:00000120 .Loc.79
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:325    .text:00000120 .Loc.80
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:328    .text:00000122 .Loc.81
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:331    .text:00000126 .Loc.82
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:334    .text:0000012a .Loc.83
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:335    .text:0000012a .Loc.84
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:337    .text:0000012e .Loc.85
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:341    .text:0000012e .Loc.86
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:343    .text:0000012e .Loc.87
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:347    .text:0000012e .Loc.88
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:349    .text:0000012e .Loc.89
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:350    .text:0000012e .Loc.90
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:353    .text:00000136 .Loc.91
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:354    .text:00000136 .Loc.92
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:356    .text:0000013a .Loc.93
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:357    .text:0000013a .Loc.94
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:360    .text:00000140 .Loc.95
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:367    .text:00000144 .Loc.96
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:371    .text:00000148 .Loc.97
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:377    .text:0000014a .Loc.98
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:382    .text:0000014e .Loc.99
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:386    .text:0000014e .Loc.100
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:390    .text:00000152 .Loc.101
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:393    .text:00000154 .Loc.102
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:395    .text:00000156 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:400    .text:00000156 eeprom_read_3char
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:403    .text:00000156 .Loc.103
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:404    .text:00000156 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:405    .text:00000156 .Loc.104
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:422    .text:00000160 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:423    .text:00000162 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:435    .text:00000168 .Loc.105
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:436    .text:00000168 .Loc.106
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:441    .text:00000170 .Loc.107
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:443    .text:00000170 .Loc.108
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:444    .text:00000170 .Loc.109
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:445    .text:00000170 .Loc.110
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:448    .text:00000174 .Loc.111
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:450    .text:00000176 .Loc.112
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:452    .text:00000176 .Loc.113
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:457    .text:0000017e .Loc.114
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:459    .text:00000180 .Loc.115
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:461    .text:00000180 .Loc.116
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:466    .text:00000188 .Loc.117
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:468    .text:0000018a .Loc.118
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:469    .text:0000018a .Loc.119
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:475    .text:00000192 .Loc.120
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:483    .text:0000019e .Loc.121
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:486    .text:000001a0 .Loc.122
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:489    .text:000001a2 .Loc.123
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:491    .text:000001a4 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:520    .text:000001a4 L0
+                     .debug_frame:00000000 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:105    .text:0000006e .L1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:74     .text:00000046 .L3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:113    .text:00000076 .L4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:98     .text:0000006a .L5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:160    .text:000000b0 .L7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:132    .text:0000008c .L6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:240    .text:000000f0 .L17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:288    .text:00000114 .L19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:380    .text:0000014e .L21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:1234   .debug_abbrev:00000000 .Ldebug_abbrev0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:8      .text:00000000 .Ltext0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:511    .text:000001a4 .Letext0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2689   .debug_line:00000000 .Ldebug_line0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:402    .text:00000156 .LFB8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:492    .text:000001a4 .LFE8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:1784   .debug_loc:00000000 .LLST20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:1835   .debug_loc:00000068 .LLST21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:1828   .debug_loc:00000062 .LVUS21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:1876   .debug_loc:000000aa .LLST22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:1863   .debug_loc:0000009e .LVUS22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:1936   .debug_loc:00000114 .LLST23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:1921   .debug_loc:00000106 .LVUS23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:447    .text:00000174 .LVL38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:456    .text:0000017e .LVL40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:465    .text:00000188 .LVL42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:302    .text:00000116 .LFB7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:396    .text:00000156 .LFE7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:1984   .debug_loc:0000017a .LLST13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2024   .debug_loc:000001c2 .LLST14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2011   .debug_loc:000001b6 .LVUS14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2070   .debug_loc:0000021e .LLST15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2057   .debug_loc:00000212 .LVUS15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:340    .text:0000012e .LBI16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2673   .debug_ranges:00000000 .Ldebug_ranges0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2126   .debug_loc:00000284 .LLST16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2123   .debug_loc:00000282 .LVUS16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2141   .debug_loc:0000029e .LLST17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2134   .debug_loc:00000298 .LVUS17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:346    .text:0000012e .LBI17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2172   .debug_loc:000002d6 .LLST18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2169   .debug_loc:000002d4 .LVUS18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2187   .debug_loc:000002f0 .LLST19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2180   .debug_loc:000002ea .LVUS19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:379    .text:0000014e .LVL33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:330    .text:00000126 .LVL29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:179    .text:000000b6 .LFB5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:250    .text:000000f8 .LFE5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2215   .debug_loc:00000326 .LLST5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2251   .debug_loc:0000036a .LLST6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2242   .debug_loc:00000362 .LVUS6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2301   .debug_loc:000003bc .LLST7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2288   .debug_loc:000003b0 .LVUS7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2367   .debug_loc:0000042c .LLST8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2356   .debug_loc:00000422 .LVUS8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:215    .text:000000d0 .LVL18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:239    .text:000000f0 .LVL21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:13     .text:00000000 .LFB4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:173    .text:000000b6 .LFE4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2394   .debug_loc:00000472 .LLST0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2430   .debug_loc:000004b6 .LLST1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2421   .debug_loc:000004ae .LVUS1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:80     .text:0000004e .LBB4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:100    .text:0000006a .LBE4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2453   .debug_loc:000004ed .LLST2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2450   .debug_loc:000004eb .LVUS2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:97     .text:0000006a .LVL5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:114    .text:00000076 .LBB5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:171    .text:000000b6 .LBE5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2477   .debug_loc:00000513 .LLST3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2470   .debug_loc:0000050d .LVUS3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2502   .debug_loc:00000548 .LLST4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2493   .debug_loc:00000540 .LVUS4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:155    .text:000000ac .LVL12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:36     .text:0000000a .LVL0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:62     .text:00000038 .LVL2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:256    .text:000000f8 .LFB6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:296    .text:00000116 .LFE6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2550   .debug_loc:000005a4 .LLST9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2543   .debug_loc:0000059e .LVUS9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2587   .debug_loc:000005e2 .LLST10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2578   .debug_loc:000005da .LVUS10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:269    .text:000000fc .LBI10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:268    .text:000000fc .LBB10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:292    .text:00000114 .LBE10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2617   .debug_loc:00000623 .LLST11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2610   .debug_loc:0000061d .LVUS11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2641   .debug_loc:00000657 .LLST12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:2636   .debug_loc:00000653 .LVUS12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:287    .text:00000114 .LVL26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:407    .text:00000158 .LCFI9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:411    .text:0000015a .LCFI10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:415    .text:0000015c .LCFI11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:419    .text:0000015e .LCFI12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:424    .text:00000162 .LCFI13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:428    .text:00000166 .LCFI14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:401    .text:00000156 .LVL36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:488    .text:000001a2 .LVL45
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:442    .text:00000170 .LVL37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:451    .text:00000176 .LVL39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:460    .text:00000180 .LVL41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:482    .text:0000019e .LVL43
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:485    .text:000001a0 .LVL44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:307    .text:00000118 .LCFI6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:311    .text:0000011a .LCFI7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:315    .text:0000011c .LCFI8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:301    .text:00000116 .LVL27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:327    .text:00000122 .LVL28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:373    .text:0000014a .LVL32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:392    .text:00000154 .LVL35
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:370    .text:00000148 .LVL31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:389    .text:00000152 .LVL34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:338    .text:0000012e .LVL30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:184    .text:000000b8 .LCFI3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:188    .text:000000ba .LCFI4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:192    .text:000000bc .LCFI5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:178    .text:000000b6 .LVL15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:212    .text:000000cc .LVL17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:208    .text:000000c8 .LVL16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:236    .text:000000ec .LVL20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:246    .text:000000f6 .LVL22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:232    .text:000000e8 .LVL19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:18     .text:00000002 .LCFI0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:22     .text:00000004 .LCFI1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:26     .text:00000006 .LCFI2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:50     .text:00000024 .LVL1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:104    .text:0000006e .LVL6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:112    .text:00000076 .LVL7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:151    .text:000000a4 .LVL11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:159    .text:000000b0 .LVL13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:82     .text:0000004e .LVL4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:118    .text:0000007a .LVL8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:146    .text:0000009c .LVL10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:133    .text:0000008c .LVL9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:166    .text:000000b4 .LVL14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:255    .text:000000f8 .LVL23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:284    .text:00000110 .LVL25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:267    .text:000000fc .LVL24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:521    .debug_info:00000000 .Ldebug_info0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:134    .text:0000008c .LBB6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:141    .text:00000094 .LBE6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:161    .text:000000b0 .LBB7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:170    .text:000000b6 .LBE7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:339    .text:0000012e .LBB16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:342    .text:0000012e .LBE16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:344    .text:0000012e .LBB21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:366    .text:00000144 .LBE21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:374    .text:0000014a .LBB22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccFGYv1g.s:385    .text:0000014e .LBE22
+
+UNDEFINED SYMBOLS
+eeprom_is_ready
+at24c512_read_byte
+at24c512_write_byte
+memcpy
+eeprom_read_byte
+__do_clear_bss

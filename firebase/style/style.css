@@ -1,0 +1,1916 @@
+:root {
+    /* Dark Theme (Default) - Synchronized with Intro Screen */
+    /* Dark Theme (Default) - Future Tech Background */
+    --bg-body-gradient: radial-gradient(circle at 50% 0%, #2a2d3d 0%, #1a1b26 60%, #111218 100%);
+    /* Subtle Grid Overlay */
+    --bg-pattern: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+
+    /* Deep dark blue intro background */
+    --bg-header-gradient: linear-gradient(180deg, rgba(30, 31, 46, 0.8) 0%, rgba(30, 31, 46, 0.4) 100%);
+    /* Intro card background for header */
+    --text-primary: #eee;
+    --text-secondary: #aaa;
+    --accent-primary: #64748b;
+    --accent-primary-gradient: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    --card-bg: #1e1f2e;
+    /* Intro card background */
+    --card-border: rgba(255, 255, 255, 0.05);
+    --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --input-bg: rgba(255, 255, 255, 0.05);
+    --input-border: rgba(255, 255, 255, 0.1);
+    --input-text: #eee;
+    --success-color: #4CAF50;
+    --error-color: #f44336;
+    --warning-color: #ff9800;
+    --offline-color: #333;
+}
+
+[data-theme="light"] {
+    --bg-body-gradient: #f0f2f5;
+    /* Simple flat light bg override */
+    --bg-pattern: none;
+    /* No grid in light mode */
+    --bg-header-gradient: #ffffff;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --accent-primary: #007bff;
+    /* Blue */
+    --accent-primary-gradient: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.05);
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --input-bg: #f8f9fa;
+    --input-border: #ced4da;
+    --input-text: #333;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --warning-color: #ffc107;
+    --offline-color: #ccc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1a1b26;
+    /* Fallback */
+    background-image: var(--bg-pattern), var(--bg-body-gradient);
+    background-size: 40px 40px, 100% 100%;
+    background-attachment: fixed;
+    /* Parallax-like feel */
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 15px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    width: 70%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+@media (max-width: 1400px) {
+    .container {
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+}
+
+/* Main Layout - Split Screen */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+}
+
+/* Sidebar (Left Column) */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+}
+
+/* Header Grid (Small Cards in Sidebar) - 2 Columns */
+.header-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Main Content (Right Column) */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+}
+
+.content-grid-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+}
+
+/* Remove margin from the last card to align bottoms perfectly */
+.content-grid-vertical>.card:last-child {
+    margin-bottom: 0;
+}
+
+/* Phone Card takes available space */
+#phoneCard {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tabs content takes remaining space inside Phone Card */
+.tab-content {
+    flex: 1;
+}
+
+/* Responsive: Stack on tablets/mobile */
+@media (max-width: 1200px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .header-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+header {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--bg-header-gradient);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Light theme specific header text override if not gradient */
+[data-theme="light"] header h1 {
+    background: none;
+    -webkit-text-fill-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+.header-content {
+    text-align: center;
+}
+
+header h1 {
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    line-height: 1.2;
+    margin-bottom: 4px;
+    background: var(--accent-primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1.0em;
+}
+
+.header-logo {
+    height: 50px;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Logo Toggling Logic */
+.logo-light {
+    display: none;
+}
+
+[data-theme="light"] .logo-dark {
+    display: none;
+}
+
+[data-theme="light"] .logo-light {
+    display: block;
+}
+
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 18px;
+    margin-bottom: 15px;
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+    margin-bottom: 15px;
+    color: var(--accent-primary);
+    font-size: 1.1em;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    /* Subtle generic border */
+    padding-bottom: 8px;
+}
+
+[data-theme="dark"] .card h2 {
+    border-bottom: 2px solid rgba(100, 116, 139, 0.3);
+}
+
+
+/* Fix for grid spacing: remove card margin inside grid so only gap applies */
+.header-grid .card {
+    margin-bottom: 0;
+}
+
+/* Connection Controls */
+/* Connection Controls */
+.connection-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    /* Allow wrapping on small screens */
+    /* justify-content: space-between;  <-- Removed to keep items flow naturally left-to-right + margin-auto on right item */
+    position: relative;
+}
+
+.connection-controls button {
+    position: relative;
+    z-index: 10;
+}
+
+.connection-controls label {
+    position: relative;
+    z-index: 10;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.1);
+    /* Neutral */
+    border-radius: 20px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--error-color);
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.status-dot.connected {
+    background: var(--accent-primary);
+    box-shadow: 0 0 10px rgba(100, 116, 139, 0.5);
+    /* Keep green glow or adapt? Keeping generic for now */
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.info-box {
+    background: rgba(0, 0, 0, 0.05);
+    border-left: 4px solid var(--accent-primary);
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    color: var(--text-primary);
+}
+
+.info-box p {
+    margin: 4px 0;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--accent-primary);
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    color: var(--input-text);
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+/* Fix for Select Dropdown Options in Dark Mode */
+select {
+    color-scheme: dark;
+    /* Force dark native scrollbars and dropdowns */
+}
+
+select option {
+    background-color: #1e1f2e;
+    /* Fallback */
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] select {
+    color-scheme: light;
+}
+
+[data-theme="light"] select option {
+    background-color: #ffffff;
+    color: #333;
+}
+
+input::placeholder {         
+    color: var(--text-secondary);
+    opacity: 0.2;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.05);
+    /* Neutral */
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-secondary);
+    font-size: 0.85em;
+}
+
+.radio-label:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+.radio-label:has(input:checked) {
+    background: rgba(0, 123, 255, 0.1);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    font-weight: 500;
+}
+
+.radio-label input[type="radio"] {
+    cursor: pointer;
+    accent-color: var(--accent-primary);
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: var(--accent-primary-gradient);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+    color: white;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+    color: white;
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 0.9em;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 10;
+}
+
+.tab-btn {
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 6px 6px 0 0;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 10;
+}
+
+.tab-btn.active {
+    background: rgba(0, 123, 255, 0.1);
+    color: var(--accent-primary);
+    border-bottom: 2px solid var(--accent-primary);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Phone Card Specifics */
+.phone-card {
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Numbers Grid/List */
+.numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.numbers-list {
+    flex-grow: 1;
+    max-height: 450px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.number-item {
+    padding: 10px;
+    background: var(--card-bg);
+    /* Use card bg for items inside lists */
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    transition: all 0.3s ease;
+}
+
+.number-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: var(--accent-primary);
+}
+
+.number-item label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9em;
+    color: var(--accent-primary);
+}
+
+.number-item input {
+    width: 100%;
+}
+
+.search-box {
+    margin-bottom: 12px;
+}
+
+.search-box input {
+    width: 100%;
+}
+
+/* Actions Grid */
+.actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* Progress */
+.progress-container {
+    text-align: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--accent-primary-gradient);
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#progressText {
+    color: var(--accent-primary);
+    font-weight: 500;
+}
+
+/* Log Area */
+.log-area {
+    background: rgba(0, 0, 0, 0.8);
+    /* Keep dark for logs/terminal feel even in light mode? Or variable? Let's use variable but make it dark by default or specific. */
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 12px;
+    padding: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.80em;
+    margin-bottom: 8px;
+    line-height: 1.2;
+    color: #eee;
+    /* Logs usually look better white on black */
+}
+
+/* Light theme log area override */
+[data-theme="light"] .log-area {
+    background: #2d2d2d;
+    color: #f0f0f0;
+}
+
+
+.log-entry {
+    margin: 2px 0;
+    padding: 2px 4px;
+    border-left: 2px solid transparent;
+}
+
+.log-entry.info {
+    border-color: #4facfe;
+    color: #4facfe;
+}
+
+.log-entry.success {
+    border-color: var(--success-color);
+    color: var(--success-color);
+}
+
+.log-entry.error {
+    border-color: var(--error-color);
+    color: var(--error-color);
+}
+
+.log-entry.warning {
+    border-color: var(--warning-color);
+    color: var(--warning-color);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+footer p {
+    margin: 4px 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 8px;
+    opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
+}
+
+/* Configuration Grid - 2 Columns (2x2) */
+.config-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.config-grid h3 {
+    color: var(--accent-primary);
+    font-size: 1.2em;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 6px;
+}
+
+/* Responsive - config grid */
+@media (max-width: 768px) {
+    .config-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.4em;
+    }
+
+    .connection-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .numbers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .header-content {
+        text-align: center;
+    }
+
+    .header-logo {
+        position: static;
+        transform: none;
+        margin-bottom: 10px;
+        left: auto;
+        top: auto;
+    }
+
+    .theme-switch {
+        position: static !important;
+        margin-top: 10px;
+    }
+}
+
+/* --- GSM Signal Icon --- */
+.signal-container {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 5px 10px;
+    background: var(--card-bg);
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+}
+
+.signal-text {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--success-color);
+    min-width: 40px;
+    text-align: right;
+}
+
+.bars-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 20px;
+    margin-bottom: 2px;
+}
+
+.signal-bar {
+    width: 5px;
+    background-color: var(--offline-color);
+    border-radius: 1px;
+    transition: background-color 0.3s ease;
+}
+
+.signal-bar.active {
+    background-color: var(--success-color);
+}
+
+/* Signal Strength Levels */
+.signal-bar.bar-1 {
+    height: 8px;
+}
+
+.signal-bar.bar-2 {
+    height: 11px;
+}
+
+.signal-bar.bar-3 {
+    height: 14px;
+}
+
+.signal-bar.bar-4 {
+    height: 17px;
+}
+
+.signal-bar.bar-5 {
+    height: 20px;
+}
+
+/* Status Colors */
+
+/* We use CSS variables effectively here by mapping generic color classes */
+/* These specific overrides might need updates to use vars if we want full theming but solid colors are usually ok */
+
+.signal-container.weak .signal-bar.active,
+.signal-container.weak .signal-text {
+    color: var(--error-color);
+    background-color: var(--error-color);
+}
+
+.signal-container.weak .signal-text {
+    background-color: transparent;
+}
+
+.signal-container.medium .signal-bar.active,
+.signal-container.medium .signal-text {
+    color: var(--warning-color);
+    background-color: var(--warning-color);
+}
+
+.signal-container.medium .signal-text {
+    background-color: transparent;
+}
+
+.signal-container.strong .signal-bar.active,
+.signal-container.strong .signal-text {
+    color: var(--success-color);
+    background-color: var(--success-color);
+}
+
+.signal-container.strong .signal-text {
+    background-color: transparent;
+}
+
+/* Hide completely when offline or no signal (class .offline added by JS) */
+.signal-container.offline {
+    display: none !important;
+}
+
+/* Footer Icons Container */
+.footer-icons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+/* Resource Links */
+.resource-link {
+    text-decoration: none;
+    transition: transform 0.2s, opacity 0.2s;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+}
+
+.resource-link:hover {
+    transform: scale(1.15);
+    opacity: 1;
+    filter: none;
+}
+
+/* Adjust black icon for dark mode */
+.resource-link svg,
+.resource-link img {
+    color: #888 !important;
+    /* Force a specific gray */
+    fill: currentColor;
+    filter: grayscale(100%) contrast(0.5) brightness(1.2);
+    /* Help images blend in */
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.resource-link:hover svg,
+.resource-link:hover img {
+    filter: none;
+    opacity: 1;
+}
+
+
+
+/* Theme Switcher Styles (Restored) */
+.theme-switch {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    right: 20px;
+    bottom: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    border-radius: 20px;
+    backdrop-filter: blur(2px);
+}
+
+[data-theme="light"] .theme-switch {
+    background: rgba(255, 255, 255, 0.5);
+    border-left: none;
+    /* Reset if previously set */
+}
+
+[data-theme="light"] .theme-switch {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.theme-switch label {
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 2px 6px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.theme-switch label:has(input:checked) {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .theme-switch label:has(input:checked) {
+    background: white;
+}
+
+/* --- Browser Support Modal --- */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    z-index: 20000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    margin: auto;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+[data-theme="light"] .modal-content {
+    background: #ffffff;
+}
+
+.modal-content h2 {
+    margin-bottom: 40px;
+    font-size: 1.8rem;
+    color: var(--text-primary);
+}
+
+.close-modal {
+    color: var(--text-secondary);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.browser-icons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.browser-icons a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: transform 0.3s ease;
+}
+
+.browser-icons a:hover {
+    transform: translateY(-5px);
+}
+
+.browser-icons img {
+    margin-bottom: 10px;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.browser-icons span {
+    font-weight: 500;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* --- Global Help Mode Styles --- */
+/* Added for Global Help System - [User Request: Cloud Tooltips] */
+
+.card,
+.has-tooltip {
+    position: relative;
+    /* Ensure tooltip positions relative to this container */
+}
+
+/* Generic Help Tooltip (Hidden by default) */
+.help-tooltip {
+    display: none;
+    background-color: #ffd700;
+    /* Nice Yellow */
+    color: #333;
+    text-align: center;
+    border-radius: 6px;
+    padding: 15px;
+    position: absolute;
+    z-index: 1000;
+
+    /* Position "cloud" above the element */
+    bottom: 105%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    max-width: 90vw;
+
+    font-size: 0.9em;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid #e1b12c;
+    pointer-events: none;
+    /* Allow clicking through the tooltip */
+
+    /* Animation */
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Tooltip Tail (Arrow down) */
+.help-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: #ffd700 transparent transparent transparent;
+}
+
+/* 
+ * VISIBILITY LOGIC: 
+ * Tooltip appears ONLY when:
+ * 1. body has class 'help-mode' (checkbox checked)
+ * 2. element with class 'has-tooltip' is HOVERED
+ */
+body.help-mode .has-tooltip:hover .help-tooltip {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+/* Cursor indication when in help mode */
+/* --- Loading Spinner Overlay --- */
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.spinner-content {
+    text-align: center;
+}
+
+.spinner-ring {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    border: 6px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--accent-primary);
+    animation: spin 1s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(100, 116, 139, 0.4);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* --- INTRO / LOADING SCREEN STYLES --- */
+#introScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #1a1b26;
+    /* Deep dark blue/bg from screenshot */
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+    transition: background 0.3s ease, color 0.3s ease;
+    overflow-y: auto;
+}
+
+[data-theme="light"] #introScreen {
+    background: #f0f2f5;
+    color: #333;
+}
+
+[data-theme="light"] .intro-title .highlight {
+    color: var(--accent-primary);
+    /* Keep accent */
+}
+
+[data-theme="light"] .logo-text-bold,
+[data-theme="light"] .logo-text-light {
+    color: #333;
+}
+
+[data-theme="light"] .feature-text strong,
+[data-theme="light"] .instruction-text strong,
+[data-theme="light"] .instruction-header {
+    color: #333;
+}
+
+[data-theme="light"] .instruction-text span {
+    color: #555;
+}
+
+[data-theme="light"] .feature-card,
+[data-theme="light"] .instruction-card,
+[data-theme="light"] .loader-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .loader-status {
+    color: #666;
+}
+
+[data-theme="light"] .usb-icon-circle {
+    background: #f8f9fa;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .intro-footer {
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .intro-badges-row {
+    border-top-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Intro Header - Matches .container width */
+#introScreen header {
+    width: 70%;
+    max-width: 1600px;
+    margin: 0 auto 60px auto;
+}
+
+/* Intro Logo */
+.intro-logo {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* ... existing classes ... */
+
+/* Intro Main Content - Matches .container width */
+.intro-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    max-width: 1600px;
+    margin: 0 auto;
+    flex-grow: 1;
+    gap: 60px;
+}
+
+/* Left Column */
+.intro-left {
+    flex: 1;
+    max-width: 500px;
+}
+
+.badge-pill {
+    display: inline-block;
+    background: rgba(100, 116, 139, 0.1);
+    color: var(--accent-primary);
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.intro-title {
+    font-size: 3.2em;
+    line-height: 1.1;
+    font-weight: 800;
+    margin-bottom: 40px;
+    /* text-transform: uppercase; Removed to allow Mixed Case for Bramster */
+}
+
+.intro-title .highlight {
+    color: var(--accent-primary);
+}
+
+.intro-desc {
+    color: #8892b0;
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 50px;
+}
+
+.feature-cards {
+    display: flex;
+    gap: 20px;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.feature-icon {
+    color: var(--accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.feature-text strong {
+    font-size: 0.9em;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.feature-text span {
+    font-size: 0.7em;
+    color: #8892b0;
+}
+
+/* Right Column */
+.intro-right {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.loader-card {
+    background: #1e1f2e;
+    /* Slightly lighter than bg */
+    border-radius: 30px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+/* USB Icon Grid Background Effect (Simplified) */
+.usb-icon-circle {
+    width: 80px;
+    height: 80px;
+    background: #161722;
+    border-radius: 20px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.launch-btn {
+    width: 100%;
+    padding: 20px;
+    background: var(--accent-primary);
+    color: #1a1b26;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    /* Glow transition */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0.5;
+    /* Startup disabled state */
+    cursor: default;
+    /* pointer-events: none; Removed to improve click registration response */
+}
+
+.launch-btn:not([disabled]) {
+    opacity: 1;
+    pointer-events: auto;
+    box-shadow: 0 10px 30px rgba(100, 116, 139, 0.3);
+    /* Green glow */
+}
+
+.launch-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(100, 116, 139, 0.4);
+}
+
+/* Boot Logs */
+.boot-logs {
+    background: #111218;
+    border-radius: 12px;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8em;
+    color: #555;
+    line-height: 1.6;
+}
+
+.log-line {
+    opacity: 0;
+    /* Hidden initially for animation */
+    transform: translateY(10px);
+    animation: fadeInUp 0.3s forwards;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.log-prefix {
+    color: #334;
+}
+
+.log-line.success {
+    color: #556;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Intro - matching .container media queries */
+@media (max-width: 1400px) {
+
+    #introScreen header,
+    .intro-main {
+        width: 80%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .intro-main {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+    }
+
+    #introScreen header {
+        margin-bottom: 30px;
+    }
+
+    /* From original: */
+    .intro-left,
+    .intro-right {
+        max-width: 100%;
+    }
+
+    .intro-title {
+        font-size: 3em;
+    }
+
+    .feature-cards {
+        justify-content: center;
+    }
+
+    .feature-text {
+        text-align: left;
+    }
+}
+
+@media (max-width: 768px) {
+
+    #introScreen header,
+    .intro-main {
+        width: 95%;
+    }
+
+    .instruction-card {
+        flex-direction: row;
+        text-align: left;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .instruction-card {
+        padding: 12px;
+        gap: 15px;
+    }
+
+    .instruction-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .instruction-text strong {
+        font-size: 0.95em;
+    }
+
+    .instruction-text span {
+        font-size: 0.85em;
+    }
+}
+
+/* --- UPDATED INTRO STYLES (INSTRUCTIONS) --- */
+.instruction-section {
+    margin-top: 40px;
+}
+
+
+
+.instruction-card {
+    background: rgba(255, 255, 255, 0.05);
+    /* Very transparent main bg */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.instruction-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    /* Slightly lighter on hover */
+    border-color: var(--accent-primary);
+    /* transform search removed to prevent text shifting */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.instruction-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(100, 116, 139, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    flex-shrink: 0;
+}
+
+.instruction-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.instruction-text strong {
+    color: #fff;
+    font-size: 1.0em;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.instruction-text span {
+    color: #8892b0;
+    font-size: 0.9em;
+}
+
+/* Updated Loader Card Button */
+.launch-btn {
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+/* --- INTRO FOOTER --- */
+.intro-footer {
+    margin-top: auto;
+    /* Push to bottom */
+    width: 100%;
+    text-align: center;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.intro-footer .resource-link svg {
+    transition: transform 0.3s ease;
+}
+
+.intro-footer .resource-link:hover svg {
+    transform: scale(1.1);
+}
+
+
+
+/* --- INTRO BADGES (Between Title and Instructions) --- */
+.intro-badges {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.badge-tech {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aab;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* --- COMPATIBILITY FOOTER --- */
+.compatibility-section span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.comp-icons span {
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.comp-icons span:hover {
+    opacity: 1;
+}
+
+/* --- VERTICAL BADGES (Below Launch Button) --- */
+.intro-badges-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 25px;
+    align-items: center;
+}
+
+.intro-badges-vertical .badge-tech {
+    background: transparent;
+    border: none;
+    color: #667;
+    font-size: 0.7em;
+    padding: 0;
+    width: auto;
+}
+
+/* --- HORIZONTAL BADGES (Below Launch Button) --- */
+.intro-badges-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 60px;
+    /* Increased margin as requested */
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.intro-badges-row .badge-tech {
+    background: transparent;
+    border: none;
+    color: #667;
+    font-size: 0.7em;
+    padding: 0;
+    width: auto;
+    white-space: nowrap;
+}
+
+/* --- GLOBAL ICON OVERRIDE (High Specificity) --- */
+.footer-icons .resource-link svg,
+.footer-icons .resource-link img {
+    color: #888 !important;
+    fill: currentColor;
+    filter: grayscale(100%) contrast(0.5) brightness(1.2) !important;
+    opacity: 0.7 !important;
+    transition: all 0.3s ease;
+}
+
+.footer-icons .resource-link:hover svg,
+.footer-icons .resource-link:hover img {
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* Specific Hover Colors */
+.footer-icons a[title*="YouTube"]:hover svg {
+    color: #FF0000 !important;
+}
+
+.footer-icons a[title*="iOS"]:hover svg {
+    color: #ffffff !important;
+}
+
+.footer-icons a[title*="Sklep"]:hover svg {
+    color: #007bff !important;
+}
+/* ==========================================================================
+   CLASSIC (WIN7) THEME
+   ========================================================================== */
+
+[data-theme="classic"] {
+    --bg-body-gradient: #000000;
+    --bg-pattern: none;
+    --bg-header-gradient: #ffffff;
+    
+    --text-primary: #000000;
+    --text-secondary: #444444;
+    
+    /* Win7 Blues */
+    --accent-primary: #0078d7;
+    --accent-primary-gradient: linear-gradient(180deg, #f0f0f0 0%, #e1e1e1 100%); /* Button default */
+    
+    --card-bg: #f9f9f9;
+    --card-border: #aaaaaa;
+    --card-shadow: none;
+    
+    --input-bg: #ffffff;
+    --input-border: #abadb3;
+    --input-text: #000000;
+    
+    --success-color: #008000;
+    --error-color: #ff0000;
+    --warning-color: #ff8c00;
+}
+
+/* Window Container Wrapper (applied to main-layout or body in classic mode) */
+[data-theme="classic"] body {
+    display: flex;
+    justify-content: center;
+    background-color: #000;
+    padding: 0;
+}
+
+[data-theme="classic"] .container {
+    background-color: #f0f0f0;
+    border: 1px solid #444;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    padding: 10px;
+    margin: 20px auto;
+    max-width: 800px; /* Fixed width feel */
+    min-height: auto;
+    border-radius: 4px; /* Slight rounded corners for window */
+}
+
+/* Header Override - Window Title Bar feel */
+[data-theme="classic"] header {
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    box-shadow: none;
+    border-radius: 0;
+    margin-bottom: 15px;
+    padding: 5px 10px;
+    justify-content: space-between;
+    height: auto;
+}
+
+[data-theme="classic"] header h1 {
+    font-size: 14px;
+    margin: 0;
+    background: none;
+    -webkit-text-fill-color: #000;
+    color: #000;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+/* Insert logo icon simulation or use existing logo small */
+[data-theme="classic"] .header-logo {
+    display: none !important; /* Hide big logos */
+}
+
+[data-theme="classic"] .subtitle {
+    display: none; /* Hide subtitle */
+}
+
+/* Cards as Group Boxes */
+[data-theme="classic"] .card {
+    background: #f9f9f9;
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    box-shadow: none;
+    padding: 10px;
+    position: relative;
+    margin-top: 10px; /* Space for faux legend */
+}
+
+/* Faux Legend for Cards */
+[data-theme="classic"] .card h2 {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: #f0f0f0; /* Match container bg to hide line */
+    padding: 0 5px;
+    font-size: 11px;
+    color: #444;
+    border: none;
+    margin: 0;
+    width: auto;
+    font-weight: normal;
+}
+
+/* Interactive Elements */
+[data-theme="classic"] .btn {
+    background: #e1e1e1;
+    border: 1px solid #adadad;
+    color: #000;
+    border-radius: 2px;
+    box-shadow: none;
+    font-size: 12px;
+    padding: 6px 15px;
+    transition: none;
+}
+[data-theme="classic"] .btn:hover {
+    background: #e5f1fb;
+    border-color: #0078d7;
+    transform: none;
+}
+[data-theme="classic"] .btn:active {
+    background: #cce4f7;
+    border-color: #005499;
+}
+
+[data-theme="classic"] input[type="text"],
+[data-theme="classic"] input[type="number"],
+[data-theme="classic"] select {
+    border: 1px solid #abadb3;
+    border-radius: 0;
+    background: #fff;
+    color: #000;
+    box-shadow: inset 1px 1px 2px #f0f0f0;
+    padding: 2px 4px;
+    height: 22px; /* Fixed height for classic feel */
+    font-size: 11px;
+}
+[data-theme="classic"] input:focus,
+[data-theme="classic"] select:focus {
+    border-color: #0078d7;
+    box-shadow: none;
+}
+
+/* Radios */
+[data-theme="classic"] .radio-label {
+    background: none;
+    border: none;
+    color: #000;
+    padding: 0;
+    border-radius: 0;
+}
+[data-theme="classic"] .radio-label:hover {
+    background: none;
+}
+[data-theme="classic"] .radio-label:has(input:checked) {
+    background: none;
+    box-shadow: none;
+    color: #000;
+    font-weight: normal;
+}
+
+/* Layout Adjustments */
+[data-theme="classic"] .main-layout {
+    gap: 10px;
+}
+[data-theme="classic"] .header-grid {
+    gap: 10px;
+}
+
+/* Logs */
+[data-theme="classic"] .log-area {
+    background: #fff;
+    color: #000;
+    border: 1px solid #abadb3;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+}
+[data-theme="classic"] .log-entry {
+    color: #000 !important; /* Override colors? Or keep simple */
+}
+
+/* Phone List specific overrides */
+[data-theme="classic"] .number-item {
+    padding: 2px;
+    margin-bottom: 2px;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+[data-theme="classic"] .number-item label {
+    margin: 0;
+    font-size: 11px;
+    font-weight: normal;
+    color: #000;
+    width: 30px;
+}
+[data-theme="classic"] .number-item input {
+    flex: 1;
+}
+
+/* Intro Screen - Keep it separated from "Window" style if possible
+   Since body has [data-theme="classic"] class, we need to protect Intro.
+   However, Intro has its own styles. We just ensure .intro-main etc don't inherit window properties bad.
+*/
+[data-theme="classic"] #introScreen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 9999;
+    background-color: #1a1b26; /* Force dark intro */
+    color: #eee;
+}

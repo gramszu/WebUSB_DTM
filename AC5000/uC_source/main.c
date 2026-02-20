@@ -155,7 +155,7 @@ uchar autosync_czas_aktywny =
 // Merged GSM and Time function - replaces independent Time and Network reports
 // to save space Format: "GSM: 12:34:56 99%\n"
 void generuj_raport_sieci(uchar **buf_sms) {
-  static const char tekst_header[] PROGMEM = "AC-2000-DTMF-F\n";
+  static const char tekst_header[] PROGMEM = "AC-5000-DTMF-F\n";
   uchar *ptr = *buf_sms;
 
   // 1. Header

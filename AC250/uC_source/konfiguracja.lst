@@ -1,0 +1,1711 @@
+   1               		.file	"konfiguracja.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	konwersja_znaku_telefonu
+  12               	konwersja_znaku_telefonu:
+  13               	.LVL0:
+  14               	.LFB5:
+  15               		.file 1 "konfiguracja.c"
+   1:konfiguracja.c **** 
+   2:konfiguracja.c **** #include "konfiguracja.h"
+   3:konfiguracja.c **** #include <avr/io.h>
+   4:konfiguracja.c **** #include <avr/pgmspace.h>
+   5:konfiguracja.c **** #include <string.h>
+   6:konfiguracja.c **** #include "zapiseeprom.h"
+   7:konfiguracja.c **** 
+   8:konfiguracja.c **** uchar konwersja_znaku_telefonu(const uchar znak)
+   9:konfiguracja.c **** {
+  16               		.loc 1 9 1 view -0
+  17               		.cfi_startproc
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  10:konfiguracja.c **** 	switch ( znak )
+  22               		.loc 1 10 2 view .LVU1
+  23 0000 8B32      		cpi r24,lo8(43)
+  24 0002 01F0      		breq .L4
+  25 0004 00F4      		brsh .L3
+  26 0006 8332      		cpi r24,lo8(35)
+  27 0008 01F0      		breq .L5
+  28 000a 8A32      		cpi r24,lo8(42)
+  29 000c 01F0      		breq .L6
+  30               	.LVL1:
+  31               	.L7:
+  11:konfiguracja.c **** 	{
+  12:konfiguracja.c **** 	case '0': case '1': case '2': case '3': case '4': 
+  13:konfiguracja.c **** 	case '5': case '6': case '7': case '8': case '9':
+  14:konfiguracja.c **** 		return znak - '0';
+  15:konfiguracja.c **** 	case '+': return ZNAK_NUMERU_TELEFONU_PLUS;
+  16:konfiguracja.c **** 	case '*': return ZNAK_NUMERU_TELEFONU_GWIAZDKA;
+  17:konfiguracja.c **** 	case '#': return ZNAK_NUMERU_TELEFONU_KRZYZ;
+  18:konfiguracja.c **** 	default: return ZNAK_NUMERU_TELEFONU_NIEZNANY;
+  32               		.loc 1 18 18 is_stmt 0 view .LVU2
+  33 000e 8DE0      		ldi r24,lo8(13)
+  34               	/* epilogue start */
+  19:konfiguracja.c **** 	}
+  20:konfiguracja.c **** }
+  35               		.loc 1 20 1 view .LVU3
+  36 0010 0895      		ret
+  37               	.LVL2:
+  38               	.L3:
+  10:konfiguracja.c **** 	{
+  39               		.loc 1 10 2 view .LVU4
+  40 0012 8053      		subi r24,lo8(-(-48))
+  41               	.LVL3:
+  10:konfiguracja.c **** 	{
+  42               		.loc 1 10 2 view .LVU5
+  43 0014 8A30      		cpi r24,lo8(10)
+  44 0016 00F4      		brsh .L7
+  14:konfiguracja.c **** 	case '+': return ZNAK_NUMERU_TELEFONU_PLUS;
+  45               		.loc 1 14 3 is_stmt 1 view .LVU6
+  14:konfiguracja.c **** 	case '+': return ZNAK_NUMERU_TELEFONU_PLUS;
+  46               		.loc 1 14 15 is_stmt 0 view .LVU7
+  47 0018 0895      		ret
+  48               	.LVL4:
+  49               	.L4:
+  15:konfiguracja.c **** 	case '*': return ZNAK_NUMERU_TELEFONU_GWIAZDKA;
+  50               		.loc 1 15 19 view .LVU8
+  51 001a 8AE0      		ldi r24,lo8(10)
+  52               	.LVL5:
+  15:konfiguracja.c **** 	case '*': return ZNAK_NUMERU_TELEFONU_GWIAZDKA;
+  53               		.loc 1 15 19 view .LVU9
+  54 001c 0895      		ret
+  55               	.LVL6:
+  56               	.L5:
+  17:konfiguracja.c **** 	default: return ZNAK_NUMERU_TELEFONU_NIEZNANY;
+  57               		.loc 1 17 19 view .LVU10
+  58 001e 8CE0      		ldi r24,lo8(12)
+  59               	.LVL7:
+  17:konfiguracja.c **** 	default: return ZNAK_NUMERU_TELEFONU_NIEZNANY;
+  60               		.loc 1 17 19 view .LVU11
+  61 0020 0895      		ret
+  62               	.LVL8:
+  63               	.L6:
+  16:konfiguracja.c **** 	case '#': return ZNAK_NUMERU_TELEFONU_KRZYZ;
+  64               		.loc 1 16 19 view .LVU12
+  65 0022 8BE0      		ldi r24,lo8(11)
+  66               	.LVL9:
+  16:konfiguracja.c **** 	case '#': return ZNAK_NUMERU_TELEFONU_KRZYZ;
+  67               		.loc 1 16 19 view .LVU13
+  68 0024 0895      		ret
+  69               		.cfi_endproc
+  70               	.LFE5:
+  72               	.global	konwertuj_telefon_na_blok_eeprom
+  74               	konwertuj_telefon_na_blok_eeprom:
+  75               	.LVL10:
+  76               	.LFB6:
+  21:konfiguracja.c **** 
+  22:konfiguracja.c **** void konwertuj_telefon_na_blok_eeprom(const uchar* telefon_ptr_begin,
+  23:konfiguracja.c **** 	const uchar* telefon_ptr_end, uchar* blok_ptr)
+  24:konfiguracja.c **** {
+  77               		.loc 1 24 1 is_stmt 1 view -0
+  78               		.cfi_startproc
+  79               		.loc 1 24 1 is_stmt 0 view .LVU15
+  80 0026 AF92      		push r10
+  81               	.LCFI0:
+  82               		.cfi_def_cfa_offset 3
+  83               		.cfi_offset 10, -2
+  84 0028 BF92      		push r11
+  85               	.LCFI1:
+  86               		.cfi_def_cfa_offset 4
+  87               		.cfi_offset 11, -3
+  88 002a CF92      		push r12
+  89               	.LCFI2:
+  90               		.cfi_def_cfa_offset 5
+  91               		.cfi_offset 12, -4
+  92 002c DF92      		push r13
+  93               	.LCFI3:
+  94               		.cfi_def_cfa_offset 6
+  95               		.cfi_offset 13, -5
+  96 002e FF92      		push r15
+  97               	.LCFI4:
+  98               		.cfi_def_cfa_offset 7
+  99               		.cfi_offset 15, -6
+ 100 0030 0F93      		push r16
+ 101               	.LCFI5:
+ 102               		.cfi_def_cfa_offset 8
+ 103               		.cfi_offset 16, -7
+ 104 0032 1F93      		push r17
+ 105               	.LCFI6:
+ 106               		.cfi_def_cfa_offset 9
+ 107               		.cfi_offset 17, -8
+ 108 0034 CF93      		push r28
+ 109               	.LCFI7:
+ 110               		.cfi_def_cfa_offset 10
+ 111               		.cfi_offset 28, -9
+ 112 0036 DF93      		push r29
+ 113               	.LCFI8:
+ 114               		.cfi_def_cfa_offset 11
+ 115               		.cfi_offset 29, -10
+ 116               	/* prologue: function */
+ 117               	/* frame size = 0 */
+ 118               	/* stack size = 9 */
+ 119               	.L__stack_usage = 9
+ 120 0038 182F      		mov r17,r24
+ 121 003a EB01      		movw r28,r22
+ 122 003c 6A01      		movw r12,r20
+  25:konfiguracja.c **** 	memset(blok_ptr, 0xff, LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM);
+ 123               		.loc 1 25 2 is_stmt 1 view .LVU16
+ 124 003e 45E0      		ldi r20,lo8(5)
+ 125 0040 50E0      		ldi r21,0
+ 126               	.LVL11:
+ 127               		.loc 1 25 2 is_stmt 0 view .LVU17
+ 128 0042 6FEF      		ldi r22,lo8(-1)
+ 129 0044 70E0      		ldi r23,0
+ 130               	.LVL12:
+ 131               		.loc 1 25 2 view .LVU18
+ 132 0046 C601      		movw r24,r12
+ 133               	.LVL13:
+ 134               		.loc 1 25 2 view .LVU19
+ 135 0048 0E94 0000 		call memset
+ 136               	.LVL14:
+  26:konfiguracja.c **** 	uchar l = telefon_ptr_end - telefon_ptr_begin;
+ 137               		.loc 1 26 2 is_stmt 1 view .LVU20
+ 138               		.loc 1 26 8 is_stmt 0 view .LVU21
+ 139 004c 8C2F      		mov r24,r28
+ 140 004e 811B      		sub r24,r17
+ 141 0050 182F      		mov r17,r24
+ 142               	.LVL15:
+  27:konfiguracja.c **** 	if ( l < 2 )
+ 143               		.loc 1 27 2 is_stmt 1 view .LVU22
+  28:konfiguracja.c **** 		return;
+  29:konfiguracja.c **** 	uchar pos_buf = 0;
+  30:konfiguracja.c **** 	telefon_ptr_end--;
+ 144               		.loc 1 30 17 is_stmt 0 view .LVU23
+ 145 0052 2197      		sbiw r28,1
+ 146               	.LVL16:
+  31:konfiguracja.c **** 	while ( l-- )
+ 147               		.loc 1 31 2 is_stmt 1 view .LVU24
+ 148               		.loc 1 31 8 view .LVU25
+  29:konfiguracja.c **** 	telefon_ptr_end--;
+ 149               		.loc 1 29 8 is_stmt 0 view .LVU26
+ 150 0054 00E0      		ldi r16,0
+  27:konfiguracja.c **** 		return;
+ 151               		.loc 1 27 5 view .LVU27
+ 152 0056 8230      		cpi r24,lo8(2)
+ 153 0058 00F4      		brsh .L12
+ 154               	.LVL17:
+ 155               	.L8:
+ 156               	/* epilogue start */
+  32:konfiguracja.c **** 	{
+  33:konfiguracja.c **** 		uchar s1 = konwersja_znaku_telefonu(*telefon_ptr_end--);
+  34:konfiguracja.c **** 		s1 <<= 4;
+  35:konfiguracja.c **** 		s1 |= konwersja_znaku_telefonu(*telefon_ptr_end);
+  36:konfiguracja.c **** 		if ( l == 0 )
+  37:konfiguracja.c **** 			s1 |= 0x0f;
+  38:konfiguracja.c **** 		else
+  39:konfiguracja.c **** 			--telefon_ptr_end, --l;
+  40:konfiguracja.c **** 		blok_ptr[pos_buf++] = s1;
+  41:konfiguracja.c **** 	}
+  42:konfiguracja.c **** }
+ 157               		.loc 1 42 1 view .LVU28
+ 158 005a DF91      		pop r29
+ 159 005c CF91      		pop r28
+ 160               	.LVL18:
+ 161               		.loc 1 42 1 view .LVU29
+ 162 005e 1F91      		pop r17
+ 163 0060 0F91      		pop r16
+ 164 0062 FF90      		pop r15
+ 165 0064 DF90      		pop r13
+ 166 0066 CF90      		pop r12
+ 167               	.LVL19:
+ 168               		.loc 1 42 1 view .LVU30
+ 169 0068 BF90      		pop r11
+ 170 006a AF90      		pop r10
+ 171 006c 0895      		ret
+ 172               	.LVL20:
+ 173               	.L13:
+ 174               	.LBB12:
+  40:konfiguracja.c **** 	}
+ 175               		.loc 1 40 19 view .LVU31
+ 176 006e 092F      		mov r16,r25
+ 177               	.LVL21:
+ 178               	.L12:
+  33:konfiguracja.c **** 		s1 <<= 4;
+ 179               		.loc 1 33 3 is_stmt 1 view .LVU32
+  33:konfiguracja.c **** 		s1 <<= 4;
+ 180               		.loc 1 33 14 is_stmt 0 view .LVU33
+ 181 0070 8881      		ld r24,Y
+ 182 0072 0E94 0000 		call konwersja_znaku_telefonu
+ 183               	.LVL22:
+  34:konfiguracja.c **** 		s1 |= konwersja_znaku_telefonu(*telefon_ptr_end);
+ 184               		.loc 1 34 3 is_stmt 1 view .LVU34
+  34:konfiguracja.c **** 		s1 |= konwersja_znaku_telefonu(*telefon_ptr_end);
+ 185               		.loc 1 34 6 is_stmt 0 view .LVU35
+ 186 0076 F82E      		mov r15,r24
+ 187 0078 F294      		swap r15
+ 188 007a 80EF      		ldi r24,lo8(-16)
+ 189               	.LVL23:
+  34:konfiguracja.c **** 		s1 |= konwersja_znaku_telefonu(*telefon_ptr_end);
+ 190               		.loc 1 34 6 view .LVU36
+ 191 007c F822      		and r15,r24
+ 192               	.LVL24:
+  35:konfiguracja.c **** 		if ( l == 0 )
+ 193               		.loc 1 35 3 is_stmt 1 view .LVU37
+  35:konfiguracja.c **** 		if ( l == 0 )
+ 194               		.loc 1 35 9 is_stmt 0 view .LVU38
+ 195 007e FE01      		movw r30,r28
+ 196 0080 8291      		ld r24,-Z
+ 197               	.LVL25:
+  35:konfiguracja.c **** 		if ( l == 0 )
+ 198               		.loc 1 35 9 view .LVU39
+ 199 0082 5F01      		movw r10,r30
+ 200 0084 0E94 0000 		call konwersja_znaku_telefonu
+ 201               	.LVL26:
+  35:konfiguracja.c **** 		if ( l == 0 )
+ 202               		.loc 1 35 6 view .LVU40
+ 203 0088 8F29      		or r24,r15
+ 204               	.LVL27:
+  36:konfiguracja.c **** 			s1 |= 0x0f;
+ 205               		.loc 1 36 3 is_stmt 1 view .LVU41
+  36:konfiguracja.c **** 			s1 |= 0x0f;
+ 206               		.loc 1 36 6 is_stmt 0 view .LVU42
+ 207 008a 1130      		cpi r17,lo8(1)
+ 208 008c 01F4      		brne .L10
+  33:konfiguracja.c **** 		s1 <<= 4;
+ 209               		.loc 1 33 55 view .LVU43
+ 210 008e E501      		movw r28,r10
+  37:konfiguracja.c **** 		else
+ 211               		.loc 1 37 4 is_stmt 1 view .LVU44
+  37:konfiguracja.c **** 		else
+ 212               		.loc 1 37 7 is_stmt 0 view .LVU45
+ 213 0090 8F60      		ori r24,lo8(15)
+ 214               	.LVL28:
+  37:konfiguracja.c **** 		else
+ 215               		.loc 1 37 7 view .LVU46
+ 216               	.LBE12:
+  31:konfiguracja.c **** 	{
+ 217               		.loc 1 31 11 view .LVU47
+ 218 0092 10E0      		ldi r17,0
+ 219               	.LVL29:
+ 220               	.L11:
+ 221               	.LBB13:
+  40:konfiguracja.c **** 	}
+ 222               		.loc 1 40 3 is_stmt 1 view .LVU48
+  40:konfiguracja.c **** 	}
+ 223               		.loc 1 40 19 is_stmt 0 view .LVU49
+ 224 0094 91E0      		ldi r25,lo8(1)
+ 225 0096 900F      		add r25,r16
+ 226               	.LVL30:
+  40:konfiguracja.c **** 	}
+ 227               		.loc 1 40 23 view .LVU50
+ 228 0098 F601      		movw r30,r12
+ 229 009a E00F      		add r30,r16
+ 230 009c F11D      		adc r31,__zero_reg__
+ 231 009e 8083      		st Z,r24
+  40:konfiguracja.c **** 	}
+ 232               		.loc 1 40 23 view .LVU51
+ 233               	.LBE13:
+  31:konfiguracja.c **** 	{
+ 234               		.loc 1 31 8 is_stmt 1 view .LVU52
+ 235               	.LVL31:
+  31:konfiguracja.c **** 	{
+ 236               		.loc 1 31 8 is_stmt 0 view .LVU53
+ 237 00a0 1111      		cpse r17,__zero_reg__
+ 238 00a2 00C0      		rjmp .L13
+  31:konfiguracja.c **** 	{
+ 239               		.loc 1 31 8 view .LVU54
+ 240 00a4 00C0      		rjmp .L8
+ 241               	.LVL32:
+ 242               	.L10:
+ 243               	.LBB14:
+  39:konfiguracja.c **** 		blok_ptr[pos_buf++] = s1;
+ 244               		.loc 1 39 4 is_stmt 1 view .LVU55
+ 245 00a6 2297      		sbiw r28,2
+ 246               	.LVL33:
+  39:konfiguracja.c **** 		blok_ptr[pos_buf++] = s1;
+ 247               		.loc 1 39 23 is_stmt 0 view .LVU56
+ 248 00a8 1250      		subi r17,lo8(-(-2))
+ 249               	.LVL34:
+  39:konfiguracja.c **** 		blok_ptr[pos_buf++] = s1;
+ 250               		.loc 1 39 23 view .LVU57
+ 251 00aa 00C0      		rjmp .L11
+ 252               	.LBE14:
+ 253               		.cfi_endproc
+ 254               	.LFE6:
+ 256               	.global	konwersja_znaku_telefonu_eeprom
+ 258               	konwersja_znaku_telefonu_eeprom:
+ 259               	.LVL35:
+ 260               	.LFB7:
+  43:konfiguracja.c **** 
+  44:konfiguracja.c **** uchar konwersja_znaku_telefonu_eeprom(const uchar wartosc)
+  45:konfiguracja.c **** {
+ 261               		.loc 1 45 1 is_stmt 1 view -0
+ 262               		.cfi_startproc
+ 263               	/* prologue: function */
+ 264               	/* frame size = 0 */
+ 265               	/* stack size = 0 */
+ 266               	.L__stack_usage = 0
+  46:konfiguracja.c **** 	static const uchar znaki[16] PROGMEM = 
+ 267               		.loc 1 46 2 view .LVU59
+  47:konfiguracja.c **** 	{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '*', '#', '!', '!', '\0' };
+  48:konfiguracja.c **** 	return pgm_read_byte(znaki + wartosc);
+ 268               		.loc 1 48 2 view .LVU60
+ 269               	.LBB15:
+ 270               		.loc 1 48 9 view .LVU61
+ 271               		.loc 1 48 9 view .LVU62
+ 272               		.loc 1 48 9 view .LVU63
+ 273 00ac E82F      		mov r30,r24
+ 274 00ae F0E0      		ldi r31,0
+ 275 00b0 E050      		subi r30,lo8(-(znaki.2169))
+ 276 00b2 F040      		sbci r31,hi8(-(znaki.2169))
+ 277               	/* #APP */
+ 278               	 ;  48 "konfiguracja.c" 1
+ 279 00b4 8491      		lpm r24, Z
+ 280               		
+ 281               	 ;  0 "" 2
+ 282               	.LVL36:
+ 283               		.loc 1 48 9 view .LVU64
+ 284               	/* #NOAPP */
+ 285               	/* epilogue start */
+ 286               	.LBE15:
+  49:konfiguracja.c **** }
+ 287               		.loc 1 49 1 is_stmt 0 view .LVU65
+ 288 00b6 0895      		ret
+ 289               		.cfi_endproc
+ 290               	.LFE7:
+ 292               	.global	konwertuj_blok_eeprom_na_telefon
+ 294               	konwertuj_blok_eeprom_na_telefon:
+ 295               	.LVL37:
+ 296               	.LFB8:
+  50:konfiguracja.c **** 
+  51:konfiguracja.c **** uchar konwertuj_blok_eeprom_na_telefon(const uchar* blok_ptr, uchar* telefon_ptr,
+  52:konfiguracja.c **** 	const uchar max_liczba_znakow)	// nie dzia³a dobrze dla nieparzystych max_liczba_znakow
+  53:konfiguracja.c **** {
+ 297               		.loc 1 53 1 is_stmt 1 view -0
+ 298               		.cfi_startproc
+ 299               		.loc 1 53 1 is_stmt 0 view .LVU67
+ 300 00b8 CF93      		push r28
+ 301               	.LCFI9:
+ 302               		.cfi_def_cfa_offset 3
+ 303               		.cfi_offset 28, -2
+ 304 00ba DF93      		push r29
+ 305               	.LCFI10:
+ 306               		.cfi_def_cfa_offset 4
+ 307               		.cfi_offset 29, -3
+ 308               	/* prologue: function */
+ 309               	/* frame size = 0 */
+ 310               	/* stack size = 2 */
+ 311               	.L__stack_usage = 2
+ 312 00bc 9C01      		movw r18,r24
+ 313 00be EB01      		movw r28,r22
+  54:konfiguracja.c **** 	*telefon_ptr = '\0';
+ 314               		.loc 1 54 2 is_stmt 1 view .LVU68
+ 315               		.loc 1 54 15 is_stmt 0 view .LVU69
+ 316 00c0 1882      		st Y,__zero_reg__
+  55:konfiguracja.c **** 	const uchar* ptr = blok_ptr;
+ 317               		.loc 1 55 2 is_stmt 1 view .LVU70
+ 318               	.LVL38:
+  56:konfiguracja.c **** 	uchar i = 0;
+ 319               		.loc 1 56 2 view .LVU71
+  57:konfiguracja.c **** 	while ( *ptr != 0xff && i < LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM )
+ 320               		.loc 1 57 2 view .LVU72
+ 321 00c2 BC01      		movw r22,r24
+ 322               	.LVL39:
+  56:konfiguracja.c **** 	uchar i = 0;
+ 323               		.loc 1 56 8 is_stmt 0 view .LVU73
+ 324 00c4 80E0      		ldi r24,0
+ 325               	.LVL40:
+ 326               	.L16:
+  56:konfiguracja.c **** 	uchar i = 0;
+ 327               		.loc 1 56 8 view .LVU74
+ 328 00c6 DB01      		movw r26,r22
+ 329               	.LVL41:
+ 330               		.loc 1 57 8 is_stmt 1 view .LVU75
+ 331 00c8 6F5F      		subi r22,-1
+ 332 00ca 7F4F      		sbci r23,-1
+ 333 00cc 9C91      		ld r25,X
+ 334 00ce 9F3F      		cpi r25,lo8(-1)
+ 335 00d0 01F0      		breq .L17
+ 336               		.loc 1 57 23 is_stmt 0 discriminator 1 view .LVU76
+ 337 00d2 8530      		cpi r24,lo8(5)
+ 338 00d4 01F0      		breq .+2
+ 339 00d6 00C0      		rjmp .L18
+ 340               	.L17:
+  58:konfiguracja.c **** 		++ptr, ++i;
+  59:konfiguracja.c **** 	if ( ptr == blok_ptr )
+ 341               		.loc 1 59 2 is_stmt 1 view .LVU77
+ 342               		.loc 1 59 5 is_stmt 0 view .LVU78
+ 343 00d8 A217      		cp r26,r18
+ 344 00da B307      		cpc r27,r19
+ 345 00dc 01F4      		brne .+2
+ 346 00de 00C0      		rjmp .L27
+  60:konfiguracja.c **** 		return 0;
+  61:konfiguracja.c **** 	--ptr;
+ 347               		.loc 1 61 2 is_stmt 1 view .LVU79
+ 348               	.LVL42:
+  62:konfiguracja.c **** 	if ( i * 2 > max_liczba_znakow )
+ 349               		.loc 1 62 2 view .LVU80
+ 350               		.loc 1 62 13 is_stmt 0 view .LVU81
+ 351 00e0 642F      		mov r22,r20
+ 352 00e2 70E0      		ldi r23,0
+ 353               		.loc 1 62 9 view .LVU82
+ 354 00e4 90E0      		ldi r25,0
+ 355 00e6 880F      		lsl r24
+ 356 00e8 991F      		rol r25
+ 357               	.LVL43:
+  61:konfiguracja.c **** 	if ( i * 2 > max_liczba_znakow )
+ 358               		.loc 1 61 2 view .LVU83
+ 359 00ea 1197      		sbiw r26,1
+ 360               	.LVL44:
+ 361               		.loc 1 62 5 view .LVU84
+ 362 00ec 6817      		cp r22,r24
+ 363 00ee 7907      		cpc r23,r25
+ 364 00f0 04F4      		brge .L21
+  63:konfiguracja.c **** 		ptr = blok_ptr + (max_liczba_znakow - 1) / 2;
+ 365               		.loc 1 63 3 is_stmt 1 view .LVU85
+ 366               		.loc 1 63 44 is_stmt 0 view .LVU86
+ 367 00f2 DB01      		movw r26,r22
+ 368               	.LVL45:
+ 369               		.loc 1 63 44 view .LVU87
+ 370 00f4 1197      		sbiw r26,1
+ 371 00f6 B7FD      		sbrc r27,7
+ 372 00f8 DB01      		movw r26,r22
+ 373               	.L22:
+ 374 00fa B595      		asr r27
+ 375 00fc A795      		ror r26
+ 376               		.loc 1 63 7 view .LVU88
+ 377 00fe A20F      		add r26,r18
+ 378 0100 B31F      		adc r27,r19
+ 379               	.LVL46:
+ 380               	.L21:
+  64:konfiguracja.c **** 	i = 0;
+ 381               		.loc 1 64 2 is_stmt 1 view .LVU89
+  65:konfiguracja.c **** 	if ( /*(max_liczba_znakow & 0x01) != 0 */ (*ptr & 0x0f) == 0x0f &&
+ 382               		.loc 1 65 2 view .LVU90
+ 383               		.loc 1 65 45 is_stmt 0 view .LVU91
+ 384 0102 EC91      		ld r30,X
+ 385               		.loc 1 65 5 view .LVU92
+ 386 0104 8E2F      		mov r24,r30
+ 387 0106 8F70      		andi r24,lo8(15)
+ 388 0108 8F30      		cpi r24,lo8(15)
+ 389 010a 01F4      		brne .L28
+ 390               	.LVL47:
+ 391               	.LBB16:
+ 392               	.LBI16:
+  44:konfiguracja.c **** {
+ 393               		.loc 1 44 7 is_stmt 1 discriminator 1 view .LVU93
+ 394               	.LBB17:
+  46:konfiguracja.c **** 	{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '*', '#', '!', '!', '\0' };
+ 395               		.loc 1 46 2 discriminator 1 view .LVU94
+  48:konfiguracja.c **** }
+ 396               		.loc 1 48 2 discriminator 1 view .LVU95
+ 397               	.LBB18:
+  48:konfiguracja.c **** }
+ 398               		.loc 1 48 9 discriminator 1 view .LVU96
+  48:konfiguracja.c **** }
+ 399               		.loc 1 48 9 discriminator 1 view .LVU97
+  48:konfiguracja.c **** }
+ 400               		.loc 1 48 9 discriminator 1 view .LVU98
+ 401               	.LBE18:
+ 402               	.LBE17:
+ 403               	.LBE16:
+  66:konfiguracja.c **** 		(*telefon_ptr = konwersja_znaku_telefonu_eeprom((*ptr & 0xf0) >> 4)) != '\0' )
+ 404               		.loc 1 66 19 is_stmt 0 discriminator 1 view .LVU99
+ 405 010c E295      		swap r30
+ 406               	.LVL48:
+ 407               		.loc 1 66 19 discriminator 1 view .LVU100
+ 408 010e EF70      		andi r30,lo8(15)
+ 409               	.LBB21:
+ 410               	.LBB20:
+ 411               	.LBB19:
+  48:konfiguracja.c **** }
+ 412               		.loc 1 48 9 discriminator 1 view .LVU101
+ 413 0110 F0E0      		ldi r31,0
+ 414 0112 E050      		subi r30,lo8(-(znaki.2169))
+ 415 0114 F040      		sbci r31,hi8(-(znaki.2169))
+ 416               	/* #APP */
+ 417               	 ;  48 "konfiguracja.c" 1
+ 418 0116 8491      		lpm r24, Z
+ 419               		
+ 420               	 ;  0 "" 2
+ 421               	.LVL49:
+  48:konfiguracja.c **** }
+ 422               		.loc 1 48 9 is_stmt 1 discriminator 1 view .LVU102
+  48:konfiguracja.c **** }
+ 423               		.loc 1 48 9 is_stmt 0 discriminator 1 view .LVU103
+ 424               	/* #NOAPP */
+ 425               	.LBE19:
+ 426               	.LBE20:
+ 427               	.LBE21:
+ 428               		.loc 1 66 17 discriminator 1 view .LVU104
+ 429 0118 8883      		st Y,r24
+  65:konfiguracja.c **** 		(*telefon_ptr = konwersja_znaku_telefonu_eeprom((*ptr & 0xf0) >> 4)) != '\0' )
+ 430               		.loc 1 65 66 discriminator 1 view .LVU105
+ 431 011a 8823      		tst r24
+ 432 011c 01F0      		breq .L23
+  67:konfiguracja.c **** 		telefon_ptr++, ++i, --ptr;
+ 433               		.loc 1 67 3 is_stmt 1 view .LVU106
+ 434               		.loc 1 67 14 is_stmt 0 view .LVU107
+ 435 011e 2196      		adiw r28,1
+ 436               	.LVL50:
+ 437               		.loc 1 67 23 view .LVU108
+ 438 0120 1197      		sbiw r26,1
+ 439               	.LVL51:
+ 440               		.loc 1 67 18 view .LVU109
+ 441 0122 81E0      		ldi r24,lo8(1)
+ 442               	.LVL52:
+ 443               	.L23:
+ 444               		.loc 1 67 18 view .LVU110
+ 445 0124 1196      		adiw r26,1
+ 446               	.LVL53:
+ 447               	.L26:
+  68:konfiguracja.c **** 	do
+ 448               		.loc 1 68 2 is_stmt 1 view .LVU111
+  69:konfiguracja.c **** 	{
+  70:konfiguracja.c **** 		if ( ptr < blok_ptr )
+ 449               		.loc 1 70 3 view .LVU112
+ 450               		.loc 1 70 6 is_stmt 0 view .LVU113
+ 451 0126 1197      		sbiw r26,1
+ 452               	.LVL54:
+ 453               		.loc 1 70 6 view .LVU114
+ 454 0128 A217      		cp r26,r18
+ 455 012a B307      		cpc r27,r19
+ 456 012c 00F0      		brlo .L24
+  71:konfiguracja.c **** 			break;
+  72:konfiguracja.c **** 		if ( (*telefon_ptr = konwersja_znaku_telefonu_eeprom((*ptr & 0x0f))) != '\0' )
+ 457               		.loc 1 72 3 is_stmt 1 view .LVU115
+ 458               	.LVL55:
+ 459               	.LBB22:
+ 460               	.LBI22:
+  44:konfiguracja.c **** {
+ 461               		.loc 1 44 7 view .LVU116
+ 462               	.LBB23:
+  46:konfiguracja.c **** 	{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '*', '#', '!', '!', '\0' };
+ 463               		.loc 1 46 2 view .LVU117
+  48:konfiguracja.c **** }
+ 464               		.loc 1 48 2 view .LVU118
+ 465               	.LBB24:
+  48:konfiguracja.c **** }
+ 466               		.loc 1 48 9 view .LVU119
+  48:konfiguracja.c **** }
+ 467               		.loc 1 48 9 view .LVU120
+  48:konfiguracja.c **** }
+ 468               		.loc 1 48 9 view .LVU121
+ 469               	.LBE24:
+ 470               	.LBE23:
+ 471               	.LBE22:
+ 472               		.loc 1 72 24 is_stmt 0 view .LVU122
+ 473 012e EC91      		ld r30,X
+ 474 0130 EF70      		andi r30,lo8(15)
+ 475               	.LBB27:
+ 476               	.LBB26:
+ 477               	.LBB25:
+  48:konfiguracja.c **** }
+ 478               		.loc 1 48 9 view .LVU123
+ 479 0132 F0E0      		ldi r31,0
+ 480 0134 E050      		subi r30,lo8(-(znaki.2169))
+ 481 0136 F040      		sbci r31,hi8(-(znaki.2169))
+ 482               	/* #APP */
+ 483               	 ;  48 "konfiguracja.c" 1
+ 484 0138 E491      		lpm r30, Z
+ 485               		
+ 486               	 ;  0 "" 2
+ 487               	.LVL56:
+  48:konfiguracja.c **** }
+ 488               		.loc 1 48 9 is_stmt 1 view .LVU124
+  48:konfiguracja.c **** }
+ 489               		.loc 1 48 9 is_stmt 0 view .LVU125
+ 490               	/* #NOAPP */
+ 491               	.LBE25:
+ 492               	.LBE26:
+ 493               	.LBE27:
+ 494               		.loc 1 72 22 view .LVU126
+ 495 013a E883      		st Y,r30
+ 496               		.loc 1 72 6 view .LVU127
+ 497 013c EE23      		tst r30
+ 498 013e 01F0      		breq .L25
+  73:konfiguracja.c **** 			++telefon_ptr, ++i;
+ 499               		.loc 1 73 4 is_stmt 1 view .LVU128
+ 500 0140 2196      		adiw r28,1
+ 501               	.LVL57:
+ 502               		.loc 1 73 19 is_stmt 0 view .LVU129
+ 503 0142 8F5F      		subi r24,lo8(-(1))
+ 504               	.LVL58:
+ 505               	.L25:
+  74:konfiguracja.c **** 		if ( i == max_liczba_znakow )
+ 506               		.loc 1 74 3 is_stmt 1 view .LVU130
+ 507               		.loc 1 74 6 is_stmt 0 view .LVU131
+ 508 0144 8417      		cp r24,r20
+ 509 0146 01F0      		breq .L24
+  75:konfiguracja.c **** 			break;
+  76:konfiguracja.c **** 		*telefon_ptr++ = konwersja_znaku_telefonu_eeprom((*ptr & 0xf0) >> 4);
+ 510               		.loc 1 76 3 is_stmt 1 view .LVU132
+ 511               	.LVL59:
+ 512               	.LBB28:
+ 513               	.LBI28:
+  44:konfiguracja.c **** {
+ 514               		.loc 1 44 7 view .LVU133
+ 515               	.LBB29:
+  46:konfiguracja.c **** 	{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '*', '#', '!', '!', '\0' };
+ 516               		.loc 1 46 2 view .LVU134
+  48:konfiguracja.c **** }
+ 517               		.loc 1 48 2 view .LVU135
+ 518               	.LBB30:
+  48:konfiguracja.c **** }
+ 519               		.loc 1 48 9 view .LVU136
+  48:konfiguracja.c **** }
+ 520               		.loc 1 48 9 view .LVU137
+  48:konfiguracja.c **** }
+ 521               		.loc 1 48 9 view .LVU138
+ 522               	.LBE30:
+ 523               	.LBE29:
+ 524               	.LBE28:
+ 525               		.loc 1 76 20 is_stmt 0 view .LVU139
+ 526 0148 EC91      		ld r30,X
+ 527 014a E295      		swap r30
+ 528 014c EF70      		andi r30,lo8(15)
+ 529               	.LBB33:
+ 530               	.LBB32:
+ 531               	.LBB31:
+  48:konfiguracja.c **** }
+ 532               		.loc 1 48 9 view .LVU140
+ 533 014e F0E0      		ldi r31,0
+ 534 0150 E050      		subi r30,lo8(-(znaki.2169))
+ 535 0152 F040      		sbci r31,hi8(-(znaki.2169))
+ 536               	/* #APP */
+ 537               	 ;  48 "konfiguracja.c" 1
+ 538 0154 E491      		lpm r30, Z
+ 539               		
+ 540               	 ;  0 "" 2
+ 541               	.LVL60:
+  48:konfiguracja.c **** }
+ 542               		.loc 1 48 9 is_stmt 1 view .LVU141
+  48:konfiguracja.c **** }
+ 543               		.loc 1 48 9 is_stmt 0 view .LVU142
+ 544               	/* #NOAPP */
+ 545               	.LBE31:
+ 546               	.LBE32:
+ 547               	.LBE33:
+ 548               		.loc 1 76 18 view .LVU143
+ 549 0156 E993      		st Y+,r30
+ 550               	.LVL61:
+  77:konfiguracja.c **** 		if ( ++i == max_liczba_znakow )
+ 551               		.loc 1 77 3 is_stmt 1 view .LVU144
+ 552               		.loc 1 77 6 is_stmt 0 view .LVU145
+ 553 0158 8F5F      		subi r24,lo8(-(1))
+ 554               	.LVL62:
+ 555               		.loc 1 77 6 view .LVU146
+ 556 015a 4817      		cp r20,r24
+ 557 015c 01F0      		breq .L24
+  78:konfiguracja.c **** 			break;
+  79:konfiguracja.c **** 	} while ( ptr-- != blok_ptr );
+ 558               		.loc 1 79 10 is_stmt 1 view .LVU147
+ 559               		.loc 1 79 2 is_stmt 0 view .LVU148
+ 560 015e 2A17      		cp r18,r26
+ 561 0160 3B07      		cpc r19,r27
+ 562 0162 01F4      		brne .L26
+ 563               	.LVL63:
+ 564               	.L24:
+  80:konfiguracja.c **** 	*telefon_ptr = '\0';
+ 565               		.loc 1 80 2 is_stmt 1 view .LVU149
+ 566               		.loc 1 80 15 is_stmt 0 view .LVU150
+ 567 0164 1882      		st Y,__zero_reg__
+  81:konfiguracja.c **** 	return i;
+ 568               		.loc 1 81 2 is_stmt 1 view .LVU151
+ 569               	.LVL64:
+ 570               	.L15:
+ 571               	/* epilogue start */
+  82:konfiguracja.c **** }
+ 572               		.loc 1 82 1 is_stmt 0 view .LVU152
+ 573 0166 DF91      		pop r29
+ 574 0168 CF91      		pop r28
+ 575               	.LVL65:
+ 576               		.loc 1 82 1 view .LVU153
+ 577 016a 0895      		ret
+ 578               	.LVL66:
+ 579               	.L18:
+  58:konfiguracja.c **** 	if ( ptr == blok_ptr )
+ 580               		.loc 1 58 3 is_stmt 1 view .LVU154
+  58:konfiguracja.c **** 	if ( ptr == blok_ptr )
+ 581               		.loc 1 58 10 is_stmt 0 view .LVU155
+ 582 016c 8F5F      		subi r24,lo8(-(1))
+ 583               	.LVL67:
+  58:konfiguracja.c **** 	if ( ptr == blok_ptr )
+ 584               		.loc 1 58 10 view .LVU156
+ 585 016e 00C0      		rjmp .L16
+ 586               	.LVL68:
+ 587               	.L28:
+  64:konfiguracja.c **** 	if ( /*(max_liczba_znakow & 0x01) != 0 */ (*ptr & 0x0f) == 0x0f &&
+ 588               		.loc 1 64 4 view .LVU157
+ 589 0170 80E0      		ldi r24,0
+ 590 0172 00C0      		rjmp .L23
+ 591               	.LVL69:
+ 592               	.L27:
+  60:konfiguracja.c **** 	--ptr;
+ 593               		.loc 1 60 10 view .LVU158
+ 594 0174 80E0      		ldi r24,0
+ 595               	.LVL70:
+  60:konfiguracja.c **** 	--ptr;
+ 596               		.loc 1 60 10 view .LVU159
+ 597 0176 00C0      		rjmp .L15
+ 598               		.cfi_endproc
+ 599               	.LFE8:
+ 601               	.global	kopiuj_blok_eeprom_na_telefon
+ 603               	kopiuj_blok_eeprom_na_telefon:
+ 604               	.LVL71:
+ 605               	.LFB9:
+  83:konfiguracja.c **** 
+  84:konfiguracja.c **** uchar kopiuj_blok_eeprom_na_telefon(const void* eeprom_ptr, uchar* telefon_ptr,
+  85:konfiguracja.c **** 	const uchar max_liczba_znakow)	// nie dzia³a dobrze dla nieparzystych max_liczba_znakow
+  86:konfiguracja.c **** {
+ 606               		.loc 1 86 1 is_stmt 1 view -0
+ 607               		.cfi_startproc
+ 608               		.loc 1 86 1 is_stmt 0 view .LVU161
+ 609 0178 FF92      		push r15
+ 610               	.LCFI11:
+ 611               		.cfi_def_cfa_offset 3
+ 612               		.cfi_offset 15, -2
+ 613 017a 0F93      		push r16
+ 614               	.LCFI12:
+ 615               		.cfi_def_cfa_offset 4
+ 616               		.cfi_offset 16, -3
+ 617 017c 1F93      		push r17
+ 618               	.LCFI13:
+ 619               		.cfi_def_cfa_offset 5
+ 620               		.cfi_offset 17, -4
+ 621 017e CF93      		push r28
+ 622               	.LCFI14:
+ 623               		.cfi_def_cfa_offset 6
+ 624               		.cfi_offset 28, -5
+ 625 0180 DF93      		push r29
+ 626               	.LCFI15:
+ 627               		.cfi_def_cfa_offset 7
+ 628               		.cfi_offset 29, -6
+ 629 0182 00D0      		rcall .
+ 630 0184 00D0      		rcall .
+ 631 0186 0F92      		push __tmp_reg__
+ 632               	.LCFI16:
+ 633               		.cfi_def_cfa_offset 12
+ 634 0188 CDB7      		in r28,__SP_L__
+ 635 018a DEB7      		in r29,__SP_H__
+ 636               	.LCFI17:
+ 637               		.cfi_def_cfa_register 28
+ 638               	/* prologue: function */
+ 639               	/* frame size = 5 */
+ 640               	/* stack size = 10 */
+ 641               	.L__stack_usage = 10
+ 642 018c 8B01      		movw r16,r22
+ 643 018e F42E      		mov r15,r20
+  87:konfiguracja.c **** 	uchar buf[LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM];
+ 644               		.loc 1 87 2 is_stmt 1 view .LVU162
+  88:konfiguracja.c **** 	memcpy_E(buf, eeprom_ptr, LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM);
+ 645               		.loc 1 88 2 view .LVU163
+ 646 0190 45E0      		ldi r20,lo8(5)
+ 647 0192 50E0      		ldi r21,0
+ 648               	.LVL72:
+ 649               		.loc 1 88 2 is_stmt 0 view .LVU164
+ 650 0194 BC01      		movw r22,r24
+ 651               	.LVL73:
+ 652               		.loc 1 88 2 view .LVU165
+ 653 0196 CE01      		movw r24,r28
+ 654               	.LVL74:
+ 655               		.loc 1 88 2 view .LVU166
+ 656 0198 0196      		adiw r24,1
+ 657 019a 0E94 0000 		call eeprom_read_block
+ 658               	.LVL75:
+  89:konfiguracja.c **** 	return konwertuj_blok_eeprom_na_telefon(buf, telefon_ptr, max_liczba_znakow);
+ 659               		.loc 1 89 2 is_stmt 1 view .LVU167
+ 660               		.loc 1 89 9 is_stmt 0 view .LVU168
+ 661 019e 4F2D      		mov r20,r15
+ 662 01a0 B801      		movw r22,r16
+ 663 01a2 CE01      		movw r24,r28
+ 664 01a4 0196      		adiw r24,1
+ 665 01a6 0E94 0000 		call konwertuj_blok_eeprom_na_telefon
+ 666               	.LVL76:
+ 667               	/* epilogue start */
+  90:konfiguracja.c **** }
+ 668               		.loc 1 90 1 view .LVU169
+ 669 01aa 0F90      		pop __tmp_reg__
+ 670 01ac 0F90      		pop __tmp_reg__
+ 671 01ae 0F90      		pop __tmp_reg__
+ 672 01b0 0F90      		pop __tmp_reg__
+ 673 01b2 0F90      		pop __tmp_reg__
+ 674 01b4 DF91      		pop r29
+ 675 01b6 CF91      		pop r28
+ 676 01b8 1F91      		pop r17
+ 677 01ba 0F91      		pop r16
+ 678               	.LVL77:
+ 679               		.loc 1 90 1 view .LVU170
+ 680 01bc FF90      		pop r15
+ 681               	.LVL78:
+ 682               		.loc 1 90 1 view .LVU171
+ 683 01be 0895      		ret
+ 684               		.cfi_endproc
+ 685               	.LFE9:
+ 687               	.global	porownaj_numer_telefonu_blok
+ 689               	porownaj_numer_telefonu_blok:
+ 690               	.LVL79:
+ 691               	.LFB10:
+  91:konfiguracja.c **** 
+  92:konfiguracja.c **** uchar porownaj_numer_telefonu_blok(const uchar* telefon_blok_ptr, const void* eeprom_ptr)
+  93:konfiguracja.c **** {
+ 692               		.loc 1 93 1 is_stmt 1 view -0
+ 693               		.cfi_startproc
+ 694               		.loc 1 93 1 is_stmt 0 view .LVU173
+ 695 01c0 0F93      		push r16
+ 696               	.LCFI18:
+ 697               		.cfi_def_cfa_offset 3
+ 698               		.cfi_offset 16, -2
+ 699 01c2 1F93      		push r17
+ 700               	.LCFI19:
+ 701               		.cfi_def_cfa_offset 4
+ 702               		.cfi_offset 17, -3
+ 703 01c4 CF93      		push r28
+ 704               	.LCFI20:
+ 705               		.cfi_def_cfa_offset 5
+ 706               		.cfi_offset 28, -4
+ 707 01c6 DF93      		push r29
+ 708               	.LCFI21:
+ 709               		.cfi_def_cfa_offset 6
+ 710               		.cfi_offset 29, -5
+ 711               	/* prologue: function */
+ 712               	/* frame size = 0 */
+ 713               	/* stack size = 4 */
+ 714               	.L__stack_usage = 4
+ 715 01c8 EC01      		movw r28,r24
+ 716 01ca 8B01      		movw r16,r22
+  94:konfiguracja.c **** 	if ( telefon_blok_ptr[0] == 0xff || eeprom_read_byte(eeprom_ptr) == 0xff )
+ 717               		.loc 1 94 2 is_stmt 1 view .LVU174
+ 718               		.loc 1 94 5 is_stmt 0 view .LVU175
+ 719 01cc 8881      		ld r24,Y
+ 720               	.LVL80:
+ 721               		.loc 1 94 5 view .LVU176
+ 722 01ce 8F3F      		cpi r24,lo8(-1)
+ 723 01d0 01F0      		breq .L63
+ 724               		.loc 1 94 38 discriminator 1 view .LVU177
+ 725 01d2 CB01      		movw r24,r22
+ 726 01d4 0E94 0000 		call eeprom_read_byte
+ 727               	.LVL81:
+ 728               		.loc 1 94 35 discriminator 1 view .LVU178
+ 729 01d8 8F3F      		cpi r24,lo8(-1)
+ 730 01da 01F0      		breq .L63
+ 731               	.LVL82:
+ 732               	.L46:
+  95:konfiguracja.c **** 		return FALSE;
+  96:konfiguracja.c **** 	while ( 1 )
+ 733               		.loc 1 96 2 is_stmt 1 view .LVU179
+ 734               	.LBB37:
+ 735               	.LBB38:
+  97:konfiguracja.c **** 	{
+  98:konfiguracja.c **** 		const uchar b = eeprom_read_byte(eeprom_ptr);
+ 736               		.loc 1 98 3 view .LVU180
+ 737               		.loc 1 98 19 is_stmt 0 view .LVU181
+ 738 01dc C801      		movw r24,r16
+ 739 01de 0E94 0000 		call eeprom_read_byte
+ 740               	.LVL83:
+  99:konfiguracja.c **** 		uchar a = 0xf0;
+ 741               		.loc 1 99 3 is_stmt 1 view .LVU182
+ 100:konfiguracja.c **** 		uchar c = b & a;
+ 742               		.loc 1 100 3 view .LVU183
+ 743               		.loc 1 100 9 is_stmt 0 view .LVU184
+ 744 01e2 382F      		mov r19,r24
+ 745 01e4 307F      		andi r19,lo8(-16)
+ 746               	.LVL84:
+ 101:konfiguracja.c **** 		uchar d = *telefon_blok_ptr & a;
+ 747               		.loc 1 101 3 is_stmt 1 view .LVU185
+ 748               		.loc 1 101 13 is_stmt 0 view .LVU186
+ 749 01e6 9991      		ld r25,Y+
+ 750               		.loc 1 101 9 view .LVU187
+ 751 01e8 292F      		mov r18,r25
+ 752 01ea 207F      		andi r18,lo8(-16)
+ 753               	.LVL85:
+ 102:konfiguracja.c **** 		if ( c == a || d == a )
+ 754               		.loc 1 102 3 is_stmt 1 view .LVU188
+ 755               		.loc 1 102 6 is_stmt 0 view .LVU189
+ 756 01ec 303F      		cpi r19,lo8(-16)
+ 757 01ee 01F0      		breq .L41
+ 758               		.loc 1 102 15 view .LVU190
+ 759 01f0 203F      		cpi r18,lo8(-16)
+ 760 01f2 01F4      		brne .L42
+ 761               	.LVL86:
+ 762               	.L63:
+ 103:konfiguracja.c **** 			return (c == a && d == a);
+ 104:konfiguracja.c **** 		if ( c != d )
+ 105:konfiguracja.c **** 			return FALSE;
+ 106:konfiguracja.c **** 		a = 0x0f;
+ 107:konfiguracja.c **** 		c = b & a;
+ 108:konfiguracja.c **** 		d = *telefon_blok_ptr & a;
+ 109:konfiguracja.c **** 		if ( c == a || d == a )
+ 110:konfiguracja.c **** 			return (c == a && d == a);
+ 763               		.loc 1 110 19 view .LVU191
+ 764 01f4 80E0      		ldi r24,0
+ 765 01f6 00C0      		rjmp .L39
+ 766               	.LVL87:
+ 767               	.L42:
+ 104:konfiguracja.c **** 			return FALSE;
+ 768               		.loc 1 104 3 is_stmt 1 view .LVU192
+ 104:konfiguracja.c **** 			return FALSE;
+ 769               		.loc 1 104 6 is_stmt 0 view .LVU193
+ 770 01f8 3213      		cpse r19,r18
+ 771 01fa 00C0      		rjmp .L63
+ 106:konfiguracja.c **** 		c = b & a;
+ 772               		.loc 1 106 3 is_stmt 1 view .LVU194
+ 773               	.LVL88:
+ 107:konfiguracja.c **** 		d = *telefon_blok_ptr & a;
+ 774               		.loc 1 107 3 view .LVU195
+ 107:konfiguracja.c **** 		d = *telefon_blok_ptr & a;
+ 775               		.loc 1 107 5 is_stmt 0 view .LVU196
+ 776 01fc 8F70      		andi r24,lo8(15)
+ 777               	.LVL89:
+ 108:konfiguracja.c **** 		if ( c == a || d == a )
+ 778               		.loc 1 108 3 is_stmt 1 view .LVU197
+ 108:konfiguracja.c **** 		if ( c == a || d == a )
+ 779               		.loc 1 108 5 is_stmt 0 view .LVU198
+ 780 01fe 9F70      		andi r25,lo8(15)
+ 781               	.LVL90:
+ 109:konfiguracja.c **** 			return (c == a && d == a);
+ 782               		.loc 1 109 3 is_stmt 1 view .LVU199
+ 109:konfiguracja.c **** 			return (c == a && d == a);
+ 783               		.loc 1 109 6 is_stmt 0 view .LVU200
+ 784 0200 8F30      		cpi r24,lo8(15)
+ 785 0202 01F0      		breq .L44
+ 109:konfiguracja.c **** 			return (c == a && d == a);
+ 786               		.loc 1 109 15 view .LVU201
+ 787 0204 9F30      		cpi r25,lo8(15)
+ 788 0206 01F0      		breq .L63
+ 111:konfiguracja.c **** 		if ( c != d )
+ 789               		.loc 1 111 3 is_stmt 1 view .LVU202
+ 790               		.loc 1 111 6 is_stmt 0 view .LVU203
+ 791 0208 8913      		cpse r24,r25
+ 792 020a 00C0      		rjmp .L63
+ 112:konfiguracja.c **** 			return FALSE;
+ 113:konfiguracja.c **** 		++eeprom_ptr;
+ 793               		.loc 1 113 3 is_stmt 1 view .LVU204
+ 794 020c 0F5F      		subi r16,-1
+ 795 020e 1F4F      		sbci r17,-1
+ 796               	.LVL91:
+ 114:konfiguracja.c **** 		++telefon_blok_ptr;
+ 797               		.loc 1 114 3 view .LVU205
+ 798               		.loc 1 114 3 is_stmt 0 view .LVU206
+ 799               	.LBE38:
+ 800               	.LBE37:
+  96:konfiguracja.c **** 	{
+ 801               		.loc 1 96 8 is_stmt 1 view .LVU207
+ 802 0210 00C0      		rjmp .L46
+ 803               	.LVL92:
+ 804               	.L41:
+ 805               	.LBB41:
+ 806               	.LBB39:
+ 103:konfiguracja.c **** 		if ( c != d )
+ 807               		.loc 1 103 4 view .LVU208
+ 103:konfiguracja.c **** 		if ( c != d )
+ 808               		.loc 1 103 19 is_stmt 0 view .LVU209
+ 809 0212 81E0      		ldi r24,lo8(1)
+ 810               	.LVL93:
+ 103:konfiguracja.c **** 		if ( c != d )
+ 811               		.loc 1 103 19 view .LVU210
+ 812 0214 203F      		cpi r18,lo8(-16)
+ 813 0216 01F4      		brne .L63
+ 814               	.LVL94:
+ 815               	.L39:
+ 816               	/* epilogue start */
+ 103:konfiguracja.c **** 		if ( c != d )
+ 817               		.loc 1 103 19 view .LVU211
+ 818               	.LBE39:
+ 819               	.LBE41:
+ 115:konfiguracja.c **** 	}
+ 116:konfiguracja.c **** }
+ 820               		.loc 1 116 1 view .LVU212
+ 821 0218 DF91      		pop r29
+ 822 021a CF91      		pop r28
+ 823 021c 1F91      		pop r17
+ 824 021e 0F91      		pop r16
+ 825 0220 0895      		ret
+ 826               	.LVL95:
+ 827               	.L44:
+ 828               	.LBB42:
+ 829               	.LBB40:
+ 110:konfiguracja.c **** 		if ( c != d )
+ 830               		.loc 1 110 4 is_stmt 1 view .LVU213
+ 110:konfiguracja.c **** 		if ( c != d )
+ 831               		.loc 1 110 19 is_stmt 0 view .LVU214
+ 832 0222 81E0      		ldi r24,lo8(1)
+ 833               	.LVL96:
+ 110:konfiguracja.c **** 		if ( c != d )
+ 834               		.loc 1 110 19 view .LVU215
+ 835 0224 9F30      		cpi r25,lo8(15)
+ 836 0226 01F4      		brne .L63
+ 837 0228 00C0      		rjmp .L39
+ 838               	.LBE40:
+ 839               	.LBE42:
+ 840               		.cfi_endproc
+ 841               	.LFE10:
+ 843               	.global	porownaj_numer_telefonu
+ 845               	porownaj_numer_telefonu:
+ 846               	.LVL97:
+ 847               	.LFB11:
+ 117:konfiguracja.c **** 
+ 118:konfiguracja.c **** uchar porownaj_numer_telefonu(const uchar* telefon_ptr, const void* eeprom_ptr)
+ 119:konfiguracja.c **** {
+ 848               		.loc 1 119 1 is_stmt 1 view -0
+ 849               		.cfi_startproc
+ 850               		.loc 1 119 1 is_stmt 0 view .LVU217
+ 851 022a 0F93      		push r16
+ 852               	.LCFI22:
+ 853               		.cfi_def_cfa_offset 3
+ 854               		.cfi_offset 16, -2
+ 855 022c 1F93      		push r17
+ 856               	.LCFI23:
+ 857               		.cfi_def_cfa_offset 4
+ 858               		.cfi_offset 17, -3
+ 859 022e CF93      		push r28
+ 860               	.LCFI24:
+ 861               		.cfi_def_cfa_offset 5
+ 862               		.cfi_offset 28, -4
+ 863 0230 DF93      		push r29
+ 864               	.LCFI25:
+ 865               		.cfi_def_cfa_offset 6
+ 866               		.cfi_offset 29, -5
+ 867 0232 00D0      		rcall .
+ 868 0234 00D0      		rcall .
+ 869 0236 0F92      		push __tmp_reg__
+ 870               	.LCFI26:
+ 871               		.cfi_def_cfa_offset 11
+ 872 0238 CDB7      		in r28,__SP_L__
+ 873 023a DEB7      		in r29,__SP_H__
+ 874               	.LCFI27:
+ 875               		.cfi_def_cfa_register 28
+ 876               	/* prologue: function */
+ 877               	/* frame size = 5 */
+ 878               	/* stack size = 9 */
+ 879               	.L__stack_usage = 9
+ 880 023c 8B01      		movw r16,r22
+ 120:konfiguracja.c **** 	uchar buf[LICZBA_BAJTOW_NUMERU_TELEFONU_W_EEPROM];
+ 881               		.loc 1 120 2 is_stmt 1 view .LVU218
+ 121:konfiguracja.c **** 	uchar l = strlen(telefon_ptr);
+ 882               		.loc 1 121 2 view .LVU219
+ 883               		.loc 1 121 12 is_stmt 0 view .LVU220
+ 884 023e FC01      		movw r30,r24
+ 885               		0:
+ 886 0240 0190      		ld __tmp_reg__,Z+
+ 887 0242 0020      		tst __tmp_reg__
+ 888 0244 01F4      		brne 0b
+ 889 0246 3197      		sbiw r30,1
+ 890 0248 BF01      		movw r22,r30
+ 891               	.LVL98:
+ 892               		.loc 1 121 12 view .LVU221
+ 893 024a 681B      		sub r22,r24
+ 894 024c 790B      		sbc r23,r25
+ 895               	.LVL99:
+ 122:konfiguracja.c **** 	konwertuj_telefon_na_blok_eeprom(telefon_ptr, telefon_ptr + l, buf);
+ 896               		.loc 1 122 2 is_stmt 1 view .LVU222
+ 897 024e 680F      		add r22,r24
+ 898 0250 792F      		mov r23,r25
+ 899 0252 711D      		adc r23,__zero_reg__
+ 900               	.LVL100:
+ 901               		.loc 1 122 2 is_stmt 0 view .LVU223
+ 902 0254 AE01      		movw r20,r28
+ 903 0256 4F5F      		subi r20,-1
+ 904 0258 5F4F      		sbci r21,-1
+ 905 025a 0E94 0000 		call konwertuj_telefon_na_blok_eeprom
+ 906               	.LVL101:
+ 123:konfiguracja.c **** 	return porownaj_numer_telefonu_blok(buf, eeprom_ptr);
+ 907               		.loc 1 123 2 is_stmt 1 view .LVU224
+ 908               		.loc 1 123 9 is_stmt 0 view .LVU225
+ 909 025e B801      		movw r22,r16
+ 910 0260 CE01      		movw r24,r28
+ 911 0262 0196      		adiw r24,1
+ 912 0264 0E94 0000 		call porownaj_numer_telefonu_blok
+ 913               	.LVL102:
+ 914               	/* epilogue start */
+ 124:konfiguracja.c **** }
+ 915               		.loc 1 124 1 view .LVU226
+ 916 0268 0F90      		pop __tmp_reg__
+ 917 026a 0F90      		pop __tmp_reg__
+ 918 026c 0F90      		pop __tmp_reg__
+ 919 026e 0F90      		pop __tmp_reg__
+ 920 0270 0F90      		pop __tmp_reg__
+ 921 0272 DF91      		pop r29
+ 922 0274 CF91      		pop r28
+ 923 0276 1F91      		pop r17
+ 924 0278 0F91      		pop r16
+ 925               	.LVL103:
+ 926               		.loc 1 124 1 view .LVU227
+ 927 027a 0895      		ret
+ 928               		.cfi_endproc
+ 929               	.LFE11:
+ 931               		.section	.progmem.data,"a",@progbits
+ 934               	znaki.2169:
+ 935 0000 30        		.byte	48
+ 936 0001 31        		.byte	49
+ 937 0002 32        		.byte	50
+ 938 0003 33        		.byte	51
+ 939 0004 34        		.byte	52
+ 940 0005 35        		.byte	53
+ 941 0006 36        		.byte	54
+ 942 0007 37        		.byte	55
+ 943 0008 38        		.byte	56
+ 944 0009 39        		.byte	57
+ 945 000a 2B        		.byte	43
+ 946 000b 2A        		.byte	42
+ 947 000c 23        		.byte	35
+ 948 000d 21        		.byte	33
+ 949 000e 21        		.byte	33
+ 950 000f 00        		.byte	0
+ 951               		.text
+ 952               	.Letext0:
+ 953               		.file 2 "narzedzia.h"
+ 954               		.file 3 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/lib/avr-gcc/8/gcc/avr/8.5.0/include/stddef.h"
+ 955               		.file 4 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/avr/include/stdint.h"
+ 956               		.file 5 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/avr/include/stdlib.h"
+ 957               		.file 6 "zapiseeprom.h"
+ 958               		.file 7 "eeprom_ext.h"
+ 959               		.file 8 "/opt/homebrew/Cellar/avr-gcc@8/8.5.0_3/avr/include/string.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 konfiguracja.c
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2      *ABS*:0000003e __SP_H__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3      *ABS*:0000003d __SP_L__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:4      *ABS*:0000003f __SREG__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:12     .text:00000000 konwersja_znaku_telefonu
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:16     .text:00000000 .Loc.0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:17     .text:00000000 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:22     .text:00000000 .Loc.1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:32     .text:0000000e .Loc.2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:35     .text:00000010 .Loc.3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:39     .text:00000012 .Loc.4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:42     .text:00000014 .Loc.5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:45     .text:00000018 .Loc.6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:46     .text:00000018 .Loc.7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:50     .text:0000001a .Loc.8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:53     .text:0000001c .Loc.9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:57     .text:0000001e .Loc.10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:60     .text:00000020 .Loc.11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:64     .text:00000022 .Loc.12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:67     .text:00000024 .Loc.13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:69     .text:00000026 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:74     .text:00000026 konwertuj_telefon_na_blok_eeprom
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:77     .text:00000026 .Loc.14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:78     .text:00000026 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:79     .text:00000026 .Loc.15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:123    .text:0000003e .Loc.16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:127    .text:00000042 .Loc.17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:131    .text:00000046 .Loc.18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:134    .text:00000048 .Loc.19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:137    .text:0000004c .Loc.20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:138    .text:0000004c .Loc.21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:143    .text:00000052 .Loc.22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:144    .text:00000052 .Loc.23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:147    .text:00000054 .Loc.24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:148    .text:00000054 .Loc.25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:149    .text:00000054 .Loc.26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:151    .text:00000056 .Loc.27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:157    .text:0000005a .Loc.28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:161    .text:0000005e .Loc.29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:168    .text:00000068 .Loc.30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:175    .text:0000006e .Loc.31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:179    .text:00000070 .Loc.32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:180    .text:00000070 .Loc.33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:184    .text:00000076 .Loc.34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:185    .text:00000076 .Loc.35
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:190    .text:0000007c .Loc.36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:193    .text:0000007e .Loc.37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:194    .text:0000007e .Loc.38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:198    .text:00000082 .Loc.39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:202    .text:00000088 .Loc.40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:205    .text:0000008a .Loc.41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:206    .text:0000008a .Loc.42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:209    .text:0000008e .Loc.43
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:211    .text:00000090 .Loc.44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:212    .text:00000090 .Loc.45
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:215    .text:00000092 .Loc.46
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:217    .text:00000092 .Loc.47
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:222    .text:00000094 .Loc.48
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:223    .text:00000094 .Loc.49
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:227    .text:00000098 .Loc.50
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:232    .text:000000a0 .Loc.51
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:234    .text:000000a0 .Loc.52
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:236    .text:000000a0 .Loc.53
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:239    .text:000000a4 .Loc.54
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:244    .text:000000a6 .Loc.55
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:247    .text:000000a8 .Loc.56
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:250    .text:000000aa .Loc.57
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:253    .text:000000ac L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:258    .text:000000ac konwersja_znaku_telefonu_eeprom
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:261    .text:000000ac .Loc.58
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:262    .text:000000ac L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:267    .text:000000ac .Loc.59
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:268    .text:000000ac .Loc.60
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:270    .text:000000ac .Loc.61
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:271    .text:000000ac .Loc.62
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:272    .text:000000ac .Loc.63
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:934    .progmem.data:00000000 znaki.2169
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:283    .text:000000b6 .Loc.64
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:287    .text:000000b6 .Loc.65
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:289    .text:000000b8 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:294    .text:000000b8 konwertuj_blok_eeprom_na_telefon
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:297    .text:000000b8 .Loc.66
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:298    .text:000000b8 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:299    .text:000000b8 .Loc.67
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:314    .text:000000c0 .Loc.68
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:315    .text:000000c0 .Loc.69
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:317    .text:000000c2 .Loc.70
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:319    .text:000000c2 .Loc.71
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:320    .text:000000c2 .Loc.72
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:323    .text:000000c4 .Loc.73
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:327    .text:000000c6 .Loc.74
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:330    .text:000000c8 .Loc.75
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:336    .text:000000d2 .Loc.76
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:338    .text:000000d6 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:341    .text:000000d8 .Loc.77
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:342    .text:000000d8 .Loc.78
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:345    .text:000000de L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:347    .text:000000e0 .Loc.79
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:349    .text:000000e0 .Loc.80
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:350    .text:000000e0 .Loc.81
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:353    .text:000000e4 .Loc.82
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:358    .text:000000ea .Loc.83
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:361    .text:000000ec .Loc.84
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:365    .text:000000f2 .Loc.85
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:366    .text:000000f2 .Loc.86
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:369    .text:000000f4 .Loc.87
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:376    .text:000000fe .Loc.88
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:381    .text:00000102 .Loc.89
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:382    .text:00000102 .Loc.90
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:383    .text:00000102 .Loc.91
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:385    .text:00000104 .Loc.92
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:393    .text:0000010c .Loc.93
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:395    .text:0000010c .Loc.94
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:396    .text:0000010c .Loc.95
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:398    .text:0000010c .Loc.96
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:399    .text:0000010c .Loc.97
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:400    .text:0000010c .Loc.98
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:404    .text:0000010c .Loc.99
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:407    .text:0000010e .Loc.100
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:412    .text:00000110 .Loc.101
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:422    .text:00000118 .Loc.102
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:423    .text:00000118 .Loc.103
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:428    .text:00000118 .Loc.104
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:430    .text:0000011a .Loc.105
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:433    .text:0000011e .Loc.106
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:434    .text:0000011e .Loc.107
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:437    .text:00000120 .Loc.108
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:440    .text:00000122 .Loc.109
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:444    .text:00000124 .Loc.110
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:448    .text:00000126 .Loc.111
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:449    .text:00000126 .Loc.112
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:450    .text:00000126 .Loc.113
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:453    .text:00000128 .Loc.114
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:457    .text:0000012e .Loc.115
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:461    .text:0000012e .Loc.116
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:463    .text:0000012e .Loc.117
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:464    .text:0000012e .Loc.118
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:466    .text:0000012e .Loc.119
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:467    .text:0000012e .Loc.120
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:468    .text:0000012e .Loc.121
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:472    .text:0000012e .Loc.122
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:478    .text:00000132 .Loc.123
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:488    .text:0000013a .Loc.124
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:489    .text:0000013a .Loc.125
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:494    .text:0000013a .Loc.126
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:496    .text:0000013c .Loc.127
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:499    .text:00000140 .Loc.128
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:502    .text:00000142 .Loc.129
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:506    .text:00000144 .Loc.130
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:507    .text:00000144 .Loc.131
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:510    .text:00000148 .Loc.132
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:514    .text:00000148 .Loc.133
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:516    .text:00000148 .Loc.134
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:517    .text:00000148 .Loc.135
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:519    .text:00000148 .Loc.136
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:520    .text:00000148 .Loc.137
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:521    .text:00000148 .Loc.138
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:525    .text:00000148 .Loc.139
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:532    .text:0000014e .Loc.140
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:542    .text:00000156 .Loc.141
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:543    .text:00000156 .Loc.142
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:548    .text:00000156 .Loc.143
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:551    .text:00000158 .Loc.144
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:552    .text:00000158 .Loc.145
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:555    .text:0000015a .Loc.146
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:558    .text:0000015e .Loc.147
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:559    .text:0000015e .Loc.148
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:565    .text:00000164 .Loc.149
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:566    .text:00000164 .Loc.150
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:568    .text:00000166 .Loc.151
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:572    .text:00000166 .Loc.152
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:576    .text:0000016a .Loc.153
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:580    .text:0000016c .Loc.154
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:581    .text:0000016c .Loc.155
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:584    .text:0000016e .Loc.156
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:588    .text:00000170 .Loc.157
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:593    .text:00000174 .Loc.158
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:596    .text:00000176 .Loc.159
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:598    .text:00000178 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:603    .text:00000178 kopiuj_blok_eeprom_na_telefon
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:606    .text:00000178 .Loc.160
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:607    .text:00000178 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:608    .text:00000178 .Loc.161
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:629    .text:00000184 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:630    .text:00000186 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:644    .text:00000190 .Loc.162
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:645    .text:00000190 .Loc.163
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:649    .text:00000194 .Loc.164
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:652    .text:00000196 .Loc.165
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:655    .text:00000198 .Loc.166
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:659    .text:0000019e .Loc.167
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:660    .text:0000019e .Loc.168
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:668    .text:000001aa .Loc.169
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:679    .text:000001bc .Loc.170
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:682    .text:000001be .Loc.171
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:684    .text:000001c0 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:689    .text:000001c0 porownaj_numer_telefonu_blok
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:692    .text:000001c0 .Loc.172
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:693    .text:000001c0 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:694    .text:000001c0 .Loc.173
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:717    .text:000001cc .Loc.174
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:718    .text:000001cc .Loc.175
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:721    .text:000001ce .Loc.176
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:724    .text:000001d2 .Loc.177
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:728    .text:000001d8 .Loc.178
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:733    .text:000001dc .Loc.179
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:736    .text:000001dc .Loc.180
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:737    .text:000001dc .Loc.181
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:741    .text:000001e2 .Loc.182
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:742    .text:000001e2 .Loc.183
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:743    .text:000001e2 .Loc.184
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:747    .text:000001e6 .Loc.185
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:748    .text:000001e6 .Loc.186
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:750    .text:000001e8 .Loc.187
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:754    .text:000001ec .Loc.188
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:755    .text:000001ec .Loc.189
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:758    .text:000001f0 .Loc.190
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:763    .text:000001f4 .Loc.191
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:768    .text:000001f8 .Loc.192
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:769    .text:000001f8 .Loc.193
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:772    .text:000001fc .Loc.194
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:774    .text:000001fc .Loc.195
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:775    .text:000001fc .Loc.196
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:778    .text:000001fe .Loc.197
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:779    .text:000001fe .Loc.198
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:782    .text:00000200 .Loc.199
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:783    .text:00000200 .Loc.200
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:786    .text:00000204 .Loc.201
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:789    .text:00000208 .Loc.202
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:790    .text:00000208 .Loc.203
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:793    .text:0000020c .Loc.204
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:797    .text:00000210 .Loc.205
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:798    .text:00000210 .Loc.206
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:801    .text:00000210 .Loc.207
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:807    .text:00000212 .Loc.208
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:808    .text:00000212 .Loc.209
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:811    .text:00000214 .Loc.210
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:817    .text:00000218 .Loc.211
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:820    .text:00000218 .Loc.212
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:830    .text:00000222 .Loc.213
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:831    .text:00000222 .Loc.214
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:834    .text:00000224 .Loc.215
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:840    .text:0000022a L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:845    .text:0000022a porownaj_numer_telefonu
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:848    .text:0000022a .Loc.216
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:849    .text:0000022a L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:850    .text:0000022a .Loc.217
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:867    .text:00000234 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:868    .text:00000236 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:881    .text:0000023e .Loc.218
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:882    .text:0000023e .Loc.219
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:883    .text:0000023e .Loc.220
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:892    .text:0000024a .Loc.221
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:896    .text:0000024e .Loc.222
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:901    .text:00000254 .Loc.223
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:907    .text:0000025e .Loc.224
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:908    .text:0000025e .Loc.225
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:915    .text:00000268 .Loc.226
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:926    .text:0000027a .Loc.227
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:928    .text:0000027c L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:960    .text:0000027c L0
+                     .debug_frame:00000000 L0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:49     .text:0000001a .L4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:38     .text:00000012 .L3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:56     .text:0000001e .L5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:63     .text:00000022 .L6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:31     .text:0000000e .L7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:178    .text:00000070 .L12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:242    .text:000000a6 .L10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:173    .text:0000006e .L13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:155    .text:0000005a .L8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:220    .text:00000094 .L11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:340    .text:000000d8 .L17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:579    .text:0000016c .L18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:592    .text:00000174 .L27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:380    .text:00000102 .L21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:587    .text:00000170 .L28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:443    .text:00000124 .L23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:564    .text:00000164 .L24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:505    .text:00000144 .L25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:447    .text:00000126 .L26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:326    .text:000000c6 .L16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:570    .text:00000166 .L15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:762    .text:000001f4 .L63
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:804    .text:00000212 .L41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:767    .text:000001f8 .L42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:815    .text:00000218 .L39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:827    .text:00000222 .L44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:732    .text:000001dc .L46
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:885    .text:00000240 .L01
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:1864   .debug_abbrev:00000000 .Ldebug_abbrev0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:8      .text:00000000 .Ltext0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:952    .text:0000027c .Letext0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:4013   .debug_line:00000000 .Ldebug_line0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:847    .text:0000022a .LFB11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:929    .text:0000027c .LFE11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2471   .debug_loc:00000000 .LLST38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2520   .debug_loc:00000066 .LLST39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2515   .debug_loc:00000062 .LVUS39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2546   .debug_loc:00000092 .LLST40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2539   .debug_loc:0000008c .LVUS40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2579   .debug_loc:000000cc .LLST41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2574   .debug_loc:000000c8 .LVUS41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:906    .text:0000025e .LVL101
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:913    .text:00000268 .LVL102
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:605    .text:00000178 .LFB9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:685    .text:000001c0 .LFE9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2595   .debug_loc:000000ef .LLST25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2652   .debug_loc:00000164 .LLST26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2645   .debug_loc:0000015e .LVUS26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2687   .debug_loc:000001a0 .LLST27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2680   .debug_loc:0000019a .LVUS27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2722   .debug_loc:000001dc .LLST28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2715   .debug_loc:000001d6 .LVUS28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:658    .text:0000019e .LVL75
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:666    .text:000001aa .LVL76
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:296    .text:000000b8 .LFB8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:599    .text:00000178 .LFE8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2740   .debug_loc:00000208 .LLST11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2766   .debug_loc:0000023b .LLST12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2761   .debug_loc:00000237 .LVUS12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2798   .debug_loc:0000026d .LLST13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2787   .debug_loc:00000263 .LVUS13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2868   .debug_loc:000002da .LLST14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2843   .debug_loc:000002c2 .LVUS14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2987   .debug_loc:000003a9 .LLST15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:2970   .debug_loc:00000399 .LVUS15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:392    .text:0000010c .LBI16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3977   .debug_ranges:00000000 .Ldebug_ranges0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3031   .debug_loc:00000411 .LLST16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3026   .debug_loc:0000040d .LVUS16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3057   .debug_loc:0000043d .LLST17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3052   .debug_loc:00000439 .LVUS17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3093   .debug_loc:00000479 .LLST18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3090   .debug_loc:00000477 .LVUS18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:460    .text:0000012e .LBI22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3103   .debug_loc:0000048e .LLST19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3100   .debug_loc:0000048c .LVUS19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3119   .debug_loc:000004a9 .LLST20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3116   .debug_loc:000004a7 .LVUS20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3141   .debug_loc:000004cd .LLST21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3138   .debug_loc:000004cb .LVUS21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:513    .text:00000148 .LBI28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3151   .debug_loc:000004e2 .LLST22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3148   .debug_loc:000004e0 .LVUS22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3167   .debug_loc:000004fd .LLST23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3164   .debug_loc:000004fb .LVUS23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3189   .debug_loc:00000521 .LLST24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3186   .debug_loc:0000051f .LVUS24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:76     .text:00000026 .LFB6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:254    .text:000000ac .LFE6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3196   .debug_loc:00000534 .LLST1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3264   .debug_loc:000005c2 .LLST2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3259   .debug_loc:000005be .LVUS2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3302   .debug_loc:000005fa .LLST3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3283   .debug_loc:000005e8 .LVUS3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3389   .debug_loc:00000694 .LLST4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3380   .debug_loc:0000068c .LVUS4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3435   .debug_loc:000006e2 .LLST5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3426   .debug_loc:000006da .LVUS5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3469   .debug_loc:00000724 .LLST6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3458   .debug_loc:0000071a .LVUS6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3502   .debug_loc:0000076c .LLST7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3493   .debug_loc:00000764 .LVUS7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:183    .text:00000076 .LVL22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:201    .text:00000088 .LVL26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:136    .text:0000004c .LVL14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:14     .text:00000000 .LFB5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:70     .text:00000026 .LFE5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3542   .debug_loc:000007b4 .LLST0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3521   .debug_loc:000007a0 .LVUS0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:260    .text:000000ac .LFB7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:290    .text:000000b8 .LFE7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3604   .debug_loc:0000083c .LLST8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3599   .debug_loc:00000838 .LVUS8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:269    .text:000000ac .LBB15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:286    .text:000000b6 .LBE15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3623   .debug_loc:00000861 .LLST9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3618   .debug_loc:0000085d .LVUS9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3654   .debug_loc:00000898 .LLST10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3651   .debug_loc:00000896 .LVUS10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:691    .text:000001c0 .LFB10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:841    .text:0000022a .LFE10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3661   .debug_loc:000008ab .LLST29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3701   .debug_loc:000008fa .LLST30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3694   .debug_loc:000008f4 .LVUS30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3736   .debug_loc:00000936 .LLST31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3729   .debug_loc:00000930 .LVUS31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3771   .debug_loc:00000972 .LLST32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3764   .debug_loc:0000096c .LVUS32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3808   .debug_loc:000009b0 .LLST33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3801   .debug_loc:000009aa .LVUS33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3839   .debug_loc:000009e8 .LLST34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3832   .debug_loc:000009e2 .LVUS34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3865   .debug_loc:00000a1b .LLST35
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3854   .debug_loc:00000a11 .LVUS35
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3907   .debug_loc:00000a6c .LLST36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3896   .debug_loc:00000a62 .LVUS36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3941   .debug_loc:00000ab5 .LLST37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:3930   .debug_loc:00000aab .LVUS37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:740    .text:000001e2 .LVL83
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:727    .text:000001d8 .LVL81
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:852    .text:0000022c .LCFI22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:856    .text:0000022e .LCFI23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:860    .text:00000230 .LCFI24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:864    .text:00000232 .LCFI25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:870    .text:00000238 .LCFI26
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:874    .text:0000023c .LCFI27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:846    .text:0000022a .LVL97
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:891    .text:0000024a .LVL98
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:925    .text:0000027a .LVL103
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:895    .text:0000024e .LVL99
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:900    .text:00000254 .LVL100
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:610    .text:0000017a .LCFI11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:614    .text:0000017c .LCFI12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:618    .text:0000017e .LCFI13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:622    .text:00000180 .LCFI14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:626    .text:00000182 .LCFI15
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:632    .text:00000188 .LCFI16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:636    .text:0000018c .LCFI17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:604    .text:00000178 .LVL71
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:654    .text:00000198 .LVL74
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:651    .text:00000196 .LVL73
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:678    .text:000001bc .LVL77
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:648    .text:00000194 .LVL72
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:681    .text:000001be .LVL78
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:301    .text:000000ba .LCFI9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:305    .text:000000bc .LCFI10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:295    .text:000000b8 .LVL37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:325    .text:000000c6 .LVL40
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:322    .text:000000c4 .LVL39
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:550    .text:00000158 .LVL61
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:563    .text:00000164 .LVL63
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:575    .text:0000016a .LVL65
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:578    .text:0000016c .LVL66
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:318    .text:000000c2 .LVL38
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:329    .text:000000c8 .LVL41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:348    .text:000000e0 .LVL42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:360    .text:000000ec .LVL44
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:368    .text:000000f4 .LVL45
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:379    .text:00000102 .LVL46
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:446    .text:00000126 .LVL53
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:452    .text:00000128 .LVL54
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:511    .text:00000148 .LVL59
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:586    .text:00000170 .LVL68
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:357    .text:000000ea .LVL43
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:436    .text:00000120 .LVL50
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:442    .text:00000124 .LVL52
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:569    .text:00000166 .LVL64
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:591    .text:00000174 .LVL69
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:595    .text:00000176 .LVL70
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:390    .text:0000010c .LVL47
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:406    .text:0000010e .LVL48
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:421    .text:00000118 .LVL49
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:458    .text:0000012e .LVL55
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:487    .text:0000013a .LVL56
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:541    .text:00000156 .LVL60
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:81     .text:00000028 .LCFI0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:85     .text:0000002a .LCFI1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:89     .text:0000002c .LCFI2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:93     .text:0000002e .LCFI3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:97     .text:00000030 .LCFI4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:101    .text:00000032 .LCFI5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:105    .text:00000034 .LCFI6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:109    .text:00000036 .LCFI7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:113    .text:00000038 .LCFI8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:75     .text:00000026 .LVL10
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:133    .text:00000048 .LVL13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:130    .text:00000046 .LVL12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:160    .text:0000005e .LVL18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:172    .text:0000006e .LVL20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:177    .text:00000070 .LVL21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:197    .text:00000082 .LVL25
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:219    .text:00000094 .LVL29
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:241    .text:000000a6 .LVL32
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:246    .text:000000a8 .LVL33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:126    .text:00000042 .LVL11
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:167    .text:00000068 .LVL19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:235    .text:000000a0 .LVL31
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:249    .text:000000aa .LVL34
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:146    .text:00000054 .LVL16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:154    .text:0000005a .LVL17
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:226    .text:00000098 .LVL30
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:189    .text:0000007c .LVL23
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:192    .text:0000007e .LVL24
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:204    .text:0000008a .LVL27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:13     .text:00000000 .LVL0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:30     .text:0000000e .LVL1
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:37     .text:00000012 .LVL2
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:41     .text:00000014 .LVL3
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:48     .text:0000001a .LVL4
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:52     .text:0000001c .LVL5
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:55     .text:0000001e .LVL6
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:59     .text:00000020 .LVL7
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:62     .text:00000022 .LVL8
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:66     .text:00000024 .LVL9
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:259    .text:000000ac .LVL35
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:282    .text:000000b6 .LVL36
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:696    .text:000001c2 .LCFI18
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:700    .text:000001c4 .LCFI19
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:704    .text:000001c6 .LCFI20
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:708    .text:000001c8 .LCFI21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:690    .text:000001c0 .LVL79
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:720    .text:000001ce .LVL80
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:731    .text:000001dc .LVL82
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:761    .text:000001f4 .LVL86
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:766    .text:000001f8 .LVL87
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:814    .text:00000218 .LVL94
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:826    .text:00000222 .LVL95
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:777    .text:000001fe .LVL89
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:803    .text:00000212 .LVL92
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:810    .text:00000214 .LVL93
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:773    .text:000001fc .LVL88
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:746    .text:000001e6 .LVL84
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:833    .text:00000224 .LVL96
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:753    .text:000001ec .LVL85
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:781    .text:00000200 .LVL90
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:961    .debug_info:00000000 .Ldebug_info0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:174    .text:0000006e .LBB12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:216    .text:00000092 .LBE12
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:221    .text:00000094 .LBB13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:233    .text:000000a0 .LBE13
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:243    .text:000000a6 .LBB14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:252    .text:000000ac .LBE14
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:391    .text:0000010c .LBB16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:403    .text:0000010c .LBE16
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:409    .text:00000110 .LBB21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:427    .text:00000118 .LBE21
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:459    .text:0000012e .LBB22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:471    .text:0000012e .LBE22
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:475    .text:00000132 .LBB27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:493    .text:0000013a .LBE27
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:512    .text:00000148 .LBB28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:524    .text:00000148 .LBE28
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:529    .text:0000014e .LBB33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:547    .text:00000156 .LBE33
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:734    .text:000001dc .LBB37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:800    .text:00000210 .LBE37
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:805    .text:00000212 .LBB41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:819    .text:00000218 .LBE41
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:828    .text:00000222 .LBB42
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccMrbFDn.s:839    .text:0000022a .LBE42
+
+UNDEFINED SYMBOLS
+memset
+eeprom_read_block
+eeprom_read_byte

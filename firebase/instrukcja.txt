@@ -1,0 +1,3 @@
+Aby uruchomić konfigurator, rozpakuj go na dysk i otwórz plik index.html w przeglądarce.
+Działa w trybie offline.
+

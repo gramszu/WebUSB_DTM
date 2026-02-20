@@ -15,6 +15,13 @@
 #define CMD_WRITE_EEPROM 'W'  // Zapis EEPROM (adresowany bajt po bajcie)
 #define CMD_READ_EEPROM 'R'   // Odczyt EEPROM (adresowany bajt po bajcie)
 #define CMD_VERIFY_EEPROM 'V' // Weryfikacja EEPROM
+#define CMD_POLL_DEVICE 'P'   // Polling identyfikacji urządzenia (v5000)
+#define CMD_GET_ID 'I'        // Jawny odczyt identyfikacji (v5000)
+
+/* Protokół konfiguratora */
+#define CONFIG_PROTOCOL_VERSION 5000
+#define CONFIG_PROTOCOL_VERSION_STR "5000"
+#define CONFIG_DEVICE_ID "AC5000"
 
 // Prototypy funkcji
 void uart1_init(void);

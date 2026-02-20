@@ -1,0 +1,2192 @@
+:root {
+    /* Dark Theme (Default) - Synchronized with Intro Screen */
+    --bg-body-gradient: #1a1b26;
+    /* Deep dark blue intro background */
+    --bg-header-gradient: #1e1f2e;
+    /* Intro card background for header */
+    --text-primary: #eee;
+    --text-secondary: #aaa;
+    --accent-primary: #64748b;
+    --accent-primary-gradient: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    --card-bg: #1e1f2e;
+    /* Intro card background */
+    --card-border: rgba(255, 255, 255, 0.05);
+    --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --input-bg: rgba(255, 255, 255, 0.05);
+    --input-border: rgba(255, 255, 255, 0.1);
+    --input-text: #eee;
+    --success-color: #4CAF50;
+    --error-color: #f44336;
+    --warning-color: #ff9800;
+    --offline-color: #333;
+}
+
+[data-theme="light"] {
+    --bg-body-gradient: #f0f2f5;
+    --bg-header-gradient: #ffffff;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --accent-primary: #007bff;
+    /* Blue */
+    --accent-primary-gradient: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.05);
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --input-bg: #f8f9fa;
+    --input-border: #ced4da;
+    --input-text: #333;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --warning-color: #ffc107;
+    --offline-color: #ccc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-body-gradient);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 15px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    width: 70%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+@media (max-width: 1400px) {
+    .container {
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+}
+
+/* Main Layout - Split Screen */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+}
+
+/* Sidebar (Left Column) */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+}
+
+/* Header Grid (Small Cards in Sidebar) - 2 Columns */
+.header-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Main Content (Right Column) */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+}
+
+.content-grid-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+}
+
+/* Remove margin from the last card to align bottoms perfectly */
+.content-grid-vertical>.card:last-child {
+    margin-bottom: 0;
+}
+
+/* Phone Card takes available space */
+#phoneCard {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tabs content takes remaining space inside Phone Card */
+.tab-content {
+    flex: 1;
+}
+
+/* Responsive: Stack on tablets/mobile */
+@media (max-width: 1200px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .header-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+header {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--bg-header-gradient);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Light theme specific header text override if not gradient */
+[data-theme="light"] header h1 {
+    background: none;
+    -webkit-text-fill-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+.header-content {
+    text-align: center;
+}
+
+header h1 {
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    line-height: 1.2;
+    margin-bottom: 4px;
+    background: var(--accent-primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1.0em;
+}
+
+.header-logo {
+    height: 50px;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Logo Toggling Logic */
+.logo-light {
+    display: none;
+}
+
+[data-theme="light"] .logo-dark {
+    display: none;
+}
+
+[data-theme="light"] .logo-light {
+    display: block;
+}
+
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 18px;
+    margin-bottom: 15px;
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+    font-size: 1.1em;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    /* Subtle generic border */
+    padding-bottom: 8px;
+}
+
+[data-theme="dark"] .card h2 {
+    border-bottom: 2px solid rgba(100, 116, 139, 0.3);
+}
+
+
+/* Fix for grid spacing: remove card margin inside grid so only gap applies */
+.header-grid .card {
+    margin-bottom: 0;
+}
+
+/* Connection Controls */
+/* Connection Controls */
+.connection-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    /* Allow wrapping on small screens */
+    /* justify-content: space-between;  <-- Removed to keep items flow naturally left-to-right + margin-auto on right item */
+    position: relative;
+}
+
+.connection-controls button {
+    position: relative;
+    z-index: 10;
+}
+
+.connection-controls label {
+    position: relative;
+    z-index: 10;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.1);
+    /* Neutral */
+    border-radius: 20px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--error-color);
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.status-dot.connected {
+    background: var(--accent-primary);
+    box-shadow: 0 0 10px rgba(0, 212, 170, 0.5);
+    /* Keep green glow or adapt? Keeping generic for now */
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.info-box {
+    background: rgba(0, 0, 0, 0.05);
+    border-left: 4px solid var(--accent-primary);
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    color: var(--text-primary);
+}
+
+.info-box p {
+    margin: 4px 0;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--accent-primary);
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    color: var(--input-text);
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+/* Fix for Select Dropdown Options in Dark Mode */
+select option {
+    background-color: #1e1f2e;
+    /* Fallback */
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] select option {
+    background-color: #ffffff;
+    color: #333;
+}
+
+input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.2;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.05);
+    /* Neutral */
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-secondary);
+    font-size: 0.85em;
+}
+
+.radio-label:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+.radio-label:has(input:checked) {
+    background: rgba(0, 123, 255, 0.1);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    font-weight: 500;
+}
+
+.radio-label input[type="radio"] {
+    cursor: pointer;
+    accent-color: var(--accent-primary);
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: var(--accent-primary);
+    color: white;
+}
+
+.btn-secondary {
+    background: #64748b;
+    /* Slate 500 */
+    color: white;
+}
+
+.btn-success {
+    background: #475569;
+    /* Slate 600 - keeping consistent with theme, or maybe #059669 (Emerald)? Let's go with a muted green */
+    background: #10b981;
+    /* Emerald 500 - too bright? */
+    background: #334155;
+    /* Slate 700 for generic actions? No, success needs green */
+    background: #2ea043;
+    /* Github Green - professional */
+    background: linear-gradient(180deg, #2ea043 0%, #238636 100%);
+    /* Subtle gradient */
+    color: white;
+}
+
+.btn-warning {
+    background: #d29922;
+    /* Github Warning */
+    background: linear-gradient(180deg, #d29922 0%, #b08800 100%);
+    color: white;
+}
+
+.btn-info {
+    background: #0969da;
+    /* Github Blue */
+    background: linear-gradient(180deg, #0969da 0%, #0550ae 100%);
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 0.9em;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 10;
+}
+
+.tab-btn {
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 6px 6px 0 0;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 10;
+}
+
+.tab-btn.active {
+    background: rgba(0, 123, 255, 0.1);
+    color: var(--accent-primary);
+    border-bottom: 2px solid var(--accent-primary);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Phone Card Specifics */
+.phone-card {
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Numbers Grid/List */
+.numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.numbers-list {
+    flex-grow: 1;
+    max-height: 450px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.number-item {
+    padding: 10px;
+    background: var(--card-bg);
+    /* Use card bg for items inside lists */
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    transition: all 0.3s ease;
+}
+
+.number-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: var(--accent-primary);
+}
+
+.number-item label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9em;
+    color: var(--accent-primary);
+}
+
+.number-item input {
+    width: 100%;
+}
+
+.search-box {
+    margin-bottom: 12px;
+}
+
+.search-box input {
+    width: 100%;
+}
+
+/* Actions Grid */
+.actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* Progress */
+.progress-container {
+    text-align: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--accent-primary-gradient);
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#progressText {
+    color: var(--accent-primary);
+    font-weight: 500;
+}
+
+/* Log Area */
+.log-area {
+    background: rgba(0, 0, 0, 0.8);
+    /* Keep dark for logs/terminal feel even in light mode? Or variable? Let's use variable but make it dark by default or specific. */
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 12px;
+    padding: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.80em;
+    margin-bottom: 8px;
+    line-height: 1.2;
+    color: #eee;
+    /* Logs usually look better white on black */
+}
+
+/* Light theme log area override */
+[data-theme="light"] .log-area {
+    background: #2d2d2d;
+    color: #f0f0f0;
+}
+
+
+.log-entry {
+    margin: 2px 0;
+    padding: 2px 4px;
+    border-left: 2px solid transparent;
+}
+
+.log-entry.info {
+    border-color: #4facfe;
+    color: #4facfe;
+}
+
+.log-entry.success {
+    border-color: var(--success-color);
+    color: var(--success-color);
+}
+
+.log-entry.error {
+    border-color: var(--error-color);
+    color: var(--error-color);
+}
+
+.log-entry.warning {
+    border-color: var(--warning-color);
+    color: var(--warning-color);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+footer p {
+    margin: 4px 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 8px;
+    opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
+}
+
+/* Configuration Grid - 2 Columns (2x2) */
+.config-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.config-grid h3 {
+    color: var(--accent-primary);
+    font-size: 1.2em;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 6px;
+}
+
+/* Responsive - config grid */
+@media (max-width: 768px) {
+    .config-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.4em;
+    }
+
+    .connection-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .numbers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .header-content {
+        text-align: center;
+    }
+
+    .header-logo {
+        position: static;
+        transform: none;
+        margin-bottom: 10px;
+        left: auto;
+        top: auto;
+    }
+
+    .theme-switch {
+        position: static !important;
+        margin-top: 10px;
+    }
+}
+
+/* --- GSM Signal Icon --- */
+.signal-container {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 5px 10px;
+    background: var(--card-bg);
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+}
+
+.signal-text {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--success-color);
+    min-width: 40px;
+    text-align: right;
+}
+
+.bars-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 20px;
+    margin-bottom: 2px;
+}
+
+.signal-bar {
+    width: 5px;
+    background-color: var(--offline-color);
+    border-radius: 1px;
+    transition: background-color 0.3s ease;
+}
+
+.signal-bar.active {
+    background-color: var(--success-color);
+}
+
+/* Signal Strength Levels */
+.signal-bar.bar-1 {
+    height: 8px;
+}
+
+.signal-bar.bar-2 {
+    height: 11px;
+}
+
+.signal-bar.bar-3 {
+    height: 14px;
+}
+
+.signal-bar.bar-4 {
+    height: 17px;
+}
+
+.signal-bar.bar-5 {
+    height: 20px;
+}
+
+/* Status Colors */
+
+/* We use CSS variables effectively here by mapping generic color classes */
+/* These specific overrides might need updates to use vars if we want full theming but solid colors are usually ok */
+
+.signal-container.weak .signal-bar.active,
+.signal-container.weak .signal-text {
+    color: var(--error-color);
+    background-color: var(--error-color);
+}
+
+.signal-container.weak .signal-text {
+    background-color: transparent;
+}
+
+.signal-container.medium .signal-bar.active,
+.signal-container.medium .signal-text {
+    color: var(--warning-color);
+    background-color: var(--warning-color);
+}
+
+.signal-container.medium .signal-text {
+    background-color: transparent;
+}
+
+.signal-container.strong .signal-bar.active,
+.signal-container.strong .signal-text {
+    color: var(--success-color);
+    background-color: var(--success-color);
+}
+
+.signal-container.strong .signal-text {
+    background-color: transparent;
+}
+
+/* Brak zasięgu / błąd GSM – neutralny szary, nie czerwony */
+.signal-container.nodata .signal-text {
+    color: var(--text-muted, #8892b0);
+    font-weight: normal;
+}
+
+.signal-container.nodata .signal-bar.active {
+    background-color: var(--text-muted, #8892b0);
+}
+
+/* Ukryj tylko gdy rozłączono (kontener nie używany) */
+.signal-container.offline {
+    display: none !important;
+}
+
+/* Footer Icons Container */
+.footer-icons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+/* Resource Links */
+.resource-link {
+    text-decoration: none;
+    transition: transform 0.2s, opacity 0.2s;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+}
+
+.resource-link:hover {
+    transform: scale(1.15);
+    opacity: 1;
+}
+
+/* Adjust black icon for dark mode */
+.resource-link svg[style*="color: #000000;"] {
+    color: var(--text-primary) !important;
+}
+
+/* Theme Switcher Styles (Restored) */
+.theme-switch {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    right: 20px;
+    bottom: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    border-radius: 20px;
+    backdrop-filter: blur(2px);
+}
+
+[data-theme="light"] .theme-switch {
+    background: rgba(255, 255, 255, 0.5);
+    border-left: none;
+    /* Reset if previously set */
+}
+
+[data-theme="light"] .theme-switch {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.theme-switch label {
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 2px 6px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.theme-switch label:has(input:checked) {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .theme-switch label:has(input:checked) {
+    background: white;
+}
+
+/* --- Browser Support Modal --- */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    margin: auto;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+[data-theme="light"] .modal-content {
+    background: #ffffff;
+}
+
+.modal-content h2 {
+    margin-bottom: 40px;
+    font-size: 1.8rem;
+    color: var(--text-primary);
+}
+
+.close-modal {
+    color: var(--text-secondary);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.browser-icons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.browser-icons a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: transform 0.3s ease;
+}
+
+.browser-icons a:hover {
+    transform: translateY(-5px);
+}
+
+.browser-icons img {
+    margin-bottom: 10px;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.browser-icons span {
+    font-weight: 500;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* --- Global Help Mode Styles --- */
+/* Added for Global Help System - [User Request: Cloud Tooltips] */
+
+.card,
+.has-tooltip {
+    position: relative;
+    /* Ensure tooltip positions relative to this container */
+}
+
+/* Generic Help Tooltip (Hidden by default) */
+.help-tooltip {
+    display: none;
+    background-color: #ffd700;
+    /* Nice Yellow */
+    color: #333;
+    text-align: center;
+    border-radius: 6px;
+    padding: 15px;
+    position: absolute;
+    z-index: 1000;
+
+    /* Position "cloud" above the element */
+    bottom: 105%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    max-width: 90vw;
+
+    font-size: 0.9em;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid #e1b12c;
+    pointer-events: none;
+    /* Allow clicking through the tooltip */
+
+    /* Animation */
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Tooltip Tail (Arrow down) */
+.help-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: #ffd700 transparent transparent transparent;
+}
+
+/* 
+ * VISIBILITY LOGIC: 
+ * Tooltip appears ONLY when:
+ * 1. body has class 'help-mode' (checkbox checked)
+ * 2. element with class 'has-tooltip' is HOVERED
+ */
+body.help-mode .has-tooltip:hover .help-tooltip {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+/* Cursor indication when in help mode */
+/* --- Loading Spinner Overlay --- */
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.spinner-content {
+    text-align: center;
+}
+
+.spinner-ring {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    border: 6px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--accent-primary);
+    animation: spin 1s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(0, 212, 170, 0.4);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* --- INTRO / LOADING SCREEN STYLES --- */
+#introScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #1a1b26;
+    /* Deep dark blue/bg from screenshot */
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+    overflow-y: auto;
+}
+
+/* Intro Header */
+.intro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.intro-logo {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.logo-text-bold {
+    font-weight: 800;
+    font-size: 1.5em;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.logo-text-light {
+    font-weight: 300;
+    font-size: 1.5em;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.preview-badge {
+    margin-left: 10px;
+    background: #333;
+    color: #aaa;
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+.intro-version {
+    text-align: right;
+    font-size: 0.8em;
+    color: #666;
+    line-height: 1.2;
+}
+
+.version-number {
+    color: #888;
+    font-weight: normal;
+    font-size: 1.0em;
+}
+
+/* Intro Main Content */
+.intro-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    flex-grow: 1;
+    gap: 60px;
+}
+
+/* Left Column */
+.intro-left {
+    flex: 1;
+    max-width: 500px;
+}
+
+.badge-pill {
+    display: inline-block;
+    background: rgba(100, 116, 139, 0.1);
+    color: var(--accent-primary);
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.intro-title {
+    font-size: 3.2em;
+    line-height: 1.1;
+    font-weight: 800;
+    margin-bottom: 40px;
+    /* text-transform: uppercase; Removed to allow Mixed Case for Bramster */
+}
+
+.intro-title .highlight {
+    color: var(--accent-primary);
+}
+
+.intro-desc {
+    color: #8892b0;
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 50px;
+}
+
+.feature-cards {
+    display: flex;
+    gap: 20px;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.feature-icon {
+    color: var(--accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.feature-text strong {
+    font-size: 0.9em;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.feature-text span {
+    font-size: 0.7em;
+    color: #8892b0;
+}
+
+/* Right Column */
+.intro-right {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.loader-card {
+    background: #1e1f2e;
+    /* Slightly lighter than bg */
+    border-radius: 30px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+/* USB Icon Grid Background Effect (Simplified) */
+.usb-icon-circle {
+    width: 80px;
+    height: 80px;
+    background: #161722;
+    border-radius: 20px;
+    margin: 0 auto 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.loader-status {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #8892b0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#loaderPercent {
+    color: var(--accent-primary);
+}
+
+.loader-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: #2a2b3d;
+    border-radius: 3px;
+    margin-bottom: 40px;
+    overflow: hidden;
+}
+
+.loader-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--accent-primary);
+    border-radius: 3px;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 15px var(--accent-primary);
+}
+
+.launch-btn {
+    width: 100%;
+    padding: 20px;
+    background: var(--accent-primary);
+    color: #1a1b26;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    /* Glow transition */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0.5;
+    /* Startup disabled state */
+    pointer-events: none;
+}
+
+.launch-btn:not([disabled]) {
+    opacity: 1;
+    pointer-events: auto;
+    box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
+    /* Green glow */
+}
+
+.launch-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0, 212, 170, 0.4);
+}
+
+/* Boot Logs */
+.boot-logs {
+    background: #111218;
+    border-radius: 12px;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8em;
+    color: #555;
+    line-height: 1.6;
+}
+
+.log-line {
+    opacity: 0;
+    /* Hidden initially for animation */
+    transform: translateY(10px);
+    animation: fadeInUp 0.3s forwards;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.log-prefix {
+    color: #334;
+}
+
+.log-line.success {
+    color: #556;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Intro */
+@media (max-width: 1024px) {
+    .intro-main {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+    }
+
+    .intro-header {
+        margin-bottom: 30px;
+    }
+
+    .intro-left,
+    .intro-right {
+        max-width: 100%;
+    }
+
+    .intro-title {
+        font-size: 3em;
+    }
+
+    .feature-cards {
+        justify-content: center;
+    }
+
+    .feature-text {
+        text-align: left;
+        /* Keep text aligned left inside card */
+    }
+}
+
+/* --- UPDATED INTRO STYLES (INSTRUCTIONS) --- */
+.instruction-section {
+    margin-top: 40px;
+}
+
+.instruction-header {
+    font-size: 0.9em;
+    color: #667;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.instruction-card {
+    background: rgba(255, 255, 255, 0.05);
+    /* Very transparent main bg */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.instruction-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    /* Slightly lighter on hover */
+    border-color: var(--accent-primary);
+    transform: translateX(5px);
+}
+
+.instruction-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 212, 170, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    flex-shrink: 0;
+}
+
+.instruction-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.instruction-text strong {
+    color: #fff;
+    font-size: 1.0em;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.instruction-text span {
+    color: #8892b0;
+    font-size: 0.9em;
+}
+
+/* Updated Loader Card Button */
+.launch-btn {
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+/* --- INTRO FOOTER --- */
+.intro-footer {
+    margin-top: auto;
+    /* Push to bottom */
+    width: 100%;
+    text-align: center;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.intro-footer .resource-link svg {
+    transition: transform 0.3s ease;
+}
+
+.intro-footer .resource-link:hover svg {
+    transform: scale(1.1);
+}
+
+/* Fix for iOS icon (which is black by default) on dark intro background */
+.intro-footer a[title="Aplikacja iOS"] svg {
+    color: #fff !important;
+}
+
+/* --- INTRO BADGES (Between Title and Instructions) --- */
+.intro-badges {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.badge-tech {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aab;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* --- COMPATIBILITY FOOTER --- */
+.compatibility-section span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.comp-icons span {
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.comp-icons span:hover {
+    opacity: 1;
+}
+
+/* --- VERTICAL BADGES (Below Launch Button) --- */
+.intro-badges-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 25px;
+    align-items: center;
+}
+
+.intro-badges-vertical .badge-tech {
+    background: transparent;
+    border: none;
+    color: #667;
+    font-size: 0.7em;
+    padding: 0;
+    width: auto;
+}
+
+/* --- HORIZONTAL BADGES (Below Launch Button) --- */
+.intro-badges-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 60px;
+    /* Increased margin as requested */
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.intro-badges-row .badge-tech {
+    background: transparent;
+    border: none;
+    color: #667;
+    font-size: 0.7em;
+    padding: 0;
+    width: auto;
+    white-space: nowrap;
+}
+
+/* --- GLOBAL ICON OVERRIDE (High Specificity) --- */
+.footer-icons .resource-link svg,
+.footer-icons .resource-link img {
+    color: #888 !important;
+    fill: currentColor;
+    filter: grayscale(100%) contrast(0.5) brightness(1.2) !important;
+    opacity: 0.7 !important;
+    transition: all 0.3s ease;
+}
+
+.footer-icons .resource-link:hover svg,
+.footer-icons .resource-link:hover img {
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* Specific Hover Colors */
+.footer-icons a[title*="YouTube"]:hover svg {
+    color: #FF0000 !important;
+}
+
+.footer-icons a[title*="iOS"]:hover svg {
+    color: #ffffff !important;
+}
+
+.footer-icons a[title*="Sklep"]:hover svg {
+    color: #007bff !important;
+}
+
+/* ==========================================================================
+   CLASSIC (WIN7) THEME - ROBUST OVERRIDES
+   ========================================================================== */
+
+[data-theme="classic"] {
+    --bg-body-gradient: #000000;
+    --bg-pattern: none;
+    --bg-header-gradient: #ffffff;
+
+    --text-primary: #000000;
+    --text-secondary: #444444;
+
+    --accent-primary: #0078d7;
+    --accent-primary-gradient: linear-gradient(180deg, #f0f0f0 0%, #e1e1e1 100%);
+
+    --card-bg: #f9f9f9;
+    --card-border: #aaaaaa;
+    --card-shadow: none;
+
+    --input-bg: #ffffff;
+    --input-border: #abadb3;
+    --input-text: #000000;
+
+    --success-color: #008000;
+    --error-color: #ff0000;
+    --warning-color: #ff8c00;
+}
+
+/* 1. RESET BODY & LAYOUT */
+[data-theme="classic"] body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000 !important;
+    background-image: none !important;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* 2. MAIN CONTAINER RESET */
+[data-theme="classic"] .container {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 20px;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+}
+
+/* 3. WINDOW WRAPPER (#appWindow) Simulates the Win7 Window */
+[data-theme="classic"] #appWindow {
+    width: 96% !important;
+    max-width: 9000px !important;
+    /* Allow wide screens? User said 'Win skin responsive', usually 900px was fixed. Wait, previous was 900px. If responsive, maybe allow wider? Or keep 900px dense? 'width: 900px' implies fixed. I'll make it fluid up to a reasonable max or 900. Let's stick to max-width: 1000px or so to avoid looking too stretched, or just 95%. User didn't specify max. I'll use max-width: 1200px or similar to benefit from 'responsive' meaning 'adapts to size'.
+    Actually, Win7 style usually looks bad if too wide.
+    I'll set `width: 96%` and `max-width: 950px`. */
+    width: 96% !important;
+    max-width: 1100px !important;
+    background-color: #f0f0f0;
+    border: 1px solid #444;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    font-size: 12px;
+}
+
+/* 4. HEADER AS TITLE BAR */
+[data-theme="classic"] header {
+    background: #fff !important;
+    border-bottom: 1px solid #ccc !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin-bottom: 10px !important;
+    padding: 5px 10px !important;
+    height: auto !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+[data-theme="classic"] header h1 {
+    font-size: 14px !important;
+    margin: 0 !important;
+    background: none !important;
+    -webkit-text-fill-color: #000 !important;
+    color: #000 !important;
+    font-weight: bold;
+}
+
+[data-theme="classic"] .header-content p.subtitle,
+[data-theme="classic"] .header-logo {
+    display: none !important;
+}
+
+/* 5. CARDS AS GROUP BOXES */
+[data-theme="classic"] .card {
+    background: #f9f9f9 !important;
+    border: 1px solid #aaa !important;
+    border-radius: 2px !important;
+    box-shadow: none !important;
+    padding: 15px 10px 10px 10px !important;
+    margin-bottom: 10px !important;
+    backdrop-filter: none !important;
+    position: relative;
+    margin-top: 15px !important;
+    /* Spacing for faux legend */
+}
+
+/* Faux Legend */
+[data-theme="classic"] .card h2 {
+    position: absolute;
+    top: -12px;
+    left: 10px;
+    background: #f0f0f0;
+    /* Match window bg */
+    padding: 0 5px;
+    font-size: 11px !important;
+    color: #444 !important;
+    border: none !important;
+    margin: 0 !important;
+    width: auto;
+    font-weight: normal;
+}
+
+/* 6. GRID LAYOUT OVERRIDES */
+[data-theme="classic"] .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Force 2 columns */
+    gap: 10px;
+}
+
+[data-theme="classic"] .sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+[data-theme="classic"] .header-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+[data-theme="classic"] #configGrid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    /* Inside config 2 columns */
+    gap: 10px !important;
+}
+
+/* 7. CONTROLS COMPACTING */
+[data-theme="classic"] .btn {
+    background: #e1e1e1 !important;
+    background-image: linear-gradient(180deg, #f0f0f0 0%, #e1e1e1 100%) !important;
+    border: 1px solid #707070 !important;
+    color: #000 !important;
+    border-radius: 3px !important;
+    box-shadow: inset 0 0 1px #fff !important;
+    font-size: 11px !important;
+    padding: 4px 10px !important;
+    font-weight: normal !important;
+}
+
+[data-theme="classic"] .btn:hover {
+    border-color: #3c7fb1 !important;
+    background: #eaf6fd !important;
+}
+
+[data-theme="classic"] input,
+[data-theme="classic"] select {
+    border: 1px solid #abadb3 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    padding: 2px !important;
+    height: 22px !important;
+    font-size: 11px !important;
+}
+
+/* 8. HIDE MODERN ELEMENTS */
+[data-theme="classic"] .footer-icons {
+    display: none !important;
+    /* Will be overridden by later rule */
+}
+
+/* Help/Tooltips are now visible */
+
+/* 9. SPECIFIC SECTIONS ADJUST */
+[data-theme="classic"] .connection-controls {
+    flex-wrap: nowrap;
+}
+
+[data-theme="classic"] #actionsCard .actions-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 5px !important;
+}
+
+[data-theme="classic"] .phone-card {
+    min-height: 400px;
+}
+
+[data-theme="classic"] .numbers-list {
+    background: #fff;
+    border: 1px solid #aaa;
+}
+
+[data-theme="classic"] .number-item {
+    border: none !important;
+    background: transparent !important;
+    padding: 2px !important;
+    border-bottom: 1px solid #eee !important;
+}
+
+/* Fix progress section visibility */
+[data-theme="classic"] #progressSection {
+    margin-bottom: 10px;
+}
+
+[data-theme="classic"] .progress-bar {
+    background: #fff;
+    border: 1px solid #aaa;
+    border-radius: 0;
+    height: 15px;
+}
+
+[data-theme="classic"] .progress-fill {
+    background: #0078d7;
+    border-radius: 0;
+}
+
+/* Signal Bars - Ensure they are visible and positioned correctly */
+[data-theme="classic"] .signal-container {
+    background: transparent !important;
+    border: none !important;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+/* 10. UNHIDE FOOTER & STYLE AS STATUS BAR */
+[data-theme="classic"] .footer-icons {
+    display: flex !important;
+    gap: 10px !important;
+    margin: 5px 0 !important;
+    justify-content: center !important;
+    /* Centered as per user request */
+}
+
+[data-theme="classic"] footer {
+    display: none !important;
+}
+
+[data-theme="classic"] footer p {
+    display: none !important;
+    /* Hide text, keep icons? Or keep status text */
+}
+
+/* Make icons smaller/grayscale for status bar feel */
+[data-theme="classic"] .footer-icons .resource-link svg,
+[data-theme="classic"] .footer-icons .resource-link img {
+    width: 16px !important;
+    height: 16px !important;
+    filter: grayscale(100%) !important;
+    color: #444 !important;
+}
+
+
+/* 11. GSM SIGNAL POSITIONING FIX */
+[data-theme="classic"] .signal-container {
+    position: static !important;
+    /* Reset absolute positioning */
+    display: inline-flex !important;
+    vertical-align: middle !important;
+    margin-left: 10px !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+[data-theme="classic"] .connection-controls {
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Lift page visual position */
+[data-theme="classic"] #appWindow {
+    transform: translateY(-30px);
+}
+
+/* 12. THEME SWITCHER POSITIONING FIX */
+[data-theme="classic"] .theme-switch {
+    position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+[data-theme="classic"] .theme-switch label {
+    font-size: 14px !important;
+    /* Match header font */
+    padding: 1px 3px !important;
+}
+
+[data-theme="classic"] .theme-switch label:hover {
+    background: #e5f1fb !important;
+    border: 1px solid #0078d7 !important;
+    border-radius: 2px !important;
+}
+
+[data-theme="classic"] .theme-switch label:has(input:checked) {
+    background: #cce4f7 !important;
+    border: 1px solid #005499 !important;
+    border-radius: 2px !important;
+    box-shadow: none !important;
+}
+
+/* 13. REFINED GSM SIGNAL POSITION (Flexbox Parent) */
+[data-theme="classic"] .connection-card {
+    display: flex !important;
+    flex-flow: row wrap !important;
+    align-items: center !important;
+}
+
+[data-theme="classic"] .connection-card h2 {
+    width: 100% !important;
+    /* Force title to take full width */
+    position: absolute !important;
+    /* Keep absolute position for faux legend */
+    top: -12px !important;
+}
+
+[data-theme="classic"] .connection-controls {
+    flex: 0 1 auto !important;
+    /* Allow width to fit content */
+    width: auto !important;
+}
+
+[data-theme="classic"] #gsmSignalContainer {
+    position: static !important;
+    margin-left: 15px !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    height: auto !important;
+}
+
+/* Ensure bars are visible/sized correctly for inline */
+[data-theme="classic"] .bars-wrapper {
+    height: 16px !important;
+}
+
+[data-theme="classic"] .signal-bar {
+    width: 3px !important;
+    border-radius: 0 !important;
+}
+
+/* 14. REORDERING CONNECTION ITEMS (Button -> Signal -> Help -> Logs) */
+[data-theme="classic"] .connection-controls {
+    display: contents !important;
+    /* Flatten hierarchy to allow reordering with siblings */
+}
+
+[data-theme="classic"] #connectBtn {
+    order: 1 !important;
+}
+
+[data-theme="classic"] .status-indicator {
+    order: 2 !important;
+    margin-left: 5px !important;
+}
+
+[data-theme="classic"] #gsmSignalContainer {
+    order: 3 !important;
+    margin-left: 10px !important;
+}
+
+/* Target labels using has() or adjacency */
+[data-theme="classic"] .connection-controls label:has(#showHelpCheckbox) {
+    order: 4 !important;
+    margin-left: 10px !important;
+    border: none !important;
+    /* Remove separators if any */
+}
+
+[data-theme="classic"] .connection-controls label:has(#showLogsCheckbox) {
+    order: 5 !important;
+    margin-left: 10px !important;
+    border-left: 1px solid #aaa !important;
+    /* Add separator */
+    padding-left: 10px !important;
+}
+
+/* 15. ALIGN HELP/LOGS TO RIGHT */
+[data-theme="classic"] .connection-controls label:has(#showHelpCheckbox) {
+    margin-left: auto !important;
+    /* Push to right */
+    order: 4 !important;
+}
+
+[data-theme="classic"] .connection-controls label:has(#showLogsCheckbox) {
+    order: 5 !important;
+    margin-left: 10px !important;
+}
+
+/* 16. FONT SIZE INCREASE (~10%) */
+[data-theme="classic"] #appWindow {
+    font-size: 13.5px !important;
+    /* ~10% larger than 12px */
+}
+
+[data-theme="classic"] header h1 {
+    font-size: 15.5px !important;
+    /* ~10% larger than 14px */
+}
+
+[data-theme="classic"] .card legend,
+[data-theme="classic"] .card h2 {
+    font-size: 12.5px !important;
+}
+
+[data-theme="classic"] .btn {
+    font-size: 12.5px !important;
+    padding: 5px 12px !important;
+}
+
+[data-theme="classic"] input,
+[data-theme="classic"] select {
+    font-size: 12.5px !important;
+    height: 25px !important;
+    /* Taller inputs */
+    padding: 2px 4px !important;
+}
+
+[data-theme="classic"] .radio-label,
+[data-theme="classic"] .checkbox-label {
+    font-size: 13.5px !important;
+}
+
+/* Adjust layout spacing for larger text */
+[data-theme="classic"] .card {
+    padding-top: 22px !important;
+}
+
+/* 21. STYLING RELOCATED ICONS (Inside Actions Card) */
+[data-theme="classic"] .footer-icons {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    margin-top: 10px !important;
+    width: 100% !important;
+    border-top: none !important;
+}
+
+[data-theme="classic"] .footer-icons .resource-link svg,
+[data-theme="classic"] .footer-icons .resource-link img {
+    width: 20px !important;
+    height: 20px !important;
+    filter: grayscale(100%) !important;
+    opacity: 0.8 !important;
+}
+
+[data-theme="classic"] .footer-icons .resource-link:hover svg,
+[data-theme="classic"] .footer-icons .resource-link:hover img {
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* 24. RESPONSIVE MEDIA QUERIES (Classic) */
+@media (max-width: 850px) {
+    [data-theme="classic"] .main-layout {
+        grid-template-columns: 1fr !important;
+        /* Stack vertically */
+        gap: 20px !important;
+    }
+
+    [data-theme="classic"] #configGrid {
+        grid-template-columns: 1fr !important;
+        /* Stack config cards too */
+    }
+
+    [data-theme="classic"] .sidebar,
+    [data-theme="classic"] .main-content {
+        width: 100% !important;
+    }
+
+    /* Connection bar stacking */
+    [data-theme="classic"] .connection-controls {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+
+    [data-theme="classic"] .connection-controls label {
+        margin: 5px !important;
+    }
+
+    [data-theme="classic"] #appWindow {
+        width: 100% !important;
+        border-radius: 0 !important;
+        border: none !important;
+        margin-top: 0 !important;
+        transform: none !important;
+        /* Reset lift */
+    }
+}
+/* 25. DARKER LOGS BACKGROUND (Classic) */
+[data-theme="classic"] .log-area {
+    background-color: #222 !important; /* Dark background */
+    color: #0f0 !important; /* Green text like terminal, or just white #eee */
+    border: 1px solid #555 !important;
+}

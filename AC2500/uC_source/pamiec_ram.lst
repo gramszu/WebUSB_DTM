@@ -21,18 +21,18 @@
   23               		.file 3 "narzedzia.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 pamiec_ram.c
-/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//cclWoK2k.s:2      *ABS*:0000003e __SP_H__
-/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//cclWoK2k.s:3      *ABS*:0000003d __SP_L__
-/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//cclWoK2k.s:4      *ABS*:0000003f __SREG__
-/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//cclWoK2k.s:5      *ABS*:00000000 __tmp_reg__
-/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//cclWoK2k.s:6      *ABS*:00000001 __zero_reg__
-/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//cclWoK2k.s:14     .bss:00000000 powiadomienia_aktywne
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccqxaWJ1.s:2      *ABS*:0000003e __SP_H__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccqxaWJ1.s:3      *ABS*:0000003d __SP_L__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccqxaWJ1.s:4      *ABS*:0000003f __SREG__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccqxaWJ1.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccqxaWJ1.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccqxaWJ1.s:14     .bss:00000000 powiadomienia_aktywne
                             *COM*:00000011 numer_powiadomien
                             *COM*:000000a1 tekst_wysylanego_smsa
                             *COM*:00000140 wysylany_blok_SIM900
-/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//cclWoK2k.s:149    .debug_abbrev:00000000 .Ldebug_abbrev0
-/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//cclWoK2k.s:294    .debug_line:00000000 .Ldebug_line0
-/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//cclWoK2k.s:25     .debug_info:00000000 .Ldebug_info0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccqxaWJ1.s:149    .debug_abbrev:00000000 .Ldebug_abbrev0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccqxaWJ1.s:294    .debug_line:00000000 .Ldebug_line0
+/var/folders/7g/v_85jvns1ms329sry2jy3vjc0000gn/T//ccqxaWJ1.s:25     .debug_info:00000000 .Ldebug_info0
 
 UNDEFINED SYMBOLS
 __do_clear_bss
