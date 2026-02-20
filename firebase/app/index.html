@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sonfy-ac.web.app</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Prevent white flash on load */
+        html,
+        body {
+            background-color: #1a1b26;
+        }
+
+        /* FORCE GRAY ICONS - SUPER AGGRESSIVE */
+        .footer-icons .resource-link svg,
+        .footer-icons .resource-link img,
+        .footer-icons .resource-link path {
+            filter: grayscale(100%) opacity(0.7) !important;
+            color: #888 !important;
+            fill: #888 !important;
+            /* Force fill for paths */
+        }
+
+        .footer-icons .resource-link:hover svg,
+        .footer-icons .resource-link:hover img,
+        .footer-icons .resource-link:hover path {
+            filter: none !important;
+            opacity: 1 !important;
+            color: inherit !important;
+            /* Force path to inherit color */
+            fill: currentColor !important;
+            /* Restore fill */
+        }
+
+        /* Hover Brand Colors */
+        .footer-icons a[title*="YouTube"]:hover svg {
+            color: #FF0000 !important;
+        }
+
+        .footer-icons a[title*="iOS"]:hover svg {
+            color: #ffffff !important;
+        }
+
+        .footer-icons a[title*="Sklep"]:hover svg {
+            color: #007bff !important;
+        }
+    </style>
+</head>
+
+
+<body>
+    <!-- Intro / Loading Screen -->
+    <!-- Intro removed for standalone app -->
+
+    <div class="container" id="mainAppContainer">
+        <div id="appWindow" class="app-window-wrapper">
+            <header>
+                <!-- Logo Images -->
+                <a href="https://www.sonfy.pl" target="_blank"><img src="logo.png" alt="AC250 Logo"
+                        class="header-logo logo-dark"></a>
+                <a href="https://www.sonfy.pl" target="_blank"><img src="logo_light.png" alt="Sonfy Logo"
+                        class="header-logo logo-light"></a>
+                <div class="header-content">
+                    <h1>sonfy-ac.web.app</h1>
+                </div>
+                <!-- Theme Switcher (Right aligned) -->
+                <div class="theme-switch">
+                    <label title="Tryb Ciemny"><input type="radio" name="theme" value="dark" checked> 🌙</label>
+                    <label title="Tryb Jasny"><input type="radio" name="theme" value="light"> ☀️</label>
+                    <label title="Klasyk (Win7)"><input type="radio" name="theme" value="classic"> 🪟</label>
+                </div>
+            </header>
+
+            <!-- Logs Section (Moved to Top) -->
+            <section class="card" id="logsCard" style="margin-bottom: 20px;">
+                <h2>📋 Logi</h2>
+                <div id="logArea" class="log-area"></div>
+                <button id="clearLogBtn" class="btn btn-secondary" style="margin-top: 10px; width: 100%;">🗑️ Wyczyść
+                    logi</button>
+            </section>
+
+            <!-- Progress Section -->
+            <section class="card" id="progressSection" style="display: none; margin-bottom: 20px;">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                    <p id="progressText">Przetwarzanie...</p>
+                </div>
+            </section>
+
+            <!-- Main Layout Split Grid -->
+            <div class="main-layout">
+                <!-- LEFT COLUMN: Sidebar (Configuration) -->
+                <div class="sidebar">
+
+                    <!-- Connection Section -->
+                    <section class="card connection-card has-tooltip" style="position: relative;">
+                        <div class="help-tooltip">Tu zarządzasz połączeniem USB z urządzeniem.</div>
+                        <h2>🔌 Połączenie</h2>
+                        <div class="connection-controls">
+                            <button id="connectBtn" class="btn btn-primary">Połącz z urządzeniem</button>
+                            <div class="status-indicator" style="margin-left: 15px; display: none;">
+                                <div class="connection-status">
+                                    <span class="status-dot" id="statusDot"></span>
+                                    <span id="statusText">Rozłączony</span>
+                                </div>
+                            </div>
+
+                            <!-- Help Toggle Moved Here -->
+                            <label
+                                style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8em; color: #aaa; margin-left: auto;">
+                                <input type="checkbox" id="showHelpCheckbox">
+                                <span>❤️ Pomoc</span>
+                            </label>
+
+                            <!-- Log Toggle Moved Here (Separate Item) -->
+                            <label
+                                style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8em; color: #aaa; margin-left: 10px; border-left: 1px solid #444; padding-left: 10px;">
+                                <input type="checkbox" id="showLogsCheckbox" checked>
+                                <span>📜 Pokaż logi</span>
+                            </label>
+                        </div>
+
+                        <!-- GSM Signal -->
+                        <div id="gsmSignalContainer" class="signal-container offline" title="Zasięg GSM">
+                            <span id="signalPercent" class="signal-text"></span>
+                            <div class="bars-wrapper">
+                                <div class="signal-bar bar-1"></div>
+                                <div class="signal-bar bar-2"></div>
+                                <div class="signal-bar bar-3"></div>
+                                <div class="signal-bar bar-4"></div>
+                                <div class="signal-bar bar-5"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Actions + Logs (Top) -->
+                    <section class="card" id="actionsCard">
+                        <h2>🎯 Odczyt/Zapis danych do sterownika</h2>
+                        <div id="controllerInfo"
+                            style="margin: 8px 0 14px 0; font-size: 0.95em; color: #9fb3c8; font-weight: 600;">
+                            Wykryto sterownik: —
+                        </div>
+                        <div class="actions-grid">
+                            <button id="readBtn" class="btn btn-success has-tooltip">
+                                ⬇️ Pobierz ze sterownika
+                                <div class="help-tooltip">Odczytuje aktualną konfigurację ze sterownika.</div>
+                            </button>
+                            <button id="writeBtn" class="btn btn-warning has-tooltip">
+                                ⚡ Wgraj do sterownika
+                                <div class="help-tooltip">Zapisuje bieżącą konfigurację do sterownika.</div>
+                            </button>
+                            <button id="exportBtn" class="btn btn-secondary has-tooltip">
+                                📤 Eksport do CSV
+                                <div class="help-tooltip">Zapisuje ustawienia do pliku CSV sterownika.</div>
+                            </button>
+                            <button id="importBtn" class="btn btn-primary has-tooltip">
+                                📂 Import z CSV
+                                <div class="help-tooltip">Zapisuje ustawienia z pliku CSV sterownika.</div>
+                            </button>
+                        </div>
+
+                        <hr style="margin: 20px 0; border: none; border-top: 1px solid rgba(255,255,255,0.1);">
+
+                        <!-- Action Icons (Relocated) -->
+                        <div class="footer-icons"
+                            style="display: flex; justify-content: center; gap: 15px; margin-top: 10px;">
+                            <a href="https://www.youtube.com/@sonfy_pl/videos" target="_blank"
+                                class="resource-link offline-aware" title="YouTube Sonfy">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                    <path
+                                        d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                </svg>
+                            </a>
+                            <a href="../Bramster-WEB-AC-DTM-F.pdf" target="_blank" class="resource-link offline-aware"
+                                title="Instrukcja Obsługi (PDF)">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Adobe_Acrobat_DC_logo_2020.svg/960px-Adobe_Acrobat_DC_logo_2020.svg.png"
+                                    alt="PDF" width="24" height="24">
+                            </a>
+                            <a href="https://play.google.com/store/apps/details?id=megaelektronik.bramster_sonfy"
+                                target="_blank" class="resource-link offline-aware" title="Aplikacja Android">
+                                <img src="android_logo.png" alt="Android" width="24" height="24">
+                            </a>
+                            <a href="#" class="resource-link offline-aware" title="Aplikacja iOS">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                    <path
+                                        d="M16,1H8C6.34,1,5,2.34,5,4v16c0,1.66,1.34,3,3,3h8c1.66,0,3-1.34,3-3V4C19,2.34,17.66,1,16,1z M12,21 c-1.1,0-2-0.9-2-2s0.9-2,2-2s2,0.9,2,2S13.1,21,12,21z M17,16H7V5h10V16z" />
+                                </svg>
+                            </a>
+                            <a href="https://megaelektronik.pl" target="_blank" class="resource-link offline-aware"
+                                title="Sklep Megaelektronik">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 20a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                    <path d="M20 20a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                                </svg>
+                            </a>
+                        </div>
+
+                        <!-- Help/Log toggles removed from here -->
+                    </section>
+
+                    <!-- Configuration Grid (2 columns) -->
+                    <div class="header-grid" id="configGrid">
+                        <!-- 1. Kod dostępu -->
+                        <section class="card has-tooltip" id="cardAccessCode">
+                            <div class="help-tooltip">Ustaw 4-znakowy kod dostępu do sterownika.</div>
+                            <h2>🔑 Kod dostępu</h2>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <input type="text" id="accessCode" maxlength="4" placeholder="****"
+                                    style="text-align: center; letter-spacing: 5px; font-size: 1.2em;">
+                            </div>
+                        </section>
+
+                        <!-- 2. Tryb sterowania -->
+                        <section class="card has-tooltip" id="cardControlMode">
+                            <div class="help-tooltip">Wybierz w jaki sposób sterownik ma reagować na sygnały (DTMF,
+                                CLIP,
+                                SMS).</div>
+                            <h2>🎛️ Tryb sterowania</h2>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <select id="controlMode">
+                                    <option value="0">DTMF (wdzwaniany)</option>
+                                    <option value="1">CLIP</option>
+                                    <option value="2">SMS</option>
+                                    <option value="3" selected>CLIP+SMS</option>
+                                </select>
+                            </div>
+                        </section>
+
+
+                        <!-- 4. Tryb pracy -->
+                        <section class="card has-tooltip" id="cardWorkMode">
+                            <div class="help-tooltip">Tryb Prywatny (tylko lista) lub Publiczny (każdy znający numer).
+                            </div>
+                            <h2>🌐 Tryb pracy</h2>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="mode" value="0">
+                                    <span>Prywatny</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="mode" value="1" checked>
+                                    <span>Publiczny</span>
+                                </label>
+                            </div>
+                        </section>
+
+
+                        <!-- 6. Konfiguracja wyjścia -->
+                        <section class="card has-tooltip" id="cardOutput">
+                            <div class="help-tooltip">Skonfiguruj czy wyjście ma być monostabilne (czas) czy bistabilne
+                                (toggle).</div>
+                            <h2>⚡ Konfiguracja wyjścia</h2>
+                            <div class="radio-group" style="flex-direction: column; align-items: stretch;">
+                                <label class="radio-label">
+                                    <input type="radio" name="outputConfig" value="0" checked>
+                                    <span>Załączenie (s):</span>
+                                    <input type="text" id="outputTime" maxlength="5" value="1"
+                                        oninput="this.value = this.value.replace(/\D/g, ''); if(this.value === '0') this.value = ''; let v=parseInt(this.value); if(v===99999) document.querySelector('input[name=outputConfig][value=\'1\']').checked=true; else if(v<99999) document.querySelector('input[name=outputConfig][value=\'0\']').checked=true;"
+                                        style="width: 80px; margin-left: 10px;">
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="outputConfig" value="1">
+                                    <span>🔄 Toggle (ON/OFF)</span>
+                                </label>
+                            </div>
+                        </section>
+
+
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Main Content (Phones, Actions, Logs) -->
+                <div class="main-content">
+                    <!-- Right Column Container re-using ID for JS compatibility -->
+                    <div id="mainContentGrid" class="content-grid-vertical">
+
+
+                        <!-- Phone Numbers (Bottom) -->
+                        <section class="card phone-card has-tooltip" id="phoneCard">
+                            <div class="help-tooltip">
+                                Tutaj wprowadza się listę numerów uprawnionych w trybie prywatnym.
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px;">
+                                <h2 id="usersHeader" style="margin: 0;">📞 Numery telefonów uprawnionych</h2>
+                                <button id="clearNumbersBtn" class="btn btn-secondary" style="padding: 6px 10px; font-size: 0.85em;">
+                                    🧹 Wyczyść listę
+                                </button>
+                            </div>
+
+                            <div class="search-box" style="margin-bottom: 15px;">
+                                <input type="text" id="searchNumber" placeholder="🔍 Szukaj numeru..."
+                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #444; background: #2a2b3d; color: #fff;">
+                            </div>
+
+                            <div id="allNumbers" class="numbers-list" style="max-height: 600px; overflow-y: auto;">
+                                <!-- JS generated items -->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logs Section Removed from Bottom -->
+
+
+
+
+        <footer>
+            <p style="visibility: hidden;">sonfy-ac.web.app</p>
+
+            <p><a href="https://www.sonfy.pl" target="_blank"
+                    style="color: inherit; text-decoration: none;">www.sonfy.pl</a></p>
+        </footer>
+    </div>
+    </div>
+
+
+
+    <input type="file" id="importFile" accept=".csv" style="display: none;">
+
+    <!-- Browser Support Modal -->
+    <div id="browserModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>ℹ️ Kompatybilność</h2>
+            <p style="font-weight: bold; font-size: 1.2em; margin-bottom: 5px;">Bramster AC-DTM-F V2
+            </p>
+            <p>jest kompatybilny z poniższymi przeglądarkami:</p>
+            <div class="browser-icons">
+                <a href="https://www.google.com/chrome/" target="_blank" title="Pobierz Chrome">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg"
+                        alt="Chrome" width="64">
+                    <span>Chrome</span>
+                </a>
+                <a href="https://www.microsoft.com/edge" target="_blank" title="Pobierz Edge">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg"
+                        alt="Edge" width="64">
+                    <span>Edge</span>
+                </a>
+                <a href="https://www.opera.com/" target="_blank" title="Pobierz Opera">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Opera_2015_icon.svg" alt="Opera"
+                        width="64">
+                    <span>Opera</span>
+                </a>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                Uwaga: <b>Safari</b> i <b>Firefox</b> nie są obecnie wspierane.
+            </p>
+            <p style="margin-top: 20px; font-size: 0.8em; color: #888;">
+                <a href="https://www.sonfy.pl" target="_blank"
+                    style="color: inherit; text-decoration: none;">www.sonfy.pl</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Disconnect Warning Modal -->
+    <div id="disconnectModal" class="modal">
+        <div class="modal-content" style="text-align: center; border-left: 5px solid #ff4444;">
+            <span class="close-disconnect">&times;</span>
+            <h2 style="color: #d32f2f;">⚠️ Rozłączono</h2>
+            <p style="font-size: 1.1em; margin: 15px 0;">Brak wymiany danych z urządzeniem</p>
+            <p style="color: #666;">Połączenie zostało przerwane ze względów bezpieczeństwa.</p>
+            <button id="reconnectBtnModal" class="btn btn-primary" style="margin-top: 20px;">OK</button>
+            <p style="margin-top: 20px; font-size: 0.8em; color: #888;">
+                <a href="https://www.sonfy.pl" target="_blank"
+                    style="color: inherit; text-decoration: none;">www.sonfy.pl</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- No Connection Warning Modal -->
+    <div id="noConnectionModal" class="modal">
+        <div class="modal-content" style="text-align: center; border-left: 5px solid #ff9800;">
+            <span class="close-noconnection">&times;</span>
+            <h2 style="color: #e65100;">⚠️ Brak połączenia</h2>
+            <p style="font-size: 1.1em; margin: 15px 0;">Najpierw połącz się z urządzeniem!</p>
+
+            <div
+                style="text-align: left; margin: 15px 10px; padding: 10px; background: #fff3e0; border-radius: 5px; font-size: 0.95em; color: #555;">
+                <strong>Instrukcja:</strong>
+                <ol style="margin: 5px 0 0 0; padding-left: 20px;">
+                    <li style="margin-bottom: 5px;">Podłącz sterownik do komputera kablem USB.</li>
+                    <li>Kliknij <b>"Połącz z urządzeniem"</b> (u góry) i wybierz port USB.</li>
+                </ol>
+            </div>
+
+            <button id="okNoConnectionBtn" class="btn btn-primary" style="margin-top: 10px;">OK</button>
+            <p style="margin-top: 20px; font-size: 0.8em; color: #888;">
+                <a href="https://www.sonfy.pl" target="_blank"
+                    style="color: inherit; text-decoration: none;">www.sonfy.pl</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Dynamic Generic Modal -->
+    <div id="dynamicModal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <span class="close-dynamic">&times;</span>
+            <h2 id="dynamicModalTitle" style="margin-top: 0;">Tytuł</h2>
+            <div id="dynamicModalBody" style="font-size: 1.1em; margin: 15px 0;">Treść</div>
+
+            <div id="dynamicModalButtons" style="margin-top: 20px; display: flex; justify-content: center; gap: 15px;">
+                <button id="dynamicModalCancel" class="btn btn-secondary" style="display: none;">Anuluj</button>
+                <button id="dynamicModalOk" class="btn btn-primary">OK</button>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 0.8em; color: #888;">
+                <a href="https://www.sonfy.pl" target="_blank"
+                    style="color: inherit; text-decoration: none;">www.sonfy.pl</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Controller Selection Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content" style="text-align: center; border-left: 5px solid #64748b;">
+            <span class="close-profile">&times;</span>
+            <h2 style="margin-top: 0;">🧠 Wybór sterownika</h2>
+            <p style="font-size: 1.0em; margin: 10px 0 16px 0;">Wybierz wariant pamięci numerów:</p>
+
+            <div style="text-align: left; max-width: 340px; margin: 0 auto 14px auto; display: grid; gap: 10px;">
+                <label><input type="radio" name="profileVariant" value="AC250_DTM-F"> AC250_DTM-F (250 numerów)</label>
+                <label><input type="radio" name="profileVariant" value="AC2500_DTM-F"> AC2500_DTM-F (2500 numerów)</label>
+                <label><input type="radio" name="profileVariant" value="AC5000_DTM-F"> AC5000_DTM-F (5000 numerów)</label>
+            </div>
+
+            <label style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                <input type="checkbox" id="profileRememberChoice" checked>
+                Zapamiętaj wybór
+            </label>
+
+            <div style="margin-top: 8px; display: flex; justify-content: center; gap: 12px;">
+                <button id="profileModalCancel" class="btn btn-secondary">Anuluj</button>
+                <button id="profileModalApply" class="btn btn-primary">Zastosuj</button>
+            </div>
+
+            <p style="margin-top: 18px; font-size: 0.8em; color: #888;">
+                <a href="https://www.sonfy.pl" target="_blank"
+                    style="color: inherit; text-decoration: none;">www.sonfy.pl</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Connection Spinner Overlay -->
+    <div id="connectionSpinner" class="spinner-overlay" style="display: none;">
+        <div class="spinner-content">
+            <div class="spinner-ring"></div>
+            <h2 style="margin-top: 20px; color: white;">Inicjalizacja czekaj</h2>
+            <p style="color: #ccc;">Proszę czekać...</p>
+        </div>
+    </div>
+
+    <!-- intro.js removed -->
+    <script>
+        // Theme Switcher Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeInputs = document.querySelectorAll('input[name="theme"]');
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+
+            themeInputs.forEach(input => {
+                if (input.value === savedTheme) input.checked = true;
+                input.addEventListener('change', (e) => {
+                    const newTheme = e.target.value;
+                    document.body.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                });
+            });
+
+
+        });
+    </script>
+    <script src="uart-eeprom.js"></script>
+</body>
+
+</html>
